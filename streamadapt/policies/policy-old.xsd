@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="AdaptationPolicy" xmlns:ap="AdaptationPolicy">
+	<xs:complexType name="PolicyConfigurationType">
+		<xs:annotation>
+			<xs:documentation>The PolicyConfigurationType type consists of a
+				set of childs witch configure the entire stream properties.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="policy-name" type="xs:string">
+			</xs:element>
+			<xs:element name="policy-description" type="xs:string" />
+			<xs:element name="negotiation-protocol">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:whiteSpace value="collapse" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="transport-properties">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element default="DCCP" name="protocol" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>Define the protocol that will be used to
+									transmission. To the adaptation be enabled, an element in
+									trasnport-adaptation MUST have a same value.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element default="true" name="enable-adaptation"
+							type="xs:boolean">
+							<xs:annotation>
+								<xs:documentation>Define if the adaptation will be enabled
+								</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="property"
+							type="ap:SimplePropertyType">
+							<xs:annotation>
+								<xs:documentation>These children will be used to define
+									specifics properties of the transport protocol
+								</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="stream-properties">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="video-codec" type="xs:string" />
+						<xs:element name="audio-codec" type="xs:string" />
+						<xs:element default="true" name="enable-adaptation"
+							type="xs:boolean" />
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="property"
+							type="ap:SimplePropertyType">
+							<xs:annotation>
+								<xs:documentation>These children will be used to define
+									specifics properties of the transport protocol
+								</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="transport-adaptation">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="transport-protocol">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:minLength value="1" />
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="adaptation-method">
+							<xs:annotation>
+								<xs:documentation>This node defines what adaptation-policy
+									node will be used</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:minLength value="0" />
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="policy">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="policy-alias">
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:minLength value="1" />
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="plugin-name">
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:minLength value="1" />
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="adaptation-criteria" type="ap:AdaptationCriteriaType" />
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="adaptation-policy" type="ap:PolicyConfigurationType">
+		<xs:annotation>
+			<xs:documentation>
+				The policy element is a root of the Adaptation Policy XML vocabulary.
+				Every conforming document should start with this element.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="AdaptationCriteriaType">
+		<xs:sequence>
+			<xs:element name="comparisson-attibute">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="unit">
+				<xs:annotation>
+					<xs:documentation>Define the unit that will be used to
+						measure</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="lower">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:choice maxOccurs="unbounded" minOccurs="0">
+							<xs:element maxOccurs="1" minOccurs="1" name="complex-property"
+								type="ap:ComplexPropertyType">
+							</xs:element>
+							<xs:element maxOccurs="1" minOccurs="1" name="simple-property"
+								type="ap:SimplePropertyType" />
+						</xs:choice>
+					</xs:sequence>
+					<xs:attribute name="threshold" type="xs:float" use="required" />
+				</xs:complexType>
+			</xs:element>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="range">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:choice maxOccurs="unbounded" minOccurs="0">
+							<xs:element maxOccurs="1" minOccurs="1" name="complex-property"
+								type="ap:ComplexPropertyType">
+							</xs:element>
+							<xs:element maxOccurs="1" minOccurs="1" name="simple-property"
+								type="ap:SimplePropertyType" />
+						</xs:choice>
+					</xs:sequence>
+					<xs:attribute name="from" type="xs:float" use="required">
+						<xs:annotation>
+							<xs:documentation>Define the left bound</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="to" type="xs:float" use="required">
+						<xs:annotation>
+							<xs:documentation>Define the right bound</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+			<xs:element minOccurs="0" name="greater">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:choice maxOccurs="unbounded" minOccurs="0">
+							<xs:element maxOccurs="1" minOccurs="1" name="complex-property"
+								type="ap:ComplexPropertyType">
+							</xs:element>
+							<xs:element maxOccurs="1" minOccurs="1" name="simple-property"
+								type="ap:SimplePropertyType" />
+						</xs:choice>
+					</xs:sequence>
+					<xs:attribute name="threshold" type="xs:float" use="required" />
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ComplexPropertyType">
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="sub-property"
+				type="ap:SimplePropertyType">
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="key">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1" />
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="SimplePropertyType">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="key">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:minLength value="1" />
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:attribute>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+</xs:schema>

@@ -1,0 +1,5 @@
+To enable the reading and writing of XML-based files. It needed the use of 
+XSD (http://www.codesynthesis.com/products/xsd/) library. It runs over xerces-c
+ API (http://xerces.apache.org/xerces-c/. In this project, there are an example of
+ how to access the xsd library. Also a XML schema is added with its instance.
+

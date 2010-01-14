@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<adaptation-policy xmlns="AdaptationPolicy"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="AdaptationPolicy file:/home/ivocalado/workspace/streamadapt/policies/policy.xsd">
+    <policy-name xmlns="">politica Teste</policy-name>
+    <policy-description xmlns="">O objetivo desta politica é realizar testes com o plugin de transporte</policy-description>
+    <startup-config xmlns="">
+        <negotiation>negotiation0</negotiation>
+        <transport>
+            <protocol>DCCP</protocol>
+            <plugin-name>DCCPSocketPlugin</plugin-name>
+            <library-name>libplugins-transport.so</library-name>
+            <library-directory>/home/ivocalado/workspace/plugins-transport/Debug/</library-directory>
+            <enable-adaptation>true</enable-adaptation>
+            <provides>
+                <provide default-value="3.6">RTT</provide>
+                <provide default-value="10.5">bandwidt</provide>
+            </provides>
+            
+            <simpleproperty key="SDESItem">rtpsend demo app.</simpleproperty>
+            <simpleproperty key="ExpireTimeout">1000000</simpleproperty>
+            <simpleproperty key="PayloadFormat">0</simpleproperty>
+            <simpleproperty key="SchedulingTimeout">10000</simpleproperty>
+        </transport>
+        <stream>
+            <video-codec>video-codec0</video-codec>
+            <audio-codec>audio-codec0</audio-codec>
+            <enable-adaptation>true</enable-adaptation>
+        </stream>
+    </startup-config>
+    <adapt-config xmlns="">
+        <transport>
+            <adaptation-method>qpolicy</adaptation-method>
+            <policy>
+                <comparisson-attibute>RTT</comparisson-attibute>
+                <unit>seconds</unit>
+                <lower threshold="2.5">
+                    <if>
+                        <equals Lhs="bandwidt" Rhs="30.0"/>
+                        <operations>
+                            <simpleproperty key="DCCPTXCCID">5</simpleproperty>
+                        </operations>
+                    </if>
+                    <simpleproperty key="PayloadFormat">1</simpleproperty>
+                </lower>
+            </policy>
+            
+        </transport>
+    </adapt-config>
+</adaptation-policy>
