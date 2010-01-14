@@ -1,0 +1,37 @@
+/*
+ * plugindefinitions.h
+ *
+ *  Created on: 11/01/2010
+ *      Author: ivocalado
+ */
+
+#ifndef PLUGINDEFINITIONS_H_
+#define PLUGINDEFINITIONS_H_
+
+enum MessageType {
+	__INVALID_OPTION,
+//Main options
+	__ENCODER_OPT,
+	__DECODER_OPT,
+//Secondary options
+	__SPEEX_ENH,
+	__SPEEX_FRAME_SIZE,
+	__SPEEX_QUALITY,
+	__SPEEX_MODE,
+	__SPEEX_VBR,
+	__SPEEX_VBR_QUALITY,
+	__SPEEX_COMPLEXITY,
+	__SPEEX_BITRATE,
+	__SPEEX_SAMPLING_RATE,
+	__SPEEX_RESET_STATE,
+	__SPEEX_VAD,
+	__SPEEX_DTX,
+	__SPEEX_ABR,
+	__SPEEX_PLC_TUNING,
+	__SPEEX_VBR_MAX_BITRATE,
+	__SPEEX_HIGHPASS
+
+};
+
+
+#endif /* PLUGINDEFINITIONS_H_ */
