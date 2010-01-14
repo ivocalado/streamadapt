@@ -1,0 +1,190 @@
+<!DOCTYPE plugin-configuration SYSTEM "RootElement.dtd">
+	<!--
+		This xml file will be used to configure the properties of
+		videoconference plugin adaptation
+	-->
+<plugin-configuration>
+	<!--The next node specify the plugin's name-->
+	<plugin-name>VideoConference</plugin-name>
+	<!--
+		This plugin has as main goal configure the features of the. This
+		plugin should be selected to
+	-->
+	<plugin-description>This plugin has as main goal provides stream
+		adaptation to video conference transmissions</plugin-description>
+	<!--
+		The next node specify the negotiation protocol which will be used. The
+		options are: xmpp or sip/sdp
+	-->
+	<negotiation-protocol>xmpp</negotiation-protocol>
+	<!--
+		The next node specify de transport protocol which will be used. The
+		options are: dccp, tcp or udp. For transport level adaptation is
+		needed an adaptation API
+	-->
+	<transport-protocol protocol="dccp">
+		<property value="default-ccid">2</property>
+		<!--
+			The next node specify if the stream adaptation at the transport level
+			will be enabled
+		-->
+
+		<enable-adaptation>yes</enable-adaptation>
+	</transport-protocol>
+
+	<stream-properties>
+		<video-codec>h.264</video-codec>
+		<audio-codec>speex</audio-codec>
+		<!--
+			The next node specify if the stream adaptation at the application
+			level will be enabled
+		-->
+		<enable-adaptation>yes</enable-adaptation>
+	</stream-properties>
+
+
+
+
+
+
+
+	<transport-adaptation>
+		<transport-protocol name="dccp">
+			<adaptation-method>qpolicy</adaptation-method>
+			<adaptation-policy lib="qpolicy">
+				<adaptation-criteria>
+					<comparisson-attibute>bandwidth</comparisson-attibute>
+					<range from="10kbps" to="30kbps">
+						<do>
+							<!--
+								This properties are specifics of this transport adaptation
+								method
+							-->
+							<property value="ccid">5</property>
+							<property value="priority-packets">yes</property>
+							<property value="discard-expired-packets">yes</property>
+							<property value="packets-weight">
+								<sub-property value="video">2</sub-property>
+								<sub-property value="audio">5</sub-property>
+							</property>
+						</do>
+					</range>
+					<range from="40kbps" to="50kbps">
+						<do>
+							<property value="ccid">3</property>
+							<property value="priority-packets">yes</property>
+							<property value="packets-weight">
+								<sub-property value="video">1</sub-property>
+								<sub-property value="audio">1</sub-property>
+							</property>
+							<if property="loss-rate" value="0.5">
+								<property value="ccid">0</property>
+							</if>
+						</do>
+					</range>
+				</adaptation-criteria>
+			</adaptation-policy>
+
+			<adaptation-policy lib="sendBestNextPacket">
+				<adaptation-criteria>
+					<comparisson-attibute>RTT</comparisson-attibute>
+					<range from="0.2" to="0.7">
+						<do>
+							<!--
+								This properties are specifics of this transport adaptation
+								method
+							-->
+							<property value="ccid">5</property>
+							<property value="priority-packets">yes</property>
+							<property value="discard-expired-packets">yes</property>
+							<property value="packets-weight">
+								<sub-property value="video">2</sub-property>
+								<sub-property value="audio">5</sub-property>
+							</property>
+						</do>
+					</range>
+					<greater threshold="0.8">
+						<property value="ccid">2</property>
+						<property value="priority-packets">no</property>
+					</greater>
+				</adaptation-criteria>
+			</adaptation-policy>
+		</transport-protocol>
+		
+		
+		<transport-protocol name="tcp">
+			<adaptation-method>tcp-adaptation-policy</adaptation-method>
+			<adaptation-policy lib="tcp-adaptation-policy">
+				<adaptation-criteria>
+					<comparisson-attibute>RTT</comparisson-attibute>
+					<range from="10kbps" to="30kbps">
+						<do>
+							<!--
+								This properties are specifics of this transport adaptation
+								method
+							-->
+							<property value="allow-seletive-retransmission">yes</property>
+							<property value="other-adaptation-method">yes</property>
+							
+						</do>
+					</range>
+				</adaptation-criteria>
+			</adaptation-policy>
+
+
+		</transport-protocol>
+
+	</transport-adaptation>
+
+	<stream-adaptation>
+		<!--The next node specify the default video codec-->
+
+		<!--The next node specify the default audio codec-->
+		<adaptation-method>SNR</adaptation-method>
+		<adaptation-policy lib="SNR">
+			<adaptation-criteria>
+				<comparisson-attibute>bandwidth</comparisson-attibute>
+				<range from="10kbps" to="30kbps">
+					<do>
+						<!--
+							This properties are specifics of this stream adaptation method
+						-->
+						<property value="codec">xvid</property>
+						<property value="drop-frames">
+							<sub-property value="allow-drop-frames">yes</sub-property>
+							<sub-property value="drop-frames-rate">0.2</sub-property>
+						</property>
+					</do>
+				</range>
+				<range from="40kbps" to="50kbps">
+					<do>
+						<property value="codec">h264</property>
+					</do>
+				</range>
+			</adaptation-criteria>
+		</adaptation-policy>
+
+		<adaptation-policy lib="spatial-scalability">
+			<adaptation-criteria>
+				<comparisson-attibute>RTT</comparisson-attibute>
+				<range from="10kbps" to="30kbps">
+					<do>
+						<!--
+							This properties are specifics of this stream adaptation method
+						-->
+						<property value="specific-property-1">its-value</property>
+						<property value="specific-property-2">its-value</property>
+					</do>
+				</range>
+				<range from="40kbps" to="50kbps">
+					<do>
+						<property value="codec">h264</property>
+					</do>
+				</range>
+			</adaptation-criteria>
+		</adaptation-policy>
+
+	</stream-adaptation>
+
+
+</plugin-configuration>

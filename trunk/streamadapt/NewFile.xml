@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<get>
+		<transport-properties>
+			<!-- GET_ALLOWED_REMOTE_CCID  -->
+			<allowed-ccid />
+		</transport-properties>
+	</get>
+	
+	<get>
+		<transport-properties>
+			<!--TRANSPORT_ADAPTATION  -->
+			<allowed-adaptation />
+		</transport-properties>
+	</get>
+	<get>
+		<transport-properties>
+			<current_adaptation />
+		</transport-properties>
+	</get>
+	<get>
+		<stream-properties>
+			<allowed-audio-codecs />
+		</stream-properties>
+	</get>
+	<get>
+		<stream-properties>
+			<allowed-video-codecs />
+		</stream-properties>
+	</get>
+	<get>
+		<stream-properties>
+			<allowed-adaptation />
+
+		</stream-properties>
+	</get>
+	<get>
+		<stream-properties>
+			<current-audio-codecs />
+		</stream-properties>
+	</get>
+	<get>
+		<stream-properties>
+			<current-video-codecs />
+
+		</stream-properties>
+	</get>
+	<get>
+		<stream-properties>
+			<current-adaptation />
+		</stream-properties>
+	</get>
+	
+	Estas são +/- os templates de request get que eu irei precisar. Eu gostaria que vc fizesse de uma forma bem desacoplada cara. 
+	Pois, algumas partes serão dependentes do plugin disponível. Por exemplo em:
+	<get>
+		<transport-properties>
+			<!-- GET_ALLOWED_REMOTE_CCID  -->
+			<allowed-ccid />
+		</transport-properties>
+	</get>
+	
+	será uma parte fixa: 
+	<get>
+		<transport-properties>
+		</transport-properties>
+	</get>
+	No entanto, a string "<allowed-ccid />" seria um componente que deveria ser fornecido pelo plugin de adaptação específico, 
+	pois só ele conhece estas propriedades.
+	Todas essas mensagens requerem uma resposta.
+	Uma coisa que tu podes fazer para tornar mais flexível na hora de manipular a resposta é utilizar ponteiro de função num mapa.
+	Eu me lembro que vc tinha feito algo assim no n-teaching:
+	
+	// Os nomes dos metodos sao diferentes, mas so pra vc pegar a ideia
+	void met(Stanza stanzaRetornada) {
+		StanzaType st = stanzaRetornada.getType();
+		if(st==Stanza.Type1) {
+			return trataStanza1(stanzaRetornada);
+		} else if(st==Stanza.Type2) {
+			return trataStanza2(stanzaRetornada);
+		} else if(st==Stanza.Type3) {
+			return trataStanza3(stanzaRetornada);
+		} else if(st==Stanza.Type4) {
+			return trataStanza4(stanzaRetornada);
+		}  
+	}
+	
+	Você poderia pensar em fazer algo como o exemplo
+	enviado em anexo:
+	
+	
+	Seguir a mesma linha de raciocinio para as seguintes informações
+	SET
+
+	REQUEST_FOR_SET_LOCAL_VIDEO_CODEC 
+	REQUEST_FOR_SET_REMOTE_VIDEO_CODEC
+	REQUEST_FOR_SET_LOCAL_AUDIO_CODEC
+	REQUEST_FOR_SET_REMOTE_AUDIO_CODEC
+	REQUEST_FOR_STREAM_ADAPTATION (METODO DE ADAPTACAO, [PARAMETROS DE ADAPTACAO])
+	REQUEST_FOR_TRANSPORT_ADAPTATION (METODO DE ADAPTACAO, [PARAMETROS DE ADAPTACAO])
+
+NOTIFY
+	NOTIFY_CHANGE_LOCAL_CCID
+	NOTIFY_REQUEST_FOR_SET_LOCAL_VIDEO_CODEC 
+	NOTIFY_REQUEST_FOR_SET_REMOTE_VIDEO_CODEC
+	NOTIFY_REQUEST_FOR_SET_LOCAL_AUDIO_CODEC
+	NOTIFY_REQUEST_FOR_SET_REMOTE_AUDIO_CODEC
+	NOTIFY_REQUEST_FOR_STREAM_ADAPTATION (METODO DE ADAPTACAO, [PARAMETROS DE ADAPTACAO])
+	NOTIFY_REQUEST_FOR_TRANSPORT_ADAPTATION (METODO DE ADAPTACAO, [PARAMETROS DE ADAPTACAO])
+
+
+	
+	
+	
+	
+	 
+	
+</root>
+

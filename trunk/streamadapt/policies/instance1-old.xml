@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<adaptation-policy xmlns="AdaptationPolicy"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="AdaptationPolicy policy-old.xsd">
+	<!--  xsi:schemaLocation="AdaptationPolicy file:/home/ivocalado/workspace/xml-policy-module/policy.xsd">-->
+	<policy-name xmlns="">policy-name0</policy-name>
+	<policy-description xmlns="">policy-description0</policy-description>
+	<negotiation-protocol xmlns="">negotiation-protocol0</negotiation-protocol>
+	<transport-properties xmlns="">
+		<protocol>DCCP</protocol>
+		<enable-adaptation>true</enable-adaptation>
+		<property key="teste1">v1</property>
+	</transport-properties>
+	<stream-properties xmlns="">
+		<video-codec>video-codec0</video-codec>
+		<audio-codec>audio-codec0</audio-codec>
+		<enable-adaptation>true</enable-adaptation>
+		<property key="teste1">v1</property>
+	</stream-properties>
+	<transport-adaptation xmlns="">
+		<transport-protocol>transport-protocol0</transport-protocol>
+		<adaptation-method>qpolicy</adaptation-method>
+		<policy>
+			<policy-alias>qpolicy</policy-alias>
+			<plugin-name>qpolicy.so</plugin-name>
+			<adaptation-criteria>
+				<comparisson-attibute>RTT</comparisson-attibute>
+				<unit>kbps</unit>
+			</adaptation-criteria>
+		</policy>
+		<policy>
+			<policy-alias>SendBestNextPacket</policy-alias>
+			<plugin-name>sbnp.so</plugin-name>
+			<adaptation-criteria>
+				<comparisson-attibute>RTT</comparisson-attibute>
+				<unit>kbps</unit>
+				<lower threshold="10">
+					<complex-property key="key1">
+						<sub-property key="subkey1">10</sub-property>
+						<sub-property key="subkey2" />
+					</complex-property>
+					<simple-property key="key2">40</simple-property>
+					<simple-property key="key3">60</simple-property>
+				</lower>
+
+			</adaptation-criteria>
+		</policy>
+
+
+	</transport-adaptation>
+</adaptation-policy>
