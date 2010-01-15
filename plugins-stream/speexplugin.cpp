@@ -564,8 +564,6 @@ void SpeexPlugin::destroyDecoder() throw(OperationNotPerfomedException) {
 uint16 SpeexPlugin::encode(int16 *sample_buf, uint16 nsamples, uint8 *payload,
 		uint16 payload_size, bool &silence)
 		throw(OperationNotPerfomedException) {
-	//assert(payload_size >= _max_payload_size);
-	//if(payload_size > 1500)
 
 	if (payload_size < 1500)
 		throw OperationNotPerfomedException("The buffer is not large enough");
