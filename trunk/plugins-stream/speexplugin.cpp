@@ -562,21 +562,21 @@ void SpeexPlugin::destroyDecoder() throw(OperationNotPerfomedException) {
 }
 
 uint16 SpeexPlugin::encode(int16 *sample_buf, uint16 nsamples, uint8 *payload,
-		uint16 payload_size, bool &silence) throw(OperationNotPerfomedException) {
+		uint16 payload_size, bool &silence)
+		throw(OperationNotPerfomedException) {
 	//assert(payload_size >= _max_payload_size);
-//if(payload_size > 1500)
+	//if(payload_size > 1500)
 
-	if(payload_size < 1500)
+	if (payload_size < 1500)
 		throw OperationNotPerfomedException("The buffer is not large enough");
 
-	if(!encoder)
+	if (!encoder)
 		throw OperationNotPerfomedException("Encoder not ready");
 
 	silence = false;
 	speex_bits_reset(&encoder->bits);
 
-	if (speex_encode_int(encoder->state, sample_buf, &encoder->bits) == 0)
-		silence = true;
+	silence = speex_encode_int(encoder->state, sample_buf, &encoder->bits) == 0;
 
 	return speex_bits_write(&encoder->bits, (char *) payload, payload_size);
 
@@ -588,16 +588,14 @@ uint16 SpeexPlugin::decode(uint8 *payload, uint16 payload_size, int16 *pcm_buf,
 	int retval;
 	int speex_frame_size;
 
-	speex_decoder_ctl(decoder->state, SPEEX_GET_FRAME_SIZE,
-			&speex_frame_size);
+	speex_decoder_ctl(decoder->state, SPEEX_GET_FRAME_SIZE, &speex_frame_size);
 
-	if(pcm_buf_size < speex_frame_size)
+	if (pcm_buf_size < speex_frame_size)
 		throw OperationNotPerfomedException("The buffer is not large enough");
 
-
-	speex_bits_read_from(&decoder->bits, reinterpret_cast<char *>(payload), payload_size);
+	speex_bits_read_from(&decoder->bits, reinterpret_cast<char *> (payload),
+			payload_size);
 	retval = speex_decode_int(decoder->state, &decoder->bits, pcm_buf);
-
 
 	if (retval < 0) {
 		throw OperationNotPerfomedException("Erro on decode frame");
