@@ -204,7 +204,7 @@ std::string SpeexPlugin::retrievePluginInformation(std::string info,
 			os << agc;
 			return os.str();
 		case __SPEEX_PREPROCESS_AGC_LEVEL:
-			spx_int32_t agclevel;
+			float agclevel;
 			speex_preprocess_ctl(preprocess, SPEEX_PREPROCESS_GET_AGC_LEVEL,
 					&agclevel);
 			os << agclevel;
@@ -571,14 +571,27 @@ uint16 SpeexPlugin::encode(int16 *sample_buf, uint16 nsamples, uint8 *payload,
 	if (!encoder)
 		throw OperationNotPerfomedException("Encoder not ready");
 
+	// Falta fazer o echo cancelling
+
+	bool preprocessing_silence = false;
+	if (preprocess) {
+		preprocessing_silence = !speex_preprocess_run(preprocess, sample_buf); //Garantir que o nsamples sera sempre o mesmo
+		bool speex_dsp_vad;
+		speex_preprocess_ctl(preprocess, SPEEX_PREPROCESS_GET_VAD,
+				&speex_dsp_vad);
+		if (!speex_dsp_vad)
+			preprocessing_silence = false;
+	}
+
 	silence = false;
 	speex_bits_reset(&encoder->bits);
 
 	silence = speex_encode_int(encoder->state, sample_buf, &encoder->bits) == 0;
 
+	silence = silence || preprocessing_silence;
+
 	return speex_bits_write(&encoder->bits, (char *) payload, payload_size);
 
-	//TODO Make preprocessing
 }
 
 uint16 SpeexPlugin::decode(uint8 *payload, uint16 payload_size, int16 *pcm_buf,
