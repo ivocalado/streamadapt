@@ -1,10 +1,7 @@
-all: compile_simple_server compile_simple_client compile_message compile_xmppnegotiation build_all
+all: compile_simple_server compile_message compile_xmppnegotiation build_all
 
 compile_simple_server:
-	g++ simpleserver.cpp -c 
-
-compile_simple_client:
-	g++ simpleclient.cpp -c 
+	g++ simpleserver.cpp -c  
 
 compile_message:
 	g++ message.cpp -c 
@@ -13,7 +10,7 @@ compile_xmppnegotiation:
 	g++ -I/home/heverton/workspace/streamadapt/inc -O0 -g3 -Wall -c -fmessage-length=0 -fPIC -MMD -MP -MF"xmppnegotiation.d" -MT"xmppnegotiation.d" -o"xmppnegotiation.o" "xmppnegotiation.cpp"
 
 build_all:
-	g++ -shared -o "libplugins-negotiation.so" simpleserver.o simpleclient.o -lgloox -lglooxd -pthread -lccgnu2
+	g++ -shared -o "libplugins-negotiation.so" simpleserver.o -lgloox -lglooxd -pthread -lccgnu2
 
 clean:
 	rm -rf *.o *.so
