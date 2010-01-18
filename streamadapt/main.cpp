@@ -17,8 +17,24 @@ using namespace infrastream;
 #include <sstream>
 #include <cstdlib>
 #include <cc++/thread.h>
+#include <sessionmanager.h>
 using namespace ost;
 
+class RecordDevice: public GenericSenderSocket {
+public:
+	int read(uint8* buffer, size_t bufferLen) {
+		return 0; // Le dados da sound card
+	}
+};
+
+class PlaybackDevice: public GenericReceiverSocket {
+public:
+	void newEventData(uint8* buffer, size_t bufferLen) {
+		//recebe dados para ser renderizado
+	}
+
+	virtual ~PlaybackDevice(){}
+};
 class Sender: public TimerPort {
 	BaseAncillaryData b;
 public:
@@ -29,80 +45,46 @@ public:
 
 		Facade* facade = Facade::getInstance();
 
-		GenericSenderSocket* sender = facade->createSession("", 0, ia, port,
+		SessionManager* sender = facade->createSession("", 0, ia, port,
+				new RecordDevice, new PlaybackDevice,
 				"/home/ivocalado/workspace/streamadapt/policies/instance1.xml",
-				0, 0);
+				0);
 
-		//		PluginManager pm;
+		//		uint32 timestamp = tstamp ? tstamp : 0;
 		//
-		//		auto_ptr<PluginTransportIF> plugin =
-		//				pm.findAdaptor<PluginTransportIF> ("transport-plugin",
-		//						"libplugins-transport.so",
-		//						"/home/ivocalado/workspace/plugins-transport/Debug/");
-		//		cout << "getName: " << plugin->getName() << endl;
-
-		//		plugin->buildSession();
-
-		//		map<string, string> param;
-
-		uint32 timestamp = tstamp ? tstamp : 0;
-
-		//		param["SDESItem"] = "rtpsend demo app.";
-		//		plugin->adapt("SDESItem", param);
-		//		param.clear();
-
-		//		param["ExpireTimeout"] = "1000000";
-		//		plugin->adapt("ExpireTimeout", param);
-		//		param.clear();
-
-		//		param["PayloadFormat"] = "0";
-		//		plugin->adapt("PayloadFormat", param);
-		//		param.clear();
-
-		//		param["SchedulingTimeout"] = "10000";
-		//		plugin->adapt("SchedulingTimeout", param);
-		//		param.clear();
-
-		//		cout<<"Passou aqui 1"<<endl;
-		//		plugin->addDestination(ia, port);
-		//		cout<<"Passou aqui 2"<<endl;
-		//		plugin->startSession();
-		//		cout<<"Passou aqui 3"<<endl;
-		//		cout << "My SSRC identifier is: " << hex << (int) getLocalSSRC()
-		//				<< endl; TODO
-
-
-		string s = sender->getSession().retrievePluginInformation(
-				"CurrentRTPClockRate");
-
-//		log_error("Passou aqui 2!");
-
-		//		cout<<"Passou aqui 4"<<endl;
-		istringstream s1(s);
-		uint16 tstampInc = 0;
-		s1 >> tstampInc;
-		tstampInc /= packetsPerSecond;
-
-		//		uint16 tstampInc = getCurrentRTPClockRate() / packetsPerSecond;
-		uint32 period = 1000 / packetsPerSecond;
-		//		cout<<"Passou aqui 5"<<endl;
-		TimerPort::setTimer(period);
-
-//		cout << "Passou aqui 6" << endl;
-		for (int i = 0; i < count; i++) {
-			uint32 tmp = timestamp + i * tstampInc;
-			sender->getSession().sendData(tmp, data,
-					strlen((char *) data) + 1, &b);
-			//			cout<<"Passou aqui 7"<<endl;
-			Thread::sleep(TimerPort::getTimer());
-			TimerPort::incTimer(period);
-			//			b.priority++;
-		}
-
-//		log_error("Passou aqui 1!");
-//		string s2 = sender->getSession()->retrievePluginInformation(
-//				"DCCPTXCCID");
-//		cout << "ccid: " << s2 << endl;
+		//
+		//
+		//		string s = sender->getSession().retrievePluginInformation(
+		//				"CurrentRTPClockRate");
+		//
+		////		log_error("Passou aqui 2!");
+		//
+		//		//		cout<<"Passou aqui 4"<<endl;
+		//		istringstream s1(s);
+		//		uint16 tstampInc = 0;
+		//		s1 >> tstampInc;
+		//		tstampInc /= packetsPerSecond;
+		//
+		//		//		uint16 tstampInc = getCurrentRTPClockRate() / packetsPerSecond;
+		//		uint32 period = 1000 / packetsPerSecond;
+		//		//		cout<<"Passou aqui 5"<<endl;
+		//		TimerPort::setTimer(period);
+		//
+		////		cout << "Passou aqui 6" << endl;
+		//		for (int i = 0; i < count; i++) {
+		//			uint32 tmp = timestamp + i * tstampInc;
+		//			sender->getSession().sendData(tmp, data,
+		//					strlen((char *) data) + 1, &b);
+		//			//			cout<<"Passou aqui 7"<<endl;
+		//			Thread::sleep(TimerPort::getTimer());
+		//			TimerPort::incTimer(period);
+		//			//			b.priority++;
+		//		}
+		//
+		////		log_error("Passou aqui 1!");
+		////		string s2 = sender->getSession()->retrievePluginInformation(
+		////				"DCCPTXCCID");
+		////		cout << "ccid: " << s2 << endl;
 
 		sender->endSession();
 	}

@@ -20,6 +20,7 @@ CPP_SRCS += \
 ../policy.cpp \
 ../policyengine.cpp \
 ../session.cpp \
+../sessionmanager.cpp \
 ../streamsession.cpp \
 ../trpsession.cpp 
 
@@ -40,6 +41,7 @@ OBJS += \
 ./policy.o \
 ./policyengine.o \
 ./session.o \
+./sessionmanager.o \
 ./streamsession.o \
 ./trpsession.o 
 
@@ -60,6 +62,7 @@ CPP_DEPS += \
 ./policy.d \
 ./policyengine.d \
 ./session.d \
+./sessionmanager.d \
 ./streamsession.d \
 ./trpsession.d 
 
