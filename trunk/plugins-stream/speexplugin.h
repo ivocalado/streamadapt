@@ -17,11 +17,12 @@
 #include <speex/speex_types.h>
 #include <speex/speex_preprocess.h>
 
-class SpeexPlugin : public PluginStreamIF {
+class SpeexPlugin: public PluginStreamIF {
 	enum SpeexMode {
-		MODE_NB,	// Narrow band
-		MODE_WB,	// Wide band
-		MODE_UWB	// Ultra wide band
+		INVALID_MODE,
+		MODE_NB, // Narrow band
+		MODE_WB, // Wide band
+		MODE_UWB// Ultra wide band
 	};
 
 	struct HalfCodec {
@@ -30,18 +31,23 @@ class SpeexPlugin : public PluginStreamIF {
 		void* state;
 	};
 
+
+
+
 	map<std::string, MessageType> constants;
 	void initConstants();
 	HalfCodec* encoder;
 	HalfCodec* decoder;
 	SpeexPreprocessState* preprocess;
-//	void* encoderPtr; //encoder
-//	void* decoderPtr; //decoder
-//	SpeexPreprocessState* preprocess; //preprocess
-//	SpeexBits encoderBits;
-//	SpeexBits decoderBits;
-	void buildEncoder(SpeexMode mode) throw(OperationNotPerfomedException);
-	void buildDecoder(SpeexMode mode) throw(OperationNotPerfomedException);
+	//	void* encoderPtr; //encoder
+	//	void* decoderPtr; //decoder
+	//	SpeexPreprocessState* preprocess; //preprocess
+	//	SpeexBits encoderBits;
+	//	SpeexBits decoderBits;
+	void buildEncoder(std::string mode) throw(OperationNotPerfomedException);
+	void buildDecoder(std::string mode) throw(OperationNotPerfomedException);
+	SpeexMode getMode(std::string modeName);
+
 
 	void destroyEncoder() throw(OperationNotPerfomedException);
 	void destroyDecoder() throw(OperationNotPerfomedException);
@@ -49,19 +55,64 @@ public:
 	SpeexPlugin();
 	virtual ~SpeexPlugin();
 
-	virtual std::string retrievePluginInformation(std::string info, std::string subInfo = "")
-				throw (OperationNotSupportedException, OperationNotPerfomedException);
+	virtual std::string retrievePluginInformation(std::string info,
+			std::string subInfo = "") throw (OperationNotSupportedException,
+			OperationNotPerfomedException);
 
 	virtual void adaptStream(std::string paramName, std::map<std::string,
-			std::string> &params)
-				throw (OperationNotPerfomedException, OperationNotSupportedException);
-
+			std::string> &params) throw (OperationNotPerfomedException,
+			OperationNotSupportedException);
 
 	virtual uint16 encode(int16 *sample_buf, uint16 nsamples, uint8 *payload,
-			uint16 payload_size, bool &silence) throw(OperationNotPerfomedException);
+			uint16 payload_size, bool &silence)
+			throw(OperationNotPerfomedException);
 
 	virtual uint16 decode(uint8 *payload, uint16 payload_size, int16 *pcm_buf,
 			uint16 pcm_buf_size) throw(OperationNotPerfomedException);
+
+	virtual uint16 getEncodingPtime() const;
+
+	virtual uint16 getDecodingPtime() const;
+
+	uint16 getEncodingSampleRate() const
+			throw(OperationNotPerfomedException);
+
+	virtual uint16 getDecodingSampleRate(void) const
+			throw(OperationNotPerfomedException);
+
+	virtual uint16 getMaxPayloadSize() const;
+
+	/**
+	 * Enable preprocessing step. If plugin doesn't support,
+	 * just return false. It throws an exception if the state
+	 * is invalid to make this operation
+	 */
+	virtual bool enablePreprocessing() throw (OperationNotPerfomedException);
+
+	/**
+	 * disable preprocessing step. If plugin doesn't support,
+	 * just return false. It throws an exception if the state
+	 * is invalid to make this operation
+	 */
+	virtual bool disablePreprocessing() throw(OperationNotPerfomedException);
+
+	/**
+	 * Enable echocancelling step. If plugin doesn't support,
+	 * just return false. It throws an exception if the state
+	 * is invalid to make this operation
+	 */
+	virtual bool enableEchoCancelling() throw(OperationNotPerfomedException) {
+		return false;
+	}
+
+	/**
+	 * Disable echocancelling step. If plugin doesn't support,
+	 * just return false. It throw an exception if the state
+	 * is invalid to make this operation
+	 */
+	virtual bool disableEchoCancelling() throw (OperationNotPerfomedException) {
+		return false;
+	}
 
 	virtual const char* getName() const;
 };
