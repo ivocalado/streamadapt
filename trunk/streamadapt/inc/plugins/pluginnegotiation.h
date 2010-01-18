@@ -13,9 +13,15 @@
 
 class PluginNegotiationPtrlIF: public PluginBase {
 public:
-	virtual void doNegotiate() = 0;
+	virtual const char* getName() const = 0;
 	// Adicionar metodos padrao para negociacao
 	virtual void notifyAdaptation(std::string paramName, std::map<std::string,
 			std::string>& params) = 0;
+
+	virtual void initNegotiation(std::string localIp, int localPort,
+			std::string remoteIp, int remotePort, std::map<std::string,
+					std::string>* params = 0)
+			throw (OperationNotPerfomedException) = 0;
+	virtual void shutdownNegotiation() = 0;
 };
 #endif /* PLUGIN_NEGOTIATION_H_ */

@@ -15,22 +15,26 @@
 
 using namespace std;
 namespace infrastream {
-class GenericSenderSocket : ost::Thread {
-	PolicyEngine engine;
-	TransportSession* trSession;
+class GenericSenderSocket : public ost::Thread {
+
 
 protected:
 	virtual void run();
 public:
-	PolicyEngine& getEngine();
+//	PolicyEngine& getEngine();
 	GenericSenderSocket();
 	virtual ~GenericSenderSocket();
-	void setTransportSession(TransportSession* trSession);
-	TransportSession& getSession(); //Temporario
 
-	void endSession();
+//	TransportSession& getSession(); //Temporario
 
 
+
+
+	/**
+	 * Provides an interface for source provider.
+	 * It could a wrapper to sound card or web can
+	 */
+	virtual int read(uint8* buffer, size_t bufferLen) = 0;
 
 };
 
@@ -46,5 +50,5 @@ public:
 	virtual void newEventData(uint8* buffer, size_t bufferLen) = 0;
 };
 }
-;
+
 #endif /* GSSCK_H_ */

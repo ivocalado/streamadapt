@@ -49,37 +49,50 @@ Facade* Facade::getInstance() {
 	return instance;
 }
 
-GenericSenderSocket* Facade::createSession(string localIP, int localport,
-		string targetIp, int targetPort, string pluginPath,
-		GenericReceiverSocket* listener, map<string, string> * additionalParams)
+SessionManager* Facade::createSession(string localIP, int localport,
+		string targetIp, int targetPort, GenericSenderSocket* sender,
+		GenericReceiverSocket* receiver, string pluginPath,
+		map<string, string> * additionalParams)
 		throw(CannotCreateSessionException, CannotLoadPolicyException) {
 
-	auto_ptr<PolicyConfigurationType> plugin = loadPolicy(pluginPath);
+	PolicyEngine* engine = 0;
+	SessionManager* session = 0;
 
-	infrastream::GenericSenderSocket* sender = new GenericSenderSocket;
+	try {
+		auto_ptr<PolicyConfigurationType> plugin = loadPolicy(pluginPath);
 
-//	PluginNegotiationPtrlIF* negotiation =
-//			InfraFactory::getInstance()->buildNegotiationSession(); TODO DESCOMENTAR
+		engine = new PolicyEngine;
 
-	TransportSession* trSession =
-			InfraFactory::getInstance()->buildTransportSession(0,
-					plugin, sender->getEngine(), targetIp, targetPort, localIP,
-					localport);
+		//	PluginNegotiationPtrlIF* negotiation =
+		//			InfraFactory::getInstance()->buildNegotiationSession(); TODO DESCOMENTAR
 
-	//StreamSession* ssession = InfraFactory::getInstance()
+		TransportSession* trSession =
+				InfraFactory::getInstance()->buildTransportSession(0, plugin,
+						*engine, targetIp, targetPort, localIP, localport);
 
-	//	trSession->addDestination(targetIp, targetPort);
+		//StreamSession* ssession = InfraFactory::getInstance()
 
-	sender->setTransportSession(trSession);
+		//	trSession->addDestination(targetIp, targetPort);
+		session = new SessionManager(sender, receiver, engine);
 
-	return sender;
+		session->setTransportSession(trSession);
+
+	} catch (...) {
+		if (engine) {
+			delete engine;
+			log_info("Exception on creating session. Deleting engine");
+		}
+		throw ;
+	}
+
+	return session;
 }
 
 auto_ptr<PolicyConfigurationType> Facade::loadPolicy(string policyPath)
-		throw(CannotLoadPolicyException) {
+throw(CannotLoadPolicyException) {
 	try {
 		return auto_ptr<PolicyConfigurationType> (adaptation_policy(
-				policyPath.c_str()));
+						policyPath.c_str()));
 	} catch (const xml_schema::exception& e) {
 		ostringstream s;
 		s << e;

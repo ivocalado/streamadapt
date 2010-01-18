@@ -8,35 +8,27 @@
 #include <gsck.h>
 
 namespace infrastream {
-PolicyEngine& GenericSenderSocket::getEngine() {
-	return engine;
-}
 
 GenericSenderSocket::GenericSenderSocket() {
 
 }
 
 GenericSenderSocket::~GenericSenderSocket() {
-	// TODO Auto-generated destructor stub
 }
 
-void GenericSenderSocket::setTransportSession(
-		TransportSession* trSession) {
-	this->trSession = trSession;
-	engine.addListener(trSession);
-}
+//void GenericSenderSocket::setTransportSession(
+//		TransportSession* trSession) {
+//	this->trSession = trSession;
+//	engine.addListener(trSession);
+//}
 
 void GenericSenderSocket::run() {
 
 	//TODO IMPLEMENTAR METODO RUN
 }
 
-void GenericSenderSocket::endSession() {
-	trSession->endSession();
-}
 
-TransportSession& GenericSenderSocket::getSession() {
-	return *trSession;
-}
+GenericReceiverSocket::GenericReceiverSocket() {}
+GenericReceiverSocket::~GenericReceiverSocket(){}
 
 }

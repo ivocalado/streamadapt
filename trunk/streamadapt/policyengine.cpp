@@ -62,65 +62,57 @@ bool PolicyEngine::unregisterProvider(EventType type) {
 	return true;
 }
 
-void PolicyEngine::run() {
-	updateData();
-}
-
 // This function MUST be called into a thread to updates
-void PolicyEngine::updateData() {
+void PolicyEngine::run() {
 
-	while (active) {
-		registers.sort();
-		timeout_t current = registers.front().getPeriod();
+	registers.sort();
+	timeout_t current = registers.front().getPeriod();
 
-		for (list<EventRegister>::iterator it = registers.begin(); it
-				!= registers.end(); it++) {
-			//			cout << "Timer: " << current << endl << "Sleepping..." << endl;
-			log_debug("Sleeping...");
-			Thread::sleep(current);
-			log_debug("Wake up!")
-			if (it->nextCicle(current)) {
-				log_info("new Event");
-				EventType eventType = it->getEventType();
-				PluginBase* plugin = providers[eventType];
+	for (list<EventRegister>::iterator it = registers.begin(); it
+			!= registers.end(); it++) {
+		//			cout << "Timer: " << current << endl << "Sleepping..." << endl;
+		log_debug("Sleeping...");
+		Thread::sleep(current);
+		log_debug("Wake up!")
+		if (it->nextCicle(current)) {
+			log_info("new Event");
+			EventType eventType = it->getEventType();
+			PluginBase* plugin = providers[eventType];
 
-				if (plugin) {
+			if (plugin) {
 
-					string s;
+				string s;
 
-					try {
-						s = plugin->retrievePluginInformation(
-								eventType.getName());
-						istringstream str(s); //OBJETIVO DESTA FUNCAO EH ATUALIZAR VALORES DE EVENT E DISPARAR EVENTOS CASO O VALOR CORRENTE SEJA DIFERENTE DO NOVO
-						double eventValue;
-						str >> eventValue;
-						if (str.fail()) {
-							log_error("Fail to update" + eventType.getName());
-							continue;
-						}
-
-						Event newEvent(eventType, eventValue);
-
-						set<Event>::iterator itEv =
-								currentValues.find(newEvent);
-						newEvent.setPayload(eventValue);
-						if (itEv == currentValues.end() || itEv->getPayload()
-								!= newEvent.getPayload()) {
-							currentValues.insert(*itEv);
-							fireEvent(*itEv);
-						} else
-							log_info("Event ignored");
-
-					} catch (OperationNotSupportedException) {
-						log_error("Problem launched in retrieve plugin information");
-						s = __default_value(eventType.getName());
-						for (set<Event>::iterator i = currentValues.begin(); i
-								!= currentValues.end(); i++)
-							if (i->getType().getName() == s) {
-								fireEvent(Event(eventType, i->getPayload()));
-								break;
-							}
+				try {
+					s = plugin->retrievePluginInformation(eventType.getName());
+					istringstream str(s); //OBJETIVO DESTA FUNCAO EH ATUALIZAR VALORES DE EVENT E DISPARAR EVENTOS CASO O VALOR CORRENTE SEJA DIFERENTE DO NOVO
+					double eventValue;
+					str >> eventValue;
+					if (str.fail()) {
+						log_error("Fail to update" + eventType.getName());
+						continue;
 					}
+
+					Event newEvent(eventType, eventValue);
+
+					set<Event>::iterator itEv = currentValues.find(newEvent);
+					newEvent.setPayload(eventValue);
+					if (itEv == currentValues.end() || itEv->getPayload()
+							!= newEvent.getPayload()) {
+						currentValues.insert(*itEv);
+						fireEvent(*itEv);
+					} else
+						log_info("Event ignored");
+
+				} catch (OperationNotSupportedException) {
+					log_error("Problem launched in retrieve plugin information");
+					s = __default_value(eventType.getName());
+					for (set<Event>::iterator i = currentValues.begin(); i
+							!= currentValues.end(); i++)
+						if (i->getType().getName() == s) {
+							fireEvent(Event(eventType, i->getPayload()));
+							break;
+						}
 				}
 			}
 		}

@@ -23,23 +23,17 @@ using namespace ost;
 #define __default_value(x) "__default_" + x
 namespace infrastream {
 
-class PolicyEngine : public Thread {
+class PolicyEngine {
 
 	map<EventType, set<Session*> > listeners; //will make glue with sessions
 	set<Event> currentValues; // will keep current values
 	map<EventType, PluginBase*> providers; // Will make the glue with the pluginBase
 	list<EventRegister> registers; //Will keep registers to update
 
-	bool active;
-
-	void updateData();
-
-protected:
-
-	void run();
 
 public:
 
+	void run();
 	/**
 	 * Retrieve the last event from type @eventType
 	 */

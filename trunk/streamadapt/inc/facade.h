@@ -8,8 +8,6 @@
 #ifndef FACADE_H_
 #define FACADE_H_
 
-
-
 #include <string>
 #include <map>
 #include <memory>
@@ -18,6 +16,7 @@
 #include "policy/policy.h"
 #include "logger/logger.h"
 #include "policyengine.h"
+#include "sessionmanager.h"
 
 using namespace std;
 using namespace AdaptationPolicy;
@@ -28,7 +27,8 @@ class Facade {
 	Facade();
 	Facade(const Facade&);
 	Facade& operator=(Facade&);
-	auto_ptr<PolicyConfigurationType> loadPolicy(string policyPath) throw(CannotLoadPolicyException);
+	auto_ptr<PolicyConfigurationType> loadPolicy(string policyPath)
+			throw(CannotLoadPolicyException);
 	PolicyEngine engine;
 
 public:
@@ -37,13 +37,13 @@ public:
 	static Facade* getInstance();
 	virtual ~Facade();
 
-	GenericSenderSocket* createSession(string localIP, int localport,
-			string targetIp, int targetPort, string pluginPath = "",
-			GenericReceiverSocket* listener = 0,
-			map<string, string> * additionalParams = 0) throw(CannotCreateSessionException, CannotLoadPolicyException);
+	SessionManager* createSession(string localIP, int localport,
+			string targetIp, int targetPort, GenericSenderSocket* sender,
+			GenericReceiverSocket* listener, string pluginPath = "", map<
+					string, string> * additionalParams = 0)
+			throw(CannotCreateSessionException, CannotLoadPolicyException);
 
 };
 }
-
 
 #endif /* FACADE_H_ */
