@@ -25,7 +25,7 @@ void XMPPNegotiation::initNegotiation(std::string localIp, int localPort,
 		server = new SimpleServer();
 		client = new SimpleClient("client_local@boom", "", this);
 	} else
-		client = new SimpleClient("client_remote@boom", "", this);
+		client = new SimpleClient("client_remote@boom", "", this, remoteIp, remotePort);
 
 	if (isServer)
 		server->start();
