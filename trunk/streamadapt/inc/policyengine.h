@@ -11,19 +11,32 @@
 #include <map>
 #include <set>
 #include <string>
+#include <list>
+#include <cc++/thread.h>
+
 #include "session.h"
 #include "plugins/pluginbase.h"
+#include "eventregister.h"
 
 using namespace std;
-
+using namespace ost;
 #define __default_value(x) "__default_" + x
 namespace infrastream {
 
-class PolicyEngine {
+class PolicyEngine : public Thread {
 
-	map<EventType, set<Session*> > listeners;
-	set<Event> currentValues;
-	map<EventType, PluginBase*> providers;
+	map<EventType, set<Session*> > listeners; //will make glue with sessions
+	set<Event> currentValues; // will keep current values
+	map<EventType, PluginBase*> providers; // Will make the glue with the pluginBase
+	list<EventRegister> registers; //Will keep registers to update
+
+	bool active;
+
+	void updateData();
+
+protected:
+
+	void run();
 
 public:
 
@@ -32,9 +45,7 @@ public:
 	 */
 	Event getLastEvent(EventType eventType);
 
-	void updateData();
-
-	void registerProvider(EventType type, PluginBase* plugin,
+	void registerProvider(EventType type, unsigned int updateTime, PluginBase* plugin,
 			Event defaultEvent) throw(InvalidPolicyException);
 
 	bool unregisterProvider(EventType type);

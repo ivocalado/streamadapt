@@ -23,6 +23,7 @@ GenericSenderSocket::~GenericSenderSocket() {
 void GenericSenderSocket::setTransportSession(
 		TransportSession* trSession) {
 	this->trSession = trSession;
+	engine.addListener(trSession);
 }
 
 void GenericSenderSocket::run() {

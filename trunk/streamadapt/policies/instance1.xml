@@ -23,9 +23,12 @@
             <simpleproperty key="SchedulingTimeout">10000</simpleproperty>
         </transport>
         <stream>
-            <video-codec>video-codec0</video-codec>
-            <audio-codec>audio-codec0</audio-codec>
-            <enable-adaptation>true</enable-adaptation>
+            <plugin-name>fdg</plugin-name>
+            <library-name>uyt</library-name>
+            <audio-transmission>
+                <codec-name>jh</codec-name>
+            </audio-transmission>
+            <enable-adaptation>false</enable-adaptation>            
         </stream>
     </startup-config>
     <adapt-config xmlns="">
@@ -44,7 +47,6 @@
                     <simpleproperty key="PayloadFormat">1</simpleproperty>
                 </lower>
             </policy>
-            
         </transport>
     </adapt-config>
 </adaptation-policy>

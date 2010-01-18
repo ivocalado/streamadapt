@@ -7,6 +7,7 @@ CPP_SRCS += \
 ../adaptationmanager.cpp \
 ../consoleappender.cpp \
 ../event.cpp \
+../eventregister.cpp \
 ../eventtype.cpp \
 ../facade.cpp \
 ../gsck.cpp \
@@ -26,6 +27,7 @@ OBJS += \
 ./adaptationmanager.o \
 ./consoleappender.o \
 ./event.o \
+./eventregister.o \
 ./eventtype.o \
 ./facade.o \
 ./gsck.o \
@@ -45,6 +47,7 @@ CPP_DEPS += \
 ./adaptationmanager.d \
 ./consoleappender.d \
 ./event.d \
+./eventregister.d \
 ./eventtype.d \
 ./facade.d \
 ./gsck.d \
@@ -65,7 +68,7 @@ CPP_DEPS += \
 %.o: ../%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler'
-	g++ -DDEBUG -I"/home/ivocalado/workspace/streamadapt/inc" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o"$@" "$<"
+	g++ -DDEBUG -I"/home/ivocalado/workspace/streamadapt/inc" -O3 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o"$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

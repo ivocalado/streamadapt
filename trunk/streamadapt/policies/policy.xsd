@@ -95,18 +95,83 @@ This property can be overhindden during infrastructure startup</xs:documentation
 						<xs:element name="stream">
 							<xs:complexType>
 								<xs:sequence>
-									<xs:element name="video-codec" type="xs:string"/>
-									<xs:element name="audio-codec" type="xs:string"/>
+									<xs:element name="plugin-name">
+										<xs:annotation>
+											<xs:documentation>This tag describes the plugin name to be used.
+</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:minLength value="1"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="library-name">
+										<xs:annotation>
+											<xs:documentation>Specifically, it is defined the shared library to handle transport-related things.
+This property can be overhindden during infrastructure startup</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:minLength value="1"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element minOccurs="0" name="library-directory">
+										<xs:annotation>
+											<xs:documentation>Defines the diretory to search. This value could ommited.</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:minLength value="1"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:choice>
+										<xs:element name="video-transmission">
+											<xs:complexType>
+												<xs:sequence>
+												<xs:element name="video-codec" type="xs:string"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="audio-transmission">
+											<xs:complexType>
+												<xs:sequence>
+												<xs:element name="codec-name">
+												<xs:simpleType>
+												<xs:restriction base="xs:string">
+												<xs:minLength value="1"/>
+												</xs:restriction>
+												</xs:simpleType>
+												</xs:element>
+												</xs:sequence>
+												<xs:attribute default="false"
+												name="enablePreprocessing" type="xs:boolean"/>
+												<xs:attribute default="false"
+												name="enableEchoCancellation" type="xs:boolean">
+												<xs:annotation>
+												<xs:documentation>Enable echo cancellation. It should be enabled in plugin. </xs:documentation>
+												</xs:annotation>
+												</xs:attribute>
+											</xs:complexType>
+										</xs:element>
+									</xs:choice>
 									<xs:element default="true" name="enable-adaptation"
 										type="xs:boolean"/>
-									<xs:element maxOccurs="unbounded" minOccurs="0" name="property"
-										type="ap:SimplePropertyType">
-										<xs:annotation>
-											<xs:documentation>These children will be used to define
-									specifics properties of the transport protocol
-								</xs:documentation>
-										</xs:annotation>
+									<xs:element minOccurs="0" name="provides">
+										<xs:complexType>
+											<xs:sequence maxOccurs="unbounded" minOccurs="1">
+												<xs:element name="provide" type="ap:ProviderType"/>
+											</xs:sequence>
+										</xs:complexType>
 									</xs:element>
+									<xs:choice maxOccurs="unbounded" minOccurs="0">
+										<xs:element name="complexproperty"
+											type="ap:ComplexPropertyType"/>
+										<xs:element name="simpleproperty"
+											type="ap:SimplePropertyType"/>
+									</xs:choice>
 								</xs:sequence>
 							</xs:complexType>
 						</xs:element>
@@ -116,6 +181,25 @@ This property can be overhindden during infrastructure startup</xs:documentation
 			<xs:element minOccurs="0" name="adapt-config">
 				<xs:complexType>
 					<xs:sequence>
+						<xs:element name="stream" minOccurs="0">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="adaptation-method">
+										<xs:annotation>
+											<xs:documentation>This node defines what adaptation-policy
+									node will be used</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:minLength value="0"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="policy" type="ap:PolicyType"
+										maxOccurs="unbounded" minOccurs="0"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
 						<xs:element name="transport" minOccurs="0">
 							<xs:complexType>
 								<xs:sequence>
@@ -285,6 +369,12 @@ This property can be overhindden during infrastructure startup</xs:documentation
 		<xs:simpleContent>
 			<xs:extension base="xs:string">
 				<xs:attribute name="default-value" type="xs:double" use="required"/>
+				<xs:attribute default="1000" name="update-time" type="xs:unsignedInt">
+					<xs:annotation>
+						<xs:documentation>This field should be informed to inform the infrastructure the update time in miliseconds needed for this information. 
+The default value is 1000 miliseconds</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
 			</xs:extension>
 		</xs:simpleContent>
 	</xs:complexType>

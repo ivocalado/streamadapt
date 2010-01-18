@@ -11,12 +11,12 @@ namespace infrastream {
 
 Session::Session(PluginNegotiationPtrlIF* negotiation)
 		throw(CannotCreateSessionException) {
-	if (negotiation)
+	/*if (negotiation)
 		this->negotiation = negotiation;
 	else {
 		log_error("Error on create session. A valid negotiation session is required");
 		throw CannotCreateSessionException("A negotiation object is required!");
-	}
+	}*/
 }
 
 Session::~Session() {

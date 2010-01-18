@@ -35,10 +35,59 @@ public:
 	// The silence flag indicates if the returned sound samples represent silence
 	// that may be suppressed.
 	virtual uint16 encode(int16 *sample_buf, uint16 nsamples, uint8 *payload,
-			uint16 payload_size, bool &silence) throw(OperationNotPerfomedException) = 0;
+			uint16 payload_size, bool &silence)
+			throw(OperationNotPerfomedException) = 0;
 
 	virtual uint16 decode(uint8 *payload, uint16 payload_size, int16 *pcm_buf,
 			uint16 pcm_buf_size) throw(OperationNotPerfomedException) = 0;
+
+	virtual uint16 getEncodingPtime(void) const = 0;
+
+	virtual uint16 getDecodingPtime(void) const = 0;
+
+	virtual uint16 getEncodingSampleRate(void) const
+			throw(OperationNotPerfomedException)= 0;
+
+	virtual uint16 getDecodingSampleRate(void) const
+			throw(OperationNotPerfomedException)= 0;
+
+	virtual uint16 getMaxPayloadSize(void) const = 0;
+
+	/**
+	 * Enable preprocessing step. If plugin doesn't support,
+	 * just return false. It throws an exception if the state
+	 * is invalid to make this operation
+	 */
+	virtual bool enablePreprocessing() throw (OperationNotPerfomedException) {
+		return false;
+	}
+
+	/**
+	 * disable preprocessing step. If plugin doesn't support,
+	 * just return false. It throws an exception if the state
+	 * is invalid to make this operation
+	 */
+	virtual bool disablePreprocessing() throw(OperationNotPerfomedException) {
+		return false;
+	}
+
+	/**
+	 * Enable echocancelling step. If plugin doesn't support,
+	 * just return false. It throws an exception if the state
+	 * is invalid to make this operation
+	 */
+	virtual bool enableEchoCancelling() throw(OperationNotPerfomedException) {
+		return false;
+	}
+
+	/**
+	 * Disable echocancelling step. If plugin doesn't support,
+	 * just return false. It throw an exception if the state
+	 * is invalid to make this operation
+	 */
+	virtual bool disableEchoCancelling() throw (OperationNotPerfomedException) {
+		return false;
+	}
 
 	virtual const char* getName() const = 0;
 

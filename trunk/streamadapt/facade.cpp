@@ -58,11 +58,11 @@ GenericSenderSocket* Facade::createSession(string localIP, int localport,
 
 	infrastream::GenericSenderSocket* sender = new GenericSenderSocket;
 
-	PluginNegotiationPtrlIF* negotiation =
-			InfraFactory::getInstance()->buildNegotiationSession();
+//	PluginNegotiationPtrlIF* negotiation =
+//			InfraFactory::getInstance()->buildNegotiationSession(); TODO DESCOMENTAR
 
 	TransportSession* trSession =
-			InfraFactory::getInstance()->buildTransportSession(negotiation,
+			InfraFactory::getInstance()->buildTransportSession(0,
 					plugin, sender->getEngine(), targetIp, targetPort, localIP,
 					localport);
 

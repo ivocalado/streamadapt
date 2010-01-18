@@ -45,7 +45,6 @@ StreamPluginFactory* PluginManager::findStreamFactory(string name) {
 		if ((*i)->getName() == name)
 			return *i;
 	return 0;
-	//return loadPlugin(name, STREAM_ADAPTOR); //TODO IMPLEMENT
 }
 
 NegotiationPtrlPluginFactory* PluginManager::findNegotiationProtocolFactory(
@@ -56,7 +55,6 @@ NegotiationPtrlPluginFactory* PluginManager::findNegotiationProtocolFactory(
 		if ((*i)->getName() == name)
 			return *i;
 	return 0;
-	//		return loadPlugin(name, NEGOTIATION_ADAPTOR);
 }
 
 TransportPluginFactory* PluginManager::findTransportFactory(string name) {
@@ -66,7 +64,6 @@ TransportPluginFactory* PluginManager::findTransportFactory(string name) {
 		if ((*i)->getName() == name)
 			return *i;
 	return 0;
-	//			return loadPlugin(name, TRANSPORT_ADAPTOR);
 }
 
 
