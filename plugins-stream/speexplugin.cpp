@@ -63,6 +63,17 @@ SpeexPlugin::~SpeexPlugin() {
 		destroyDecoder();
 }
 
+SpeexPlugin::SpeexMode SpeexPlugin::getMode(std::string modeName){
+	SpeexMode mode = INVALID_MODE;
+	if(modeName == "NarrowBand")
+		mode = MODE_NB;
+	else if(modeName == "WideBand")
+		mode = MODE_WB;
+	else if(modeName == "UltraWideBand")
+		mode = MODE_UWB;
+	return mode;
+}
+
 std::string SpeexPlugin::retrievePluginInformation(std::string info,
 		std::string subInfo) throw (OperationNotSupportedException,
 		OperationNotPerfomedException) {
@@ -258,12 +269,12 @@ std::string SpeexPlugin::retrievePluginInformation(std::string info,
 					&echosupressactive);
 			os << echosupressactive;
 			return os.str();
-		case __SPEEX_PREPROCESS_ECHO_STATE:
-			spx_int32_t echostate;
-			speex_preprocess_ctl(preprocess, SPEEX_PREPROCESS_GET_ECHO_STATE,
-					&echostate);
-			os << echostate;
-			return os.str();
+//		case __SPEEX_PREPROCESS_ECHO_STATE:  For now, it just disabled. Use enable/disable echo cancellation instead
+//			spx_int32_t echostate;
+//			speex_preprocess_ctl(preprocess, SPEEX_PREPROCESS_GET_ECHO_STATE,
+//					&echostate);
+//			os << echostate;
+//			return os.str();
 		default:
 			throw OperationNotSupportedException("Invalid Option in preprocess");
 
@@ -494,11 +505,15 @@ const char* SpeexPlugin::getName() const {
 	return "SpeexPlugin";
 }
 
-void SpeexPlugin::buildEncoder(SpeexMode mode)
+void SpeexPlugin::buildEncoder(std::string modeName)
 		throw(OperationNotPerfomedException) {
 	if (encoder)
 		throw OperationNotPerfomedException("The encoder already exists. "
 			"Please call endEncoder before perform this task");
+
+	SpeexMode mode = getMode(modeName);
+	if(mode == INVALID_MODE)
+		throw OperationNotPerfomedException("Invalid Mode");
 
 	encoder = new HalfCodec;
 	encoder->mode = mode;
@@ -516,11 +531,15 @@ void SpeexPlugin::buildEncoder(SpeexMode mode)
 		break;
 	};
 }
-void SpeexPlugin::buildDecoder(SpeexMode mode)
+void SpeexPlugin::buildDecoder(std::string modeName)
 		throw(OperationNotPerfomedException) {
 	if (decoder)
 		throw OperationNotPerfomedException("The decoder already exists. "
 			"Please call endDecoder before perform this task");
+
+	SpeexMode mode = getMode(modeName);
+	if(mode == INVALID_MODE)
+		throw OperationNotPerfomedException("Invalid Mode");
 
 	decoder = new HalfCodec;
 	decoder->mode = mode;
@@ -565,7 +584,7 @@ uint16 SpeexPlugin::encode(int16 *sample_buf, uint16 nsamples, uint8 *payload,
 		uint16 payload_size, bool &silence)
 		throw(OperationNotPerfomedException) {
 
-	if (payload_size < 1500)
+	if (payload_size < MAX_PAYLOAD_SIZE)
 		throw OperationNotPerfomedException("The buffer is not large enough");
 
 	if (!encoder)
@@ -609,8 +628,57 @@ uint16 SpeexPlugin::decode(uint8 *payload, uint16 payload_size, int16 *pcm_buf,
 	retval = speex_decode_int(decoder->state, &decoder->bits, pcm_buf);
 
 	if (retval < 0) {
-		throw OperationNotPerfomedException("Erro on decode frame");
+		throw OperationNotPerfomedException("Error on decode frame");
 	}
 
 	return speex_frame_size;
+}
+
+uint16 SpeexPlugin::getEncodingSampleRate() const
+		throw(OperationNotPerfomedException) {
+	if (!encoder)
+		throw OperationNotPerfomedException("Encoder not initialized");
+	spx_int32_t sample;
+	speex_encoder_ctl(encoder->state, SPEEX_GET_SAMPLING_RATE, &sample);
+	return sample;
+}
+
+uint16 SpeexPlugin::getDecodingSampleRate() const
+		throw(OperationNotPerfomedException) {
+	if (!decoder)
+		throw OperationNotPerfomedException("Decoder not initialized");
+	spx_int32_t sample;
+	speex_decoder_ctl(decoder->state, SPEEX_GET_SAMPLING_RATE, &sample);
+	return sample;
+}
+
+uint16 SpeexPlugin::getEncodingPtime() const {
+	return PTIME_SPEEX;
+}
+
+uint16 SpeexPlugin::getDecodingPtime() const {
+	return PTIME_SPEEX;
+}
+
+bool SpeexPlugin::enablePreprocessing() throw (OperationNotPerfomedException) {
+	if (!encoder)
+		throw OperationNotPerfomedException("Encoder not initialized");
+	uint16 sampleRate = getEncodingSampleRate();
+
+	this->preprocess = speex_preprocess_state_init(sampleRate / 1000 * getEncodingPtime(),
+			sampleRate);
+
+	return true;
+}
+
+bool SpeexPlugin::disablePreprocessing() throw(OperationNotPerfomedException) {
+	if(preprocess) {
+		speex_preprocess_state_destroy(preprocess);
+		return true;
+	}
+	return false;
+}
+
+uint16 SpeexPlugin::getMaxPayloadSize() const {
+	return MAX_PAYLOAD_SIZE;
 }

@@ -48,6 +48,9 @@ enum MessageType {
 
 };
 
+#define PTIME_SPEEX		20
+#define MAX_PAYLOAD_SIZE 1500
+
 
 #endif /* PLUGINDEFINITIONS_H_ */
 
