@@ -12,7 +12,6 @@
 #include <ostream>
 #include <helperfunctions.h>
 
-
 namespace infrastream {
 
 InfraFactory* InfraFactory::instance = 0;
@@ -27,8 +26,9 @@ PluginNegotiationPtrlIF* InfraFactory::buildNegotiationSession() {
 	return 0;
 }
 
-TransportSession* InfraFactory::buildTransportSession(PluginNegotiationPtrlIF* negotiation, auto_ptr<
-		PolicyConfigurationType> policyDesc, PolicyEngine& engine,
+TransportSession* InfraFactory::buildTransportSession(
+		PluginNegotiationPtrlIF* negotiation,
+		auto_ptr<PolicyConfigurationType> policyDesc, PolicyEngine& engine,
 		string targetIP, int targetPort, string serverIp, int serverPort)
 		throw(CannotCreateSessionException, InvalidPolicyException) {
 
@@ -51,7 +51,6 @@ TransportSession* InfraFactory::buildTransportSession(PluginNegotiationPtrlIF* n
 
 	bool useAdaptation = tProperties.enable_adaptation();
 
-
 	if (useAdaptation) {
 		if (policyDesc->adapt_config().present()
 				&& policyDesc->adapt_config().get().transport().present())
@@ -64,7 +63,6 @@ TransportSession* InfraFactory::buildTransportSession(PluginNegotiationPtrlIF* n
 		}
 		session->setPolicy(adapt);
 	}
-
 
 	bool useDirInfo = tProperties.library_directory().present();
 
@@ -101,7 +99,8 @@ TransportSession* InfraFactory::buildTransportSession(PluginNegotiationPtrlIF* n
 			EventType et(*provideIt);
 			EventType det(__default_value(*provideIt));
 			Event de(det, provideIt->default_value());
-			engine.registerProvider(et, plugin.get(), de);
+			unsigned int timestamp = provideIt->update_time();
+			engine.registerProvider(et, timestamp, plugin.get(), de);
 		}
 	}
 

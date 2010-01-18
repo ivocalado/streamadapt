@@ -243,13 +243,22 @@ namespace AdaptationPolicy
   class negotiation;
   class transport;
   class stream;
+  class stream1;
   class transport1;
   class protocol;
   class plugin_name;
   class library_name;
   class library_directory;
   class provides;
+  class plugin_name1;
+  class library_name1;
+  class library_directory1;
+  class video_transmission;
+  class audio_transmission;
+  class provides1;
   class adaptation_method;
+  class adaptation_method1;
+  class codec_name;
 }
 
 
@@ -760,6 +769,23 @@ namespace AdaptationPolicy
     void
     default_value (const default_value_type& x);
 
+    // update-time
+    // 
+    typedef ::xml_schema::unsigned_int update_time_type;
+    typedef ::xsd::cxx::tree::traits< update_time_type, char > update_time_traits;
+
+    const update_time_type&
+    update_time () const;
+
+    update_time_type&
+    update_time ();
+
+    void
+    update_time (const update_time_type& x);
+
+    static const update_time_type&
+    update_time_default_value ();
+
     // Constructors.
     //
     ProviderType (const default_value_type&);
@@ -797,6 +823,8 @@ namespace AdaptationPolicy
 
     protected:
     ::xsd::cxx::tree::one< default_value_type > default_value_;
+    ::xsd::cxx::tree::one< update_time_type > update_time_;
+    static const update_time_type update_time_default_value_;
   };
 
   class startup_config: public ::xml_schema::type
@@ -894,6 +922,27 @@ namespace AdaptationPolicy
   class adapt_config: public ::xml_schema::type
   {
     public:
+    // stream
+    // 
+    typedef ::AdaptationPolicy::stream1 stream_type;
+    typedef ::xsd::cxx::tree::optional< stream_type > stream_optional;
+    typedef ::xsd::cxx::tree::traits< stream_type, char > stream_traits;
+
+    const stream_optional&
+    stream () const;
+
+    stream_optional&
+    stream ();
+
+    void
+    stream (const stream_type& x);
+
+    void
+    stream (const stream_optional& x);
+
+    void
+    stream (::std::auto_ptr< stream_type > p);
+
     // transport
     // 
     typedef ::AdaptationPolicy::transport1 transport_type;
@@ -942,6 +991,7 @@ namespace AdaptationPolicy
            ::xml_schema::flags);
 
     protected:
+    stream_optional stream_;
     transport_optional transport_;
   };
 
@@ -1949,39 +1999,102 @@ namespace AdaptationPolicy
   class stream: public ::xml_schema::type
   {
     public:
-    // video-codec
+    // plugin-name
     // 
-    typedef ::xml_schema::string video_codec_type;
-    typedef ::xsd::cxx::tree::traits< video_codec_type, char > video_codec_traits;
+    typedef ::AdaptationPolicy::plugin_name1 plugin_name_type;
+    typedef ::xsd::cxx::tree::traits< plugin_name_type, char > plugin_name_traits;
 
-    const video_codec_type&
-    video_codec () const;
+    const plugin_name_type&
+    plugin_name () const;
 
-    video_codec_type&
-    video_codec ();
-
-    void
-    video_codec (const video_codec_type& x);
+    plugin_name_type&
+    plugin_name ();
 
     void
-    video_codec (::std::auto_ptr< video_codec_type > p);
+    plugin_name (const plugin_name_type& x);
 
-    // audio-codec
+    void
+    plugin_name (::std::auto_ptr< plugin_name_type > p);
+
+    // library-name
     // 
-    typedef ::xml_schema::string audio_codec_type;
-    typedef ::xsd::cxx::tree::traits< audio_codec_type, char > audio_codec_traits;
+    typedef ::AdaptationPolicy::library_name1 library_name_type;
+    typedef ::xsd::cxx::tree::traits< library_name_type, char > library_name_traits;
 
-    const audio_codec_type&
-    audio_codec () const;
+    const library_name_type&
+    library_name () const;
 
-    audio_codec_type&
-    audio_codec ();
-
-    void
-    audio_codec (const audio_codec_type& x);
+    library_name_type&
+    library_name ();
 
     void
-    audio_codec (::std::auto_ptr< audio_codec_type > p);
+    library_name (const library_name_type& x);
+
+    void
+    library_name (::std::auto_ptr< library_name_type > p);
+
+    // library-directory
+    // 
+    typedef ::AdaptationPolicy::library_directory1 library_directory_type;
+    typedef ::xsd::cxx::tree::optional< library_directory_type > library_directory_optional;
+    typedef ::xsd::cxx::tree::traits< library_directory_type, char > library_directory_traits;
+
+    const library_directory_optional&
+    library_directory () const;
+
+    library_directory_optional&
+    library_directory ();
+
+    void
+    library_directory (const library_directory_type& x);
+
+    void
+    library_directory (const library_directory_optional& x);
+
+    void
+    library_directory (::std::auto_ptr< library_directory_type > p);
+
+    // video-transmission
+    // 
+    typedef ::AdaptationPolicy::video_transmission video_transmission_type;
+    typedef ::xsd::cxx::tree::optional< video_transmission_type > video_transmission_optional;
+    typedef ::xsd::cxx::tree::traits< video_transmission_type, char > video_transmission_traits;
+
+    const video_transmission_optional&
+    video_transmission () const;
+
+    video_transmission_optional&
+    video_transmission ();
+
+    void
+    video_transmission (const video_transmission_type& x);
+
+    void
+    video_transmission (const video_transmission_optional& x);
+
+    void
+    video_transmission (::std::auto_ptr< video_transmission_type > p);
+
+    // audio-transmission
+    // 
+    typedef ::AdaptationPolicy::audio_transmission audio_transmission_type;
+    typedef ::xsd::cxx::tree::optional< audio_transmission_type > audio_transmission_optional;
+    typedef ::xsd::cxx::tree::traits< audio_transmission_type, char > audio_transmission_traits;
+
+    const audio_transmission_optional&
+    audio_transmission () const;
+
+    audio_transmission_optional&
+    audio_transmission ();
+
+    void
+    audio_transmission (const audio_transmission_type& x);
+
+    void
+    audio_transmission (const audio_transmission_optional& x);
+
+    void
+    audio_transmission (::std::auto_ptr< audio_transmission_type > p);
 
     // enable-adaptation
     // 
@@ -2000,27 +2113,65 @@ namespace AdaptationPolicy
     static const enable_adaptation_type&
     enable_adaptation_default_value ();
 
-    // property
+    // provides
     // 
-    typedef ::AdaptationPolicy::SimplePropertyType property_type;
-    typedef ::xsd::cxx::tree::sequence< property_type > property_sequence;
-    typedef property_sequence::iterator property_iterator;
-    typedef property_sequence::const_iterator property_const_iterator;
-    typedef ::xsd::cxx::tree::traits< property_type, char > property_traits;
+    typedef ::AdaptationPolicy::provides1 provides_type;
+    typedef ::xsd::cxx::tree::optional< provides_type > provides_optional;
+    typedef ::xsd::cxx::tree::traits< provides_type, char > provides_traits;
 
-    const property_sequence&
-    property () const;
+    const provides_optional&
+    provides () const;
 
-    property_sequence&
-    property ();
+    provides_optional&
+    provides ();
 
     void
-    property (const property_sequence& s);
+    provides (const provides_type& x);
+
+    void
+    provides (const provides_optional& x);
+
+    void
+    provides (::std::auto_ptr< provides_type > p);
+
+    // complexproperty
+    // 
+    typedef ::AdaptationPolicy::ComplexPropertyType complexproperty_type;
+    typedef ::xsd::cxx::tree::sequence< complexproperty_type > complexproperty_sequence;
+    typedef complexproperty_sequence::iterator complexproperty_iterator;
+    typedef complexproperty_sequence::const_iterator complexproperty_const_iterator;
+    typedef ::xsd::cxx::tree::traits< complexproperty_type, char > complexproperty_traits;
+
+    const complexproperty_sequence&
+    complexproperty () const;
+
+    complexproperty_sequence&
+    complexproperty ();
+
+    void
+    complexproperty (const complexproperty_sequence& s);
+
+    // simpleproperty
+    // 
+    typedef ::AdaptationPolicy::SimplePropertyType simpleproperty_type;
+    typedef ::xsd::cxx::tree::sequence< simpleproperty_type > simpleproperty_sequence;
+    typedef simpleproperty_sequence::iterator simpleproperty_iterator;
+    typedef simpleproperty_sequence::const_iterator simpleproperty_const_iterator;
+    typedef ::xsd::cxx::tree::traits< simpleproperty_type, char > simpleproperty_traits;
+
+    const simpleproperty_sequence&
+    simpleproperty () const;
+
+    simpleproperty_sequence&
+    simpleproperty ();
+
+    void
+    simpleproperty (const simpleproperty_sequence& s);
 
     // Constructors.
     //
-    stream (const video_codec_type&,
-            const audio_codec_type&,
+    stream (const plugin_name_type&,
+            const library_name_type&,
             const enable_adaptation_type&);
 
     stream (const ::xercesc::DOMElement& e,
@@ -2046,11 +2197,84 @@ namespace AdaptationPolicy
            ::xml_schema::flags);
 
     protected:
-    ::xsd::cxx::tree::one< video_codec_type > video_codec_;
-    ::xsd::cxx::tree::one< audio_codec_type > audio_codec_;
+    ::xsd::cxx::tree::one< plugin_name_type > plugin_name_;
+    ::xsd::cxx::tree::one< library_name_type > library_name_;
+    library_directory_optional library_directory_;
+    video_transmission_optional video_transmission_;
+    audio_transmission_optional audio_transmission_;
     ::xsd::cxx::tree::one< enable_adaptation_type > enable_adaptation_;
     static const enable_adaptation_type enable_adaptation_default_value_;
-    property_sequence property_;
+    provides_optional provides_;
+    complexproperty_sequence complexproperty_;
+    simpleproperty_sequence simpleproperty_;
+  };
+
+  class stream1: public ::xml_schema::type
+  {
+    public:
+    // adaptation-method
+    // 
+    typedef ::AdaptationPolicy::adaptation_method adaptation_method_type;
+    typedef ::xsd::cxx::tree::traits< adaptation_method_type, char > adaptation_method_traits;
+
+    const adaptation_method_type&
+    adaptation_method () const;
+
+    adaptation_method_type&
+    adaptation_method ();
+
+    void
+    adaptation_method (const adaptation_method_type& x);
+
+    void
+    adaptation_method (::std::auto_ptr< adaptation_method_type > p);
+
+    // policy
+    // 
+    typedef ::AdaptationPolicy::PolicyType policy_type;
+    typedef ::xsd::cxx::tree::sequence< policy_type > policy_sequence;
+    typedef policy_sequence::iterator policy_iterator;
+    typedef policy_sequence::const_iterator policy_const_iterator;
+    typedef ::xsd::cxx::tree::traits< policy_type, char > policy_traits;
+
+    const policy_sequence&
+    policy () const;
+
+    policy_sequence&
+    policy ();
+
+    void
+    policy (const policy_sequence& s);
+
+    // Constructors.
+    //
+    stream1 (const adaptation_method_type&);
+
+    stream1 (const ::xercesc::DOMElement& e,
+             ::xml_schema::flags f = 0,
+             ::xml_schema::container* c = 0);
+
+    stream1 (const stream1& x,
+             ::xml_schema::flags f = 0,
+             ::xml_schema::container* c = 0);
+
+    virtual stream1*
+    _clone (::xml_schema::flags f = 0,
+            ::xml_schema::container* c = 0) const;
+
+    virtual 
+    ~stream1 ();
+
+    // Implementation.
+    //
+    protected:
+    void
+    parse (::xsd::cxx::xml::dom::parser< char >&,
+           ::xml_schema::flags);
+
+    protected:
+    ::xsd::cxx::tree::one< adaptation_method_type > adaptation_method_;
+    policy_sequence policy_;
   };
 
   class transport1: public ::xml_schema::type
@@ -2058,7 +2282,7 @@ namespace AdaptationPolicy
     public:
     // adaptation-method
     // 
-    typedef ::AdaptationPolicy::adaptation_method adaptation_method_type;
+    typedef ::AdaptationPolicy::adaptation_method1 adaptation_method_type;
     typedef ::xsd::cxx::tree::traits< adaptation_method_type, char > adaptation_method_traits;
 
     const adaptation_method_type&
@@ -2323,6 +2547,308 @@ namespace AdaptationPolicy
     provide_sequence provide_;
   };
 
+  class plugin_name1: public ::xml_schema::string
+  {
+    public:
+    // Constructors.
+    //
+    plugin_name1 ();
+
+    plugin_name1 (const char*);
+
+    plugin_name1 (const ::std::string&);
+
+    plugin_name1 (const ::xml_schema::string&);
+
+    plugin_name1 (const ::xercesc::DOMElement& e,
+                  ::xml_schema::flags f = 0,
+                  ::xml_schema::container* c = 0);
+
+    plugin_name1 (const ::xercesc::DOMAttr& a,
+                  ::xml_schema::flags f = 0,
+                  ::xml_schema::container* c = 0);
+
+    plugin_name1 (const ::std::string& s,
+                  const ::xercesc::DOMElement* e,
+                  ::xml_schema::flags f = 0,
+                  ::xml_schema::container* c = 0);
+
+    plugin_name1 (const plugin_name1& x,
+                  ::xml_schema::flags f = 0,
+                  ::xml_schema::container* c = 0);
+
+    virtual plugin_name1*
+    _clone (::xml_schema::flags f = 0,
+            ::xml_schema::container* c = 0) const;
+
+    virtual 
+    ~plugin_name1 ();
+  };
+
+  class library_name1: public ::xml_schema::string
+  {
+    public:
+    // Constructors.
+    //
+    library_name1 ();
+
+    library_name1 (const char*);
+
+    library_name1 (const ::std::string&);
+
+    library_name1 (const ::xml_schema::string&);
+
+    library_name1 (const ::xercesc::DOMElement& e,
+                   ::xml_schema::flags f = 0,
+                   ::xml_schema::container* c = 0);
+
+    library_name1 (const ::xercesc::DOMAttr& a,
+                   ::xml_schema::flags f = 0,
+                   ::xml_schema::container* c = 0);
+
+    library_name1 (const ::std::string& s,
+                   const ::xercesc::DOMElement* e,
+                   ::xml_schema::flags f = 0,
+                   ::xml_schema::container* c = 0);
+
+    library_name1 (const library_name1& x,
+                   ::xml_schema::flags f = 0,
+                   ::xml_schema::container* c = 0);
+
+    virtual library_name1*
+    _clone (::xml_schema::flags f = 0,
+            ::xml_schema::container* c = 0) const;
+
+    virtual 
+    ~library_name1 ();
+  };
+
+  class library_directory1: public ::xml_schema::string
+  {
+    public:
+    // Constructors.
+    //
+    library_directory1 ();
+
+    library_directory1 (const char*);
+
+    library_directory1 (const ::std::string&);
+
+    library_directory1 (const ::xml_schema::string&);
+
+    library_directory1 (const ::xercesc::DOMElement& e,
+                        ::xml_schema::flags f = 0,
+                        ::xml_schema::container* c = 0);
+
+    library_directory1 (const ::xercesc::DOMAttr& a,
+                        ::xml_schema::flags f = 0,
+                        ::xml_schema::container* c = 0);
+
+    library_directory1 (const ::std::string& s,
+                        const ::xercesc::DOMElement* e,
+                        ::xml_schema::flags f = 0,
+                        ::xml_schema::container* c = 0);
+
+    library_directory1 (const library_directory1& x,
+                        ::xml_schema::flags f = 0,
+                        ::xml_schema::container* c = 0);
+
+    virtual library_directory1*
+    _clone (::xml_schema::flags f = 0,
+            ::xml_schema::container* c = 0) const;
+
+    virtual 
+    ~library_directory1 ();
+  };
+
+  class video_transmission: public ::xml_schema::type
+  {
+    public:
+    // video-codec
+    // 
+    typedef ::xml_schema::string video_codec_type;
+    typedef ::xsd::cxx::tree::traits< video_codec_type, char > video_codec_traits;
+
+    const video_codec_type&
+    video_codec () const;
+
+    video_codec_type&
+    video_codec ();
+
+    void
+    video_codec (const video_codec_type& x);
+
+    void
+    video_codec (::std::auto_ptr< video_codec_type > p);
+
+    // Constructors.
+    //
+    video_transmission (const video_codec_type&);
+
+    video_transmission (const ::xercesc::DOMElement& e,
+                        ::xml_schema::flags f = 0,
+                        ::xml_schema::container* c = 0);
+
+    video_transmission (const video_transmission& x,
+                        ::xml_schema::flags f = 0,
+                        ::xml_schema::container* c = 0);
+
+    virtual video_transmission*
+    _clone (::xml_schema::flags f = 0,
+            ::xml_schema::container* c = 0) const;
+
+    virtual 
+    ~video_transmission ();
+
+    // Implementation.
+    //
+    protected:
+    void
+    parse (::xsd::cxx::xml::dom::parser< char >&,
+           ::xml_schema::flags);
+
+    protected:
+    ::xsd::cxx::tree::one< video_codec_type > video_codec_;
+  };
+
+  class audio_transmission: public ::xml_schema::type
+  {
+    public:
+    // codec-name
+    // 
+    typedef ::AdaptationPolicy::codec_name codec_name_type;
+    typedef ::xsd::cxx::tree::traits< codec_name_type, char > codec_name_traits;
+
+    const codec_name_type&
+    codec_name () const;
+
+    codec_name_type&
+    codec_name ();
+
+    void
+    codec_name (const codec_name_type& x);
+
+    void
+    codec_name (::std::auto_ptr< codec_name_type > p);
+
+    // enablePreprocessing
+    // 
+    typedef ::xml_schema::boolean enablePreprocessing_type;
+    typedef ::xsd::cxx::tree::traits< enablePreprocessing_type, char > enablePreprocessing_traits;
+
+    const enablePreprocessing_type&
+    enablePreprocessing () const;
+
+    enablePreprocessing_type&
+    enablePreprocessing ();
+
+    void
+    enablePreprocessing (const enablePreprocessing_type& x);
+
+    static const enablePreprocessing_type&
+    enablePreprocessing_default_value ();
+
+    // enableEchoCancellation
+    // 
+    typedef ::xml_schema::boolean enableEchoCancellation_type;
+    typedef ::xsd::cxx::tree::traits< enableEchoCancellation_type, char > enableEchoCancellation_traits;
+
+    const enableEchoCancellation_type&
+    enableEchoCancellation () const;
+
+    enableEchoCancellation_type&
+    enableEchoCancellation ();
+
+    void
+    enableEchoCancellation (const enableEchoCancellation_type& x);
+
+    static const enableEchoCancellation_type&
+    enableEchoCancellation_default_value ();
+
+    // Constructors.
+    //
+    audio_transmission (const codec_name_type&);
+
+    audio_transmission (const ::xercesc::DOMElement& e,
+                        ::xml_schema::flags f = 0,
+                        ::xml_schema::container* c = 0);
+
+    audio_transmission (const audio_transmission& x,
+                        ::xml_schema::flags f = 0,
+                        ::xml_schema::container* c = 0);
+
+    virtual audio_transmission*
+    _clone (::xml_schema::flags f = 0,
+            ::xml_schema::container* c = 0) const;
+
+    virtual 
+    ~audio_transmission ();
+
+    // Implementation.
+    //
+    protected:
+    void
+    parse (::xsd::cxx::xml::dom::parser< char >&,
+           ::xml_schema::flags);
+
+    protected:
+    ::xsd::cxx::tree::one< codec_name_type > codec_name_;
+    ::xsd::cxx::tree::one< enablePreprocessing_type > enablePreprocessing_;
+    static const enablePreprocessing_type enablePreprocessing_default_value_;
+    ::xsd::cxx::tree::one< enableEchoCancellation_type > enableEchoCancellation_;
+    static const enableEchoCancellation_type enableEchoCancellation_default_value_;
+  };
+
+  class provides1: public ::xml_schema::type
+  {
+    public:
+    // provide
+    // 
+    typedef ::AdaptationPolicy::ProviderType provide_type;
+    typedef ::xsd::cxx::tree::sequence< provide_type > provide_sequence;
+    typedef provide_sequence::iterator provide_iterator;
+    typedef provide_sequence::const_iterator provide_const_iterator;
+    typedef ::xsd::cxx::tree::traits< provide_type, char > provide_traits;
+
+    const provide_sequence&
+    provide () const;
+
+    provide_sequence&
+    provide ();
+
+    void
+    provide (const provide_sequence& s);
+
+    // Constructors.
+    //
+    provides1 ();
+
+    provides1 (const ::xercesc::DOMElement& e,
+               ::xml_schema::flags f = 0,
+               ::xml_schema::container* c = 0);
+
+    provides1 (const provides1& x,
+               ::xml_schema::flags f = 0,
+               ::xml_schema::container* c = 0);
+
+    virtual provides1*
+    _clone (::xml_schema::flags f = 0,
+            ::xml_schema::container* c = 0) const;
+
+    virtual 
+    ~provides1 ();
+
+    // Implementation.
+    //
+    protected:
+    void
+    parse (::xsd::cxx::xml::dom::parser< char >&,
+           ::xml_schema::flags);
+
+    protected:
+    provide_sequence provide_;
+  };
+
   class adaptation_method: public ::xml_schema::string
   {
     public:
@@ -2359,6 +2885,82 @@ namespace AdaptationPolicy
 
     virtual 
     ~adaptation_method ();
+  };
+
+  class adaptation_method1: public ::xml_schema::string
+  {
+    public:
+    // Constructors.
+    //
+    adaptation_method1 ();
+
+    adaptation_method1 (const char*);
+
+    adaptation_method1 (const ::std::string&);
+
+    adaptation_method1 (const ::xml_schema::string&);
+
+    adaptation_method1 (const ::xercesc::DOMElement& e,
+                        ::xml_schema::flags f = 0,
+                        ::xml_schema::container* c = 0);
+
+    adaptation_method1 (const ::xercesc::DOMAttr& a,
+                        ::xml_schema::flags f = 0,
+                        ::xml_schema::container* c = 0);
+
+    adaptation_method1 (const ::std::string& s,
+                        const ::xercesc::DOMElement* e,
+                        ::xml_schema::flags f = 0,
+                        ::xml_schema::container* c = 0);
+
+    adaptation_method1 (const adaptation_method1& x,
+                        ::xml_schema::flags f = 0,
+                        ::xml_schema::container* c = 0);
+
+    virtual adaptation_method1*
+    _clone (::xml_schema::flags f = 0,
+            ::xml_schema::container* c = 0) const;
+
+    virtual 
+    ~adaptation_method1 ();
+  };
+
+  class codec_name: public ::xml_schema::string
+  {
+    public:
+    // Constructors.
+    //
+    codec_name ();
+
+    codec_name (const char*);
+
+    codec_name (const ::std::string&);
+
+    codec_name (const ::xml_schema::string&);
+
+    codec_name (const ::xercesc::DOMElement& e,
+                ::xml_schema::flags f = 0,
+                ::xml_schema::container* c = 0);
+
+    codec_name (const ::xercesc::DOMAttr& a,
+                ::xml_schema::flags f = 0,
+                ::xml_schema::container* c = 0);
+
+    codec_name (const ::std::string& s,
+                const ::xercesc::DOMElement* e,
+                ::xml_schema::flags f = 0,
+                ::xml_schema::container* c = 0);
+
+    codec_name (const codec_name& x,
+                ::xml_schema::flags f = 0,
+                ::xml_schema::container* c = 0);
+
+    virtual codec_name*
+    _clone (::xml_schema::flags f = 0,
+            ::xml_schema::container* c = 0) const;
+
+    virtual 
+    ~codec_name ();
   };
 }
 

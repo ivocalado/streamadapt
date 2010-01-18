@@ -11,7 +11,6 @@ namespace infrastream {
 
 AdaptationManager::AdaptationManager() {
 	// TODO Auto-generated constructor stub
-
 }
 
 AdaptationManager::~AdaptationManager() {
