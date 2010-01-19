@@ -12,13 +12,17 @@
 #include <string>
 #include "streamexceptions.h"
 #include <ccrtp/rtp.h>
+//#include <sessionmanager.h>
 #include "pluginbase.h"
+#include "connectionlistener.h"
 
 const std::string DEFAULT_HOST_ADDRESS = "127.0.0.1";
 const int DEFAULT_DATA_PORT = ost::DefaultRTPDataPort;
 
 class PluginTransportIF : public PluginBase {
+
 protected:
+//	infrastream::SessionManager* manager;
 	virtual void adaptTransport(
 			std::string paramName, std::map<std::string, std::string> &params) throw (OperationNotPerfomedException, OperationNotSupportedException) = 0; // Adicionar metodos padrao para adaptacao a nivel de transporte
 public:
@@ -26,7 +30,7 @@ public:
 			throw (OperationNotPerfomedException, OperationNotSupportedException) {
 		adaptTransport(paramName, params);
 	}
-	virtual void buildSession(std::string target = DEFAULT_HOST_ADDRESS, int port = DEFAULT_DATA_PORT)
+	virtual void buildSession(infrastream::ConnectionListener* manager, std::string target = DEFAULT_HOST_ADDRESS, int port = DEFAULT_DATA_PORT)
 			throw(CannotBindSocketException,
 			CannotCreateSocketException) = 0;
 

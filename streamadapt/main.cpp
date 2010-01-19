@@ -33,7 +33,8 @@ public:
 		//recebe dados para ser renderizado
 	}
 
-	virtual ~PlaybackDevice(){}
+	virtual ~PlaybackDevice() {
+	}
 };
 class Sender: public TimerPort {
 	BaseAncillaryData b;
@@ -45,7 +46,7 @@ public:
 
 		Facade* facade = Facade::getInstance();
 
-		SessionManager* sender = facade->createSession("", 0, ia, port,
+		SessionManager* sender = facade->createClientSession(ia, port,
 				new RecordDevice, new PlaybackDevice,
 				"/home/ivocalado/workspace/streamadapt/policies/instance1.xml",
 				0);

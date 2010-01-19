@@ -27,6 +27,10 @@ class InfraFactory {
 	static InfraFactory* instance;
 
 public:
+	enum SessionType {
+		SERVER_SESSION, CLIENT_SESSION
+	};
+
 	static InfraFactory* getInstance();
 
 	PluginNegotiationPtrlIF* buildNegotiationSession();
@@ -34,8 +38,8 @@ public:
 	TransportSession* buildTransportSession(
 			PluginNegotiationPtrlIF* negotiation, auto_ptr<
 					PolicyConfigurationType> policyDesc, PolicyEngine& engine,
-			string targetIP, int targetPort, string serverIp = "",
-			int serverPort = 0) throw(CannotCreateSessionException,
+			string ip, int port, InfraFactory::SessionType sessionType,
+			ConnectionListener* listener) throw(CannotCreateSessionException,
 			InvalidPolicyException);
 
 	virtual ~InfraFactory();
