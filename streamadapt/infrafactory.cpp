@@ -10,7 +10,6 @@
 #include <string>
 #include <map>
 #include <ostream>
-#include <helperfunctions.h>
 #include <adaptationjob.h>
 #include <jobmanager.h>
 

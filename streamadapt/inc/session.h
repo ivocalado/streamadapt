@@ -11,7 +11,6 @@
 #include "event.h"
 #include "eventtype.h"
 #include "logger/logger.h"
-#include "helperfunctions.h"
 #include "plugins/pluginnegotiation.h"
 #include "jobmanager.h"
 #include "adaptationjob.h"
