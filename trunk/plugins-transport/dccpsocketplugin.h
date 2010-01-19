@@ -14,7 +14,7 @@
 #include <map>
 #include <cstdlib>
 #include <ccrtp/rtp.h>
-
+#include <connectionlistener.h>
 #include "plugindefinitions.h"
 
 #ifdef  CCXX_NAMESPACES
@@ -23,6 +23,7 @@ using namespace std;
 #endif
 
 class DCCPSocketPlugin: public PluginTransportIF {
+	infrastream::ConnectionListener* listener;
 
 	class RTPDCCPS: public RTPDCCPSession {
 		DCCPSocketPlugin* caller;
@@ -126,8 +127,9 @@ public:
 			std::string> &params) throw (OperationNotPerfomedException,
 			OperationNotSupportedException);
 
-	void buildSession(string hostIp, int hostPort)
-			throw(CannotBindSocketException, CannotCreateSocketException);
+	void buildSession(infrastream::ConnectionListener* manager, string hostIp,
+			int hostPort) throw(CannotBindSocketException,
+			CannotCreateSocketException);
 
 	void addDestination(string target, int port)
 			throw(CannotConnectSocketException);
@@ -148,7 +150,8 @@ public:
 			throw (OperationNotPerfomedException);
 
 	string retrievePluginInformation(string info, std::string subInfo = "")
-			throw (OperationNotSupportedException, OperationNotPerfomedException);
+			throw (OperationNotSupportedException,
+			OperationNotPerfomedException);
 
 	void newRemoteConnection(const InetHostAddress& remoteIp, int remotePort);
 

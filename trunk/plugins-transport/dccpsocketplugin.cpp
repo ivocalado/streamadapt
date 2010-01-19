@@ -119,8 +119,9 @@ void DCCPSocketPlugin::adaptTransport(string paramName, std::map<std::string,
 
 }
 
-void DCCPSocketPlugin::buildSession(std::string hostIp, int hostPort)
-		throw(CannotBindSocketException, CannotCreateSocketException) {
+void DCCPSocketPlugin::buildSession(infrastream::ConnectionListener* manager,
+		std::string hostIp, int hostPort) throw(CannotBindSocketException,
+		CannotCreateSocketException) {
 	if (rtpSession)
 		throw CannotCreateSocketException(
 				"The session already exist. Please, end the current session before");
@@ -134,6 +135,8 @@ void DCCPSocketPlugin::buildSession(std::string hostIp, int hostPort)
 		}
 		throw CannotBindSocketException();
 	}
+
+	this->listener = manager;
 }
 
 void DCCPSocketPlugin::addDestination(std::string target, int port)
@@ -172,8 +175,9 @@ void DCCPSocketPlugin::sendImmediateData(uint32 stamp,
 }
 
 #include <stdio.h>
-string DCCPSocketPlugin::retrievePluginInformation(std::string info, std::string /*subInfo*/)
-		throw (OperationNotSupportedException, OperationNotPerfomedException) {
+string DCCPSocketPlugin::retrievePluginInformation(std::string info,
+		std::string /*subInfo*/) throw (OperationNotSupportedException,
+		OperationNotPerfomedException) {
 	log_info("DCCPSocketPlugin::retrievePluginInformation");
 	if (!rtpSession)
 		throw OperationNotPerfomedException();
@@ -255,5 +259,7 @@ void DCCPSocketPlugin::startSession() throw (OperationNotPerfomedException) {
 
 void DCCPSocketPlugin::newRemoteConnection(const InetHostAddress& remoteIp,
 		int remotePort) {
-	// TODO inform to upper level layers
+	if (listener)
+		this->listener->onNewRemoteConnection(remoteIp.getHostname(),
+				remotePort);
 }
