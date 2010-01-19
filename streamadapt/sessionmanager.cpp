@@ -11,34 +11,42 @@
 namespace infrastream {
 
 SessionManager::SessionManager(GenericSenderSocket* sender,
-		GenericReceiverSocket* receiver, PolicyEngine* engine) throw (CannotCreateSessionException) {
-	if(!sender && !receiver) {
+		GenericReceiverSocket* receiver, PolicyEngine* engine)
+		throw (CannotCreateSessionException) {
+	if (!sender && !receiver) {
 		log_error("Invalid session creating");
-		throw CannotCreateSessionException("At least one endpoint must be valid");
+		throw CannotCreateSessionException(
+				"At least one endpoint must be valid");
 	}
 
-	if(!engine) {
+	if (!engine) {
 		log_error("Strange! It shouldn't happen");
 		throw CannotCreateSessionException("The Policy engine MUST be valid");
 	}
 
-
 	this->sender = sender;
 	this->receiver = receiver;
 	this->engine = engine;
+
+	this->engineManager = ThreadManager<PolicyEngine> ("EngineManager", engine);
+
+	this->jobManager = ThreadManager<JobManager> ("JobManager",
+			JobManager::getInstance(), 50);
+
+	jobManager.enable();
+	engineManager.enable();
 }
 
 SessionManager::~SessionManager() {
 
 }
 
-void SessionManager::setTransportSession(
-		TransportSession* trSession) {
+void SessionManager::setTransportSession(TransportSession* trSession) {
 	this->trSession = trSession;
 	engine->addListener(trSession);
 }
 
-void SessionManager::endSession(){
+void SessionManager::endSession() {
 	log_error("Implementar finalizacao de sessao");
 }
 }
