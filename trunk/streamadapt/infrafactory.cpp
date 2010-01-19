@@ -30,7 +30,7 @@ PluginNegotiationPtrlIF* InfraFactory::buildNegotiationSession() {
 TransportSession* InfraFactory::buildTransportSession(
 		PluginNegotiationPtrlIF* negotiation,
 		auto_ptr<PolicyConfigurationType> policyDesc, PolicyEngine& engine,
-		string targetIP, int targetPort, string serverIp, int serverPort)
+		string ip, int port, InfraFactory::SessionType sessionType, ConnectionListener* listener)
 		throw(CannotCreateSessionException, InvalidPolicyException) {
 
 	startup_config::transport_type& tProperties =
@@ -78,20 +78,18 @@ TransportSession* InfraFactory::buildTransportSession(
 			"The protocols specified are different. Make your checks", log_warning);
 
 	try {
-		if (serverIp == "" || !serverPort)
-			plugin->buildSession();
-		else
-			plugin->buildSession(serverIp, serverPort);
+		if (sessionType == SERVER_SESSION) {
+			plugin->buildSession(listener, ip, port);
+		} else {
+			plugin->buildSession(listener);
+			plugin->addDestination(ip, port);
+			plugin->sendData(0); //Send a silent packet to open socket
+		}
 	} catch (...) {
 		delete session;
 		log_error("invalid Session");
 		throw CannotCreateSessionException();
 	}
-
-	plugin->addDestination(targetIP, targetPort);
-
-	plugin->sendData(0); //Send a silent packet to open socket
-
 
 	if (tProperties.provides().present()) {
 		startup_config::transport_type::provides_type::provide_iterator
@@ -108,7 +106,6 @@ TransportSession* InfraFactory::buildTransportSession(
 	JobManager::getInstance()->addJob(new AdaptationJob<
 			startup_config::transport_type, auto_ptr<PluginTransportIF> > (
 			tProperties, plugin));
-	//	configurePlugin(tProperties, plugin);
 
 	plugin->startSession();
 	session->setTSession(plugin);

@@ -49,10 +49,9 @@ Facade* Facade::getInstance() {
 	return instance;
 }
 
-SessionManager* Facade::createSession(string localIP, int localport,
-		string targetIp, int targetPort, GenericSenderSocket* sender,
-		GenericReceiverSocket* receiver, string pluginPath,
-		map<string, string> * additionalParams)
+SessionManager* Facade::createClientSession(string targetIp, int targetPort,
+		GenericSenderSocket* sender, GenericReceiverSocket* receiver,
+		string pluginPath, map<string, string> * additionalParams)
 		throw(CannotCreateSessionException, CannotLoadPolicyException) {
 
 	PolicyEngine* engine = 0;
@@ -65,15 +64,17 @@ SessionManager* Facade::createSession(string localIP, int localport,
 
 		//	PluginNegotiationPtrlIF* negotiation =
 		//			InfraFactory::getInstance()->buildNegotiationSession(); TODO DESCOMENTAR
+		session = new SessionManager(sender, receiver, engine);
+
 
 		TransportSession* trSession =
 				InfraFactory::getInstance()->buildTransportSession(0, plugin,
-						*engine, targetIp, targetPort, localIP, localport);
+						*engine, targetIp, targetPort, InfraFactory::CLIENT_SESSION, session);
 
 		//StreamSession* ssession = InfraFactory::getInstance()
 
 		//	trSession->addDestination(targetIp, targetPort);
-		session = new SessionManager(sender, receiver, engine);
+
 
 		session->setTransportSession(trSession);
 

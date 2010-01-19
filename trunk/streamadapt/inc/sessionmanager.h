@@ -13,10 +13,10 @@
 #include <cc++/thread.h>
 #include <string>
 #include "jobmanager.h"
-
+#include "connectionlistener.h"
 
 namespace infrastream {
-class SessionManager {
+class SessionManager : public ConnectionListener {
 	template<class T> class ThreadManager: public ost::Thread {
 		bool active;
 		bool invalidstate;
@@ -65,6 +65,10 @@ public:
 			throw (CannotCreateSessionException);
 
 	void setTransportSession(TransportSession* trSession);
+
+	void onNewRemoteConnection(std::string remoteIp, int port) {
+		log_debug("Nova conexao: "+ remoteIp);
+	}
 
 	virtual ~SessionManager();
 
