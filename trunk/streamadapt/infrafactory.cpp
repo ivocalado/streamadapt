@@ -11,6 +11,8 @@
 #include <map>
 #include <ostream>
 #include <helperfunctions.h>
+#include <adaptationjob.h>
+#include <jobmanager.h>
 
 namespace infrastream {
 
@@ -104,7 +106,10 @@ TransportSession* InfraFactory::buildTransportSession(
 		}
 	}
 
-	configurePlugin(tProperties, plugin);
+	JobManager::getInstance()->addJob(new AdaptationJob<
+			startup_config::transport_type, auto_ptr<PluginTransportIF> > (
+			tProperties, plugin));
+	//	configurePlugin(tProperties, plugin);
 
 	plugin->startSession();
 	session->setTSession(plugin);

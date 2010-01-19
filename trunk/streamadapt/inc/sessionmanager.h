@@ -12,6 +12,8 @@
 #include "policyengine.h"
 #include <cc++/thread.h>
 #include <string>
+#include "jobmanager.h"
+
 
 namespace infrastream {
 class SessionManager {
@@ -19,19 +21,23 @@ class SessionManager {
 		bool active;
 		bool invalidstate;
 		T* manager;
+		timeout_t latency;
 	protected:
 		void run() {
-			while (active)
+			while (active) {
 				manager->run();
+				Thread::sleep(latency);
+			}
 		}
 	public:
 		ThreadManager() :
 			active(false), invalidstate(true) {
 		}
 
-		ThreadManager(std::string managerName) :
-			active(false), invalidstate(false) {
+		ThreadManager(std::string managerName, T* manager, timeout_t l = 0) :
+			active(false), invalidstate(false), latency(l) {
 			this->setName(managerName.c_str());
+			this->manager = manager;
 		}
 
 		bool enable() {
@@ -41,7 +47,7 @@ class SessionManager {
 			if (Thread::start())
 				throw CannotCreateSessionException(
 						"Error on start thread session");
-
+			return active;
 		}
 
 		bool disable() {
@@ -72,6 +78,7 @@ private:
 	GenericSenderSocket* sender;
 	GenericReceiverSocket* receiver;
 	ThreadManager<PolicyEngine> engineManager;
+	ThreadManager<JobManager> jobManager;
 };
 }
 #endif /* SESSIONMANAGER_H_ */

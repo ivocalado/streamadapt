@@ -12,6 +12,7 @@ CPP_SRCS += \
 ../facade.cpp \
 ../gsck.cpp \
 ../infrafactory.cpp \
+../jobmanager.cpp \
 ../logger.cpp \
 ../loggingappender.cpp \
 ../main.cpp \
@@ -33,6 +34,7 @@ OBJS += \
 ./facade.o \
 ./gsck.o \
 ./infrafactory.o \
+./jobmanager.o \
 ./logger.o \
 ./loggingappender.o \
 ./main.o \
@@ -54,6 +56,7 @@ CPP_DEPS += \
 ./facade.d \
 ./gsck.d \
 ./infrafactory.d \
+./jobmanager.d \
 ./logger.d \
 ./loggingappender.d \
 ./main.d \
