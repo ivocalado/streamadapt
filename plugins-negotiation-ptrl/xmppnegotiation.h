@@ -4,10 +4,10 @@
 #include <gloox/messagehandler.h>
 #include <gloox/taghandler.h>
 #include <gloox/iqhandler.h>
+#include <gloox/tag.h>
 #include <stdio.h>
 #include <iostream>
 #include "message.h"
-//#include "xmppnegotiation.h"
 #include <cc++/thread.h>
 
 using namespace gloox;
@@ -45,20 +45,22 @@ private:
 #ifndef XMPPNEGOTIATION_H_
 #define XMPPNEGOTIATION_H_
 
-#include <plugins/pluginnegotiation.h>
-#include <infraexceptions.h>
-#include "simpleserver.h"
-//#include "simpleclient.h"
+#include "../streamadapt/inc/plugins/pluginnegotiation.h"
+#include "../streamadapt/inc/infraexceptions.h"
+//#include "simpleserver.h"
 
 #include <string>
 #include <map>
+#include <list>
 
 class XMPPNegotiation: public PluginNegotiationPtrlIF {
 
 private:
 	bool isServer;
 	SimpleClient* client;
-	SimpleServer* server;
+	//SimpleServer* server;
+	map<PluginBase*, list<std::string> > pluginsListeners;
+	map<std::string, std::string> attHasSuport;
 
 public:
 	XMPPNegotiation();
@@ -67,7 +69,13 @@ public:
 	virtual void initNegotiation(std::string localIp, int localPort,
 			std::string remoteIp, int remotePort, std::map<std::string,
 					std::string>* params = 0) throw (OperationNotPerfomedException);
+
+	void addPluginListener(PluginBase* plugin, list<std::string> attributes);
+	void removePluginListener(const char* namePlugin);
+
 	virtual void shutdownNegotiation();
+	void updateAttrHasSuport(map<std::string, std::string> attr);
+	map<std::string, std::string> getAttrHasSuport();
 
 	virtual void notifyAdaptation(std::string paramName, std::map<std::string,
 			std::string>& params);
