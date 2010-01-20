@@ -9,7 +9,6 @@
 
 namespace infralog {
 LoggingAppender::LoggingAppender() {
-	// TODO Auto-generated constructor stub
 
 }
 
