@@ -1,10 +1,3 @@
-/*
- * XMPPNegotiation.cpp
- *
- *  Created on: 13/01/2010
- *      Author: heverton
- */
-
 #include "xmppnegotiation.h"
 
 XMPPNegotiation::XMPPNegotiation() {
@@ -13,7 +6,7 @@ XMPPNegotiation::XMPPNegotiation() {
 
 XMPPNegotiation::~XMPPNegotiation() {
 	delete client;
-	delete server;
+	//delete server;
 }
 
 void XMPPNegotiation::initNegotiation(std::string localIp, int localPort,
@@ -22,19 +15,42 @@ void XMPPNegotiation::initNegotiation(std::string localIp, int localPort,
 		throw (OperationNotPerfomedException) {
 	if ((*params)["server"] == "yes") {
 		isServer = true;
-		server = new SimpleServer();
+		//server = new SimpleServer();
 		client = new SimpleClient("client_local@boom", "", this);
 	} else
-		client = new SimpleClient("client_remote@boom", "", this, remoteIp, remotePort);
+		client = new SimpleClient("client_remote@boom", "", this, remoteIp,
+				remotePort);
 
 	if (isServer)
-		server->start();
-	client->start();
+		//server->start();
+		client->start();
 }
 
 void XMPPNegotiation::shutdownNegotiation() {
 	//server->stop();
 	client->logout();
+}
+
+void XMPPNegotiation::updateAttrHasSuport(map<std::string, std::string> attr) {
+	attHasSuport = attr;
+}
+
+map<std::string, std::string> XMPPNegotiation::getAttrHasSuport() {
+	return attHasSuport;
+}
+
+void XMPPNegotiation::addPluginListener(PluginBase* plugin, list<std::string> attributes) {
+	pluginsListeners[plugin] = attributes;
+}
+
+void XMPPNegotiation::removePluginListener(const char* namePlugin) {
+	for(map<PluginBase*, list<std::string> >::iterator it = pluginsListeners.begin() ; it != pluginsListeners.end(); it++) {
+		//TODO VERFICAR ESSA PARTE QUE FAZ ACESSO AO MAPA PARA REMOVER O PLUGIN
+		if (it->first->getName() == namePlugin) {
+			pluginsListeners.erase(it->first);
+			break;
+		}
+	}
 }
 
 void XMPPNegotiation::notifyAdaptation(std::string paramName, std::map<
@@ -51,11 +67,11 @@ std::string XMPPNegotiation::retrievePluginInformation(std::string info,
 
 }
 
-//#include "simpleclient.h"
 #include <gloox/message.h>
 #include <gloox/gloox.h>
 #include <gloox/client.h>
 #include <gloox/messagehandler.h>
+#include <gloox/tag.h>
 #include <stdio.h>
 #include <iostream>
 #include <gloox/stanza.h>
@@ -113,18 +129,24 @@ void SimpleClient::handleTag(Tag *tag) {
 }
 
 void SimpleClient::newHasSupportEvent(Tag* tag) {
-	//xmppNegotiation->hasSuport();
+	list<Tag::Attribute*> listAttr = tag->attributes();
+	map<std::string, std::string> mapAttr;
+	for(list<Tag::Attribute*>::iterator it = listAttr.begin(); it != listAttr.end(); it++){
+		//mapAttr[*it->name()] = *it->value();
+		*it->name();
+	}
+
+	xmppNegotiation->updateAttrHasSuport(mapAttr);
 }
 
 void SimpleClient::newIqEvent(Tag* tag) {
 	std::string typeIq = tag->findAttribute(MessageConstants::IQ_ID_TYPE);
-if(atoi(typeIq.c_str()) == MessageConstants::RESULT)
-printf("asd");
-//else if (atoi(typeIq.c_str()) == MessageConstants::RETRIVE)
-//xmppNegotiation->retrievePluginInformation("info", "subinfo");
-//else
-//xmppNegotiation->notifyAdaptation("paramName", map<std::string,
-//		std::string> params);
+	if (atoi(typeIq.c_str()) == MessageConstants::RESULT)
+		printf("asd");
+	//else if (atoi(typeIq.c_str()) == MessageConstants::RETRIVE)
+	//xmppNegotiation->retrievePluginInformation("info", "subinfo");
+	//else
+	//xmppNegotiation->notifyAdaptation("paramName", map<std::string,
+	//		std::string> params);
 
 }
-
