@@ -83,13 +83,12 @@ void SimpleClient::newIqEvent(Tag* tag) {
 }
 
 //Class XMPPNegotiation
-XMPPNegotiation::XMPPNegotiation(const char* name) {
-	this->name = name;
+XMPPNegotiation::XMPPNegotiation() {
 }
 
 XMPPNegotiation::~XMPPNegotiation() {
 	delete client;
-	//delete server;
+	delete server;
 }
 
 void XMPPNegotiation::initNegotiation(std::string localIp, int localPort,
@@ -98,14 +97,14 @@ void XMPPNegotiation::initNegotiation(std::string localIp, int localPort,
 		throw (OperationNotPerfomedException) {
 	if ((*params)["server"] == "yes") {
 		isServer = true;
-		//server = new SimpleServer();
+		server = new SimpleServer();
 		client = new SimpleClient("client_local@boom", "", this);
 	} else
 		client = new SimpleClient("client_remote@boom", "", this, remoteIp,
 				remotePort);
 
 	if (isServer)
-		//server->start();
+		server->start();
 		client->start();
 }
 
@@ -127,11 +126,11 @@ void XMPPNegotiation::addPluginListener(PluginBase* plugin,
 	pluginsListeners[plugin] = attributes;
 }
 
-void XMPPNegotiation::removePluginListener(const char* namePlugin) {
+void XMPPNegotiation::removePluginListener(PluginBase* plugin) {
 	for (map<PluginBase*, list<std::string> >::iterator it =
 			pluginsListeners.begin(); it != pluginsListeners.end(); it++) {
 		//TODO VERFICAR ESSA PARTE QUE FAZ ACESSO AO MAPA PARA REMOVER O PLUGIN DE ACORDO COM O NOME DADO
-		if (it->first->getName() == namePlugin) {
+		if (it->first == plugin) {
 			pluginsListeners.erase(it->first);
 			break;
 		}
