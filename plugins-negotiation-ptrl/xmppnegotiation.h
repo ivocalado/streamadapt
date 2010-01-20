@@ -138,7 +138,8 @@ public:
 	 */
 	virtual void initNegotiation(std::string localIp, int localPort,
 			std::string remoteIp, int remotePort, std::map<std::string,
-					std::string>* params = 0) throw (OperationNotPerfomedException);
+					std::string>* params = 0)
+			throw (OperationNotPerfomedException);
 
 	/**
 	 * Metodo que cadastram plugins interessador a uma lista de atributos.
@@ -168,6 +169,8 @@ public:
 	 * Metodo que informa o mapa de atributos e valores suportados pela entidade remota.
 	 */
 	map<std::string, std::string> getAttrHasSuport();
+
+	void assignResponsibleMessageToPlugin(map<std::string, std::string> param);
 
 	/**
 	 * Metodo que realiza a acao de recebimento de modificaco de adaptacao.
