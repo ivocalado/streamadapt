@@ -93,7 +93,7 @@ private:
 
 #include "../streamadapt/inc/plugins/pluginnegotiation.h"
 #include "../streamadapt/inc/infraexceptions.h"
-//#include "simpleserver.h"
+#include "simpleserver.h"
 
 #include <string>
 #include <map>
@@ -119,9 +119,8 @@ public:
 
 	/**
 	 * Metodo construtor da classe XMPPNegotiation
-	 * @param name nome dado ao plugin
 	 */
-	XMPPNegotiation(const char* name);
+	XMPPNegotiation();
 
 	/**
 	 * Metodo destrutor
@@ -152,7 +151,7 @@ public:
 	 * Metodo que remove um plugin jah cadastrado
 	 * @param namePlugin nome do plugin a ser retirado
 	 */
-	void removePluginListener(const char* namePlugin);
+	void removePluginListener(PluginBase* plugin);
 
 	/**
 	 * Metodo que encerra a negociacao entre cliente/servidor XMPP.
