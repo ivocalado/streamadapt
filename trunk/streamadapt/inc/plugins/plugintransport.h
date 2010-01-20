@@ -30,7 +30,7 @@ public:
 			throw (OperationNotPerfomedException, OperationNotSupportedException) {
 		adaptTransport(paramName, params);
 	}
-	virtual void buildSession(infrastream::ConnectionListener* manager, std::string target = DEFAULT_HOST_ADDRESS, int port = DEFAULT_DATA_PORT)
+	virtual void buildSession(std::string target = DEFAULT_HOST_ADDRESS, int port = DEFAULT_DATA_PORT, infrastream::ConnectionListener* manager = 0)
 			throw(CannotBindSocketException,
 			CannotCreateSocketException) = 0;
 

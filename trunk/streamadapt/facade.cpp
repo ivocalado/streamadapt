@@ -66,17 +66,20 @@ SessionManager* Facade::createClientSession(string targetIp, int targetPort,
 		//			InfraFactory::getInstance()->buildNegotiationSession(); TODO DESCOMENTAR
 		session = new SessionManager(sender, receiver, engine);
 
-
 		TransportSession* trSession =
 				InfraFactory::getInstance()->buildTransportSession(0, plugin,
-						*engine, targetIp, targetPort, InfraFactory::CLIENT_SESSION, session);
+						*engine, targetIp, targetPort,
+						InfraFactory::CLIENT_SESSION, session);
 
 		//StreamSession* ssession = InfraFactory::getInstance()
 
-		//	trSession->addDestination(targetIp, targetPort);
 
 
 		session->setTransportSession(trSession);
+
+
+
+		session->startSession();
 
 	} catch (...) {
 		if (engine) {
@@ -87,6 +90,46 @@ SessionManager* Facade::createClientSession(string targetIp, int targetPort,
 	}
 
 	return session;
+}
+
+SessionManager* Facade::createServerSession(string localIP, int localport,
+		GenericSenderSocket* sender, GenericReceiverSocket* receiver,
+		string pluginPath, map<string, string> * additionalParams)
+throw(CannotCreateSessionException, CannotLoadPolicyException) {
+	PolicyEngine* engine = 0;
+		SessionManager* session = 0;
+
+		try {
+			auto_ptr<PolicyConfigurationType> plugin = loadPolicy(pluginPath);
+
+
+			engine = new PolicyEngine;
+//
+//			//	PluginNegotiationPtrlIF* negotiation =
+//			//			InfraFactory::getInstance()->buildNegotiationSession(); TODO DESCOMENTAR
+			session = new SessionManager(sender, receiver, engine);
+//
+			TransportSession* trSession =
+					InfraFactory::getInstance()->buildTransportSession(0, plugin,
+							*engine, localIP, localport,
+							InfraFactory::SERVER_SESSION, session);
+//
+//			//StreamSession* ssession = InfraFactory::getInstance()
+//
+//
+//
+			session->setTransportSession(trSession);
+
+		} catch (...) {
+			if (engine) {
+				delete engine;
+				log_info("Exception on creating session. Deleting engine");
+			}
+			throw ;
+		}
+
+		return session;
+
 }
 
 auto_ptr<PolicyConfigurationType> Facade::loadPolicy(string policyPath)

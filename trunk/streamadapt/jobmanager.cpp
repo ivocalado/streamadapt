@@ -27,15 +27,25 @@ JobManager::~JobManager() {
 
 void JobManager::run() {
 	while(jobs.size()) {
+		jobs.readLock();
 		AbstractJob* job = jobs.front();
+		jobs.unlock();
 		job->executeJob();
+		jobs.writeLock();
 		jobs.pop_front();
+		jobs.unlock();
 		delete job;
 	}
 }
 
 void JobManager::addJob(AbstractJob* newJob) {
+	jobs.writeLock();
 	jobs.push_back(newJob);
+	jobs.unlock();
+}
+
+void JobManager::endSession() {
+
 }
 
 }

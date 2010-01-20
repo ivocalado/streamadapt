@@ -39,7 +39,7 @@ public:
 			PluginNegotiationPtrlIF* negotiation, auto_ptr<
 					PolicyConfigurationType> policyDesc, PolicyEngine& engine,
 			string ip, int port, InfraFactory::SessionType sessionType,
-			ConnectionListener* listener) throw(CannotCreateSessionException,
+			ConnectionListener* listener = 0) throw(CannotCreateSessionException,
 			InvalidPolicyException);
 
 	virtual ~InfraFactory();

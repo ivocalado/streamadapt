@@ -50,6 +50,8 @@ public:
 
 	PolicyEngine();
 	virtual ~PolicyEngine();
+
+	void endSession();
 };
 
 }

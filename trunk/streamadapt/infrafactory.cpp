@@ -79,9 +79,9 @@ TransportSession* InfraFactory::buildTransportSession(
 
 	try {
 		if (sessionType == SERVER_SESSION) {
-			plugin->buildSession(listener, ip, port);
+			plugin->buildSession(ip, port, listener);
 		} else {
-			plugin->buildSession(listener);
+			plugin->buildSession();
 			plugin->addDestination(ip, port);
 			plugin->sendData(0); //Send a silent packet to open socket
 		}

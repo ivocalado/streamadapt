@@ -143,4 +143,6 @@ Event PolicyEngine::getLastEvent(EventType type) {
 	return default_event;
 }
 
+void PolicyEngine::endSession() {}
+
 }

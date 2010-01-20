@@ -14,9 +14,34 @@
 #include <string>
 #include "jobmanager.h"
 #include "connectionlistener.h"
+#include "trpsession.h"
 
 namespace infrastream {
-class SessionManager : public ConnectionListener {
+
+class ReceiverManager {
+	GenericReceiverSocket& receiver;
+public:
+	ReceiverManager(GenericReceiverSocket& receiver);
+
+	void run();
+
+	void endSession();
+};
+
+class SenderManager {
+	GenericSenderSocket& sender;
+public:
+	SenderManager(GenericSenderSocket& sender);
+
+	void run();
+
+	void endSession();
+};
+
+class SessionManager: public ConnectionListener {
+
+
+
 	template<class T> class ThreadManager: public ost::Thread {
 		bool active;
 		bool invalidstate;
@@ -54,9 +79,11 @@ class SessionManager : public ConnectionListener {
 			if (invalidstate)
 				false;
 			Thread::exit();
+			manager->endSession();
 			return true;
 		}
 	};
+
 
 public:
 	// for full-transmission it is both parameters isn't null
@@ -68,9 +95,12 @@ public:
 
 	void onNewRemoteConnection(std::string remoteIp, int port) {
 		log_debug("Nova conexao: "+ remoteIp);
+		startSession();
 	}
 
 	virtual ~SessionManager();
+
+	void startSession();
 
 	void endSession();
 
@@ -78,11 +108,18 @@ private:
 
 	PolicyEngine* engine;
 	TransportSession* trSession;
-
 	GenericSenderSocket* sender;
 	GenericReceiverSocket* receiver;
+
+	ReceiverManager* recv;
+	SenderManager* send;
+
+
 	ThreadManager<PolicyEngine> engineManager;
 	ThreadManager<JobManager> jobManager;
+	ThreadManager<ReceiverManager> receiverManager;
+	ThreadManager<SenderManager> senderManager;
+
 };
 }
 #endif /* SESSIONMANAGER_H_ */

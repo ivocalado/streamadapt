@@ -15,7 +15,6 @@ CPP_SRCS += \
 ../jobmanager.cpp \
 ../logger.cpp \
 ../loggingappender.cpp \
-../main.cpp \
 ../pluginbase.cpp \
 ../pluginsfactory.cpp \
 ../policy.cpp \
@@ -37,7 +36,6 @@ OBJS += \
 ./jobmanager.o \
 ./logger.o \
 ./loggingappender.o \
-./main.o \
 ./pluginbase.o \
 ./pluginsfactory.o \
 ./policy.o \
@@ -59,7 +57,6 @@ CPP_DEPS += \
 ./jobmanager.d \
 ./logger.d \
 ./loggingappender.d \
-./main.d \
 ./pluginbase.d \
 ./pluginsfactory.d \
 ./policy.d \
@@ -74,7 +71,7 @@ CPP_DEPS += \
 %.o: ../%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler'
-	g++ -DDEBUG -I"/home/ivocalado/workspace/streamadapt/inc" -O3 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o"$@" "$<"
+	g++ -DDEBUG -I"/home/ivocalado/workspace/streamadapt/inc" -O3 -g3 -Wall -c -fmessage-length=0 -fPIC -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o"$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

@@ -8,19 +8,14 @@
 #ifndef GSSCK_H_
 #define GSSCK_H_
 #include <cc++/config.h>
-#include <cc++/thread.h>
-#include <memory>
-#include "trpsession.h"
-#include "policyengine.h"
 
 using namespace std;
 namespace infrastream {
-class GenericSenderSocket : public ost::Thread {
+class GenericSenderSocket {
 
 
-protected:
-	virtual void run();
 public:
+
 //	PolicyEngine& getEngine();
 	GenericSenderSocket();
 	virtual ~GenericSenderSocket();
