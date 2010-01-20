@@ -64,7 +64,8 @@ void SimpleClient::handleTag(Tag *tag) {
 void SimpleClient::newHasSupportEvent(Tag* tag) {
 	list<Tag::Attribute*> listAttr = tag->attributes();
 	map<std::string, std::string> mapAttr;
-	for(list<Tag::Attribute*>::iterator it = listAttr.begin(); it != listAttr.end(); it++)
+	for (list<Tag::Attribute*>::iterator it = listAttr.begin(); it
+			!= listAttr.end(); it++)
 		mapAttr[(*it)->name()] = (*it)->value();
 	xmppNegotiation->updateAttrHasSuport(mapAttr);
 }
@@ -121,17 +122,35 @@ map<std::string, std::string> XMPPNegotiation::getAttrHasSuport() {
 	return attHasSuport;
 }
 
-void XMPPNegotiation::addPluginListener(PluginBase* plugin, list<std::string> attributes) {
+void XMPPNegotiation::addPluginListener(PluginBase* plugin,
+		list<std::string> attributes) {
 	pluginsListeners[plugin] = attributes;
 }
 
 void XMPPNegotiation::removePluginListener(const char* namePlugin) {
-	for(map<PluginBase*, list<std::string> >::iterator it = pluginsListeners.begin() ; it != pluginsListeners.end(); it++) {
+	for (map<PluginBase*, list<std::string> >::iterator it =
+			pluginsListeners.begin(); it != pluginsListeners.end(); it++) {
 		//TODO VERFICAR ESSA PARTE QUE FAZ ACESSO AO MAPA PARA REMOVER O PLUGIN DE ACORDO COM O NOME DADO
 		if (it->first->getName() == namePlugin) {
 			pluginsListeners.erase(it->first);
 			break;
 		}
+	}
+}
+
+void XMPPNegotiation::assignResponsibleMessageToPlugin(map<std::string,
+		std::string> param) {
+	list<std::string> aux;
+	for (map<PluginBase*, list<std::string> >::iterator it =
+			pluginsListeners.begin(); it != pluginsListeners.end(); it++) {
+		aux = it->second;
+		for(list<std::string>::iterator i = aux.begin(); i != aux.end(); i++) {
+			//if (*i == )
+		}
+		//if (it->first->getName() == namePlugin) {
+		//	pluginsListeners.erase(it->first);
+		//	break;
+		//}
 	}
 }
 
