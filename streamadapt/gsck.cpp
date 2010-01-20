@@ -22,10 +22,6 @@ GenericSenderSocket::~GenericSenderSocket() {
 //	engine.addListener(trSession);
 //}
 
-void GenericSenderSocket::run() {
-
-	//TODO IMPLEMENTAR METODO RUN
-}
 
 
 GenericReceiverSocket::GenericReceiverSocket() {}

@@ -8,12 +8,14 @@
 #ifndef JOBMANAGER_H_
 #define JOBMANAGER_H_
 #include <list>
+#include "helperfunctions.h"
 #include "abstractjob.h"
 
 namespace infrastream {
 
 class JobManager {
-	std::list<AbstractJob*> jobs;
+	ThreadSafeObject <std::list<AbstractJob*> > jobs;
+
 	static JobManager* instance;
 
 	JobManager();
@@ -25,6 +27,8 @@ public:
 
 	void run();
 	void addJob(AbstractJob* newJob);
+
+	void endSession();
 
 };
 
