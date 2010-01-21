@@ -1389,64 +1389,28 @@ namespace AdaptationPolicy
     this->library_directory_.set (x);
   }
 
-  const stream::video_transmission_optional& stream::
-  video_transmission () const
+  const stream::transmission_properties_type& stream::
+  transmission_properties () const
   {
-    return this->video_transmission_;
+    return this->transmission_properties_.get ();
   }
 
-  stream::video_transmission_optional& stream::
-  video_transmission ()
+  stream::transmission_properties_type& stream::
+  transmission_properties ()
   {
-    return this->video_transmission_;
-  }
-
-  void stream::
-  video_transmission (const video_transmission_type& x)
-  {
-    this->video_transmission_.set (x);
+    return this->transmission_properties_.get ();
   }
 
   void stream::
-  video_transmission (const video_transmission_optional& x)
+  transmission_properties (const transmission_properties_type& x)
   {
-    this->video_transmission_ = x;
+    this->transmission_properties_.set (x);
   }
 
   void stream::
-  video_transmission (::std::auto_ptr< video_transmission_type > x)
+  transmission_properties (::std::auto_ptr< transmission_properties_type > x)
   {
-    this->video_transmission_.set (x);
-  }
-
-  const stream::audio_transmission_optional& stream::
-  audio_transmission () const
-  {
-    return this->audio_transmission_;
-  }
-
-  stream::audio_transmission_optional& stream::
-  audio_transmission ()
-  {
-    return this->audio_transmission_;
-  }
-
-  void stream::
-  audio_transmission (const audio_transmission_type& x)
-  {
-    this->audio_transmission_.set (x);
-  }
-
-  void stream::
-  audio_transmission (const audio_transmission_optional& x)
-  {
-    this->audio_transmission_ = x;
-  }
-
-  void stream::
-  audio_transmission (::std::auto_ptr< audio_transmission_type > x)
-  {
-    this->audio_transmission_.set (x);
+    this->transmission_properties_.set (x);
   }
 
   const stream::enable_adaptation_type& stream::
@@ -1682,6 +1646,130 @@ namespace AdaptationPolicy
   //
 
 
+  // transmission_properties
+  //
+
+  const transmission_properties::video_transmission_optional& transmission_properties::
+  video_transmission () const
+  {
+    return this->video_transmission_;
+  }
+
+  transmission_properties::video_transmission_optional& transmission_properties::
+  video_transmission ()
+  {
+    return this->video_transmission_;
+  }
+
+  void transmission_properties::
+  video_transmission (const video_transmission_type& x)
+  {
+    this->video_transmission_.set (x);
+  }
+
+  void transmission_properties::
+  video_transmission (const video_transmission_optional& x)
+  {
+    this->video_transmission_ = x;
+  }
+
+  void transmission_properties::
+  video_transmission (::std::auto_ptr< video_transmission_type > x)
+  {
+    this->video_transmission_.set (x);
+  }
+
+  const transmission_properties::audio_transmission_optional& transmission_properties::
+  audio_transmission () const
+  {
+    return this->audio_transmission_;
+  }
+
+  transmission_properties::audio_transmission_optional& transmission_properties::
+  audio_transmission ()
+  {
+    return this->audio_transmission_;
+  }
+
+  void transmission_properties::
+  audio_transmission (const audio_transmission_type& x)
+  {
+    this->audio_transmission_.set (x);
+  }
+
+  void transmission_properties::
+  audio_transmission (const audio_transmission_optional& x)
+  {
+    this->audio_transmission_ = x;
+  }
+
+  void transmission_properties::
+  audio_transmission (::std::auto_ptr< audio_transmission_type > x)
+  {
+    this->audio_transmission_.set (x);
+  }
+
+  const transmission_properties::transmission_type_type& transmission_properties::
+  transmission_type () const
+  {
+    return this->transmission_type_.get ();
+  }
+
+  transmission_properties::transmission_type_type& transmission_properties::
+  transmission_type ()
+  {
+    return this->transmission_type_.get ();
+  }
+
+  void transmission_properties::
+  transmission_type (const transmission_type_type& x)
+  {
+    this->transmission_type_.set (x);
+  }
+
+  void transmission_properties::
+  transmission_type (::std::auto_ptr< transmission_type_type > x)
+  {
+    this->transmission_type_.set (x);
+  }
+
+  const transmission_properties::transmission_type_type& transmission_properties::
+  transmission_type_default_value ()
+  {
+    return transmission_type_default_value_;
+  }
+
+
+  // provides1
+  //
+
+  const provides1::provide_sequence& provides1::
+  provide () const
+  {
+    return this->provide_;
+  }
+
+  provides1::provide_sequence& provides1::
+  provide ()
+  {
+    return this->provide_;
+  }
+
+  void provides1::
+  provide (const provide_sequence& s)
+  {
+    this->provide_ = s;
+  }
+
+
+  // adaptation_method
+  //
+
+
+  // adaptation_method1
+  //
+
+
   // video_transmission
   //
 
@@ -1737,83 +1825,74 @@ namespace AdaptationPolicy
     this->codec_name_.set (x);
   }
 
-  const audio_transmission::enablePreprocessing_type& audio_transmission::
-  enablePreprocessing () const
+  const audio_transmission::enable_preprocessing_type& audio_transmission::
+  enable_preprocessing () const
   {
-    return this->enablePreprocessing_.get ();
+    return this->enable_preprocessing_.get ();
   }
 
-  audio_transmission::enablePreprocessing_type& audio_transmission::
-  enablePreprocessing ()
+  audio_transmission::enable_preprocessing_type& audio_transmission::
+  enable_preprocessing ()
   {
-    return this->enablePreprocessing_.get ();
-  }
-
-  void audio_transmission::
-  enablePreprocessing (const enablePreprocessing_type& x)
-  {
-    this->enablePreprocessing_.set (x);
-  }
-
-  const audio_transmission::enablePreprocessing_type& audio_transmission::
-  enablePreprocessing_default_value ()
-  {
-    return enablePreprocessing_default_value_;
-  }
-
-  const audio_transmission::enableEchoCancellation_type& audio_transmission::
-  enableEchoCancellation () const
-  {
-    return this->enableEchoCancellation_.get ();
-  }
-
-  audio_transmission::enableEchoCancellation_type& audio_transmission::
-  enableEchoCancellation ()
-  {
-    return this->enableEchoCancellation_.get ();
+    return this->enable_preprocessing_.get ();
   }
 
   void audio_transmission::
-  enableEchoCancellation (const enableEchoCancellation_type& x)
+  enable_preprocessing (const enable_preprocessing_type& x)
   {
-    this->enableEchoCancellation_.set (x);
+    this->enable_preprocessing_.set (x);
   }
 
-  const audio_transmission::enableEchoCancellation_type& audio_transmission::
-  enableEchoCancellation_default_value ()
+  const audio_transmission::enable_preprocessing_type& audio_transmission::
+  enable_preprocessing_default_value ()
   {
-    return enableEchoCancellation_default_value_;
+    return enable_preprocessing_default_value_;
   }
 
 
-  // provides1
+  // transmission_type
   //
 
-  const provides1::provide_sequence& provides1::
-  provide () const
+  transmission_type::
+  transmission_type (value v)
+  : ::xml_schema::string (_xsd_transmission_type_literals_[v])
   {
-    return this->provide_;
   }
 
-  provides1::provide_sequence& provides1::
-  provide ()
+  transmission_type::
+  transmission_type (const char* v)
+  : ::xml_schema::string (v)
   {
-    return this->provide_;
   }
 
-  void provides1::
-  provide (const provide_sequence& s)
+  transmission_type::
+  transmission_type (const ::std::string& v)
+  : ::xml_schema::string (v)
   {
-    this->provide_ = s;
   }
 
+  transmission_type::
+  transmission_type (const ::xml_schema::string& v)
+  : ::xml_schema::string (v)
+  {
+  }
 
-  // adaptation_method
-  //
+  transmission_type::
+  transmission_type (const transmission_type& v,
+                     ::xml_schema::flags f,
+                     ::xml_schema::container* c)
+  : ::xml_schema::string (v, f, c)
+  {
+  }
 
+  transmission_type& transmission_type::
+  operator= (value v)
+  {
+    static_cast< ::xml_schema::string& > (*this) =
+    ::xml_schema::string (_xsd_transmission_type_literals_[v]);
 
-  // adaptation_method1
-  //
+    return *this;
+  }
 
 
   // codec_name
@@ -4165,13 +4244,30 @@ namespace AdaptationPolicy
   stream::
   stream (const plugin_name_type& plugin_name,
           const library_name_type& library_name,
+          const transmission_properties_type& transmission_properties,
           const enable_adaptation_type& enable_adaptation)
   : ::xml_schema::type (),
     plugin_name_ (plugin_name, ::xml_schema::flags (), this),
     library_name_ (library_name, ::xml_schema::flags (), this),
     library_directory_ (::xml_schema::flags (), this),
-    video_transmission_ (::xml_schema::flags (), this),
-    audio_transmission_ (::xml_schema::flags (), this),
+    transmission_properties_ (transmission_properties, ::xml_schema::flags (), this),
+    enable_adaptation_ (enable_adaptation, ::xml_schema::flags (), this),
+    provides_ (::xml_schema::flags (), this),
+    complexproperty_ (::xml_schema::flags (), this),
+    simpleproperty_ (::xml_schema::flags (), this)
+  {
+  }
+
+  stream::
+  stream (const plugin_name_type& plugin_name,
+          const library_name_type& library_name,
+          ::std::auto_ptr< transmission_properties_type >& transmission_properties,
+          const enable_adaptation_type& enable_adaptation)
+  : ::xml_schema::type (),
+    plugin_name_ (plugin_name, ::xml_schema::flags (), this),
+    library_name_ (library_name, ::xml_schema::flags (), this),
+    library_directory_ (::xml_schema::flags (), this),
+    transmission_properties_ (transmission_properties, ::xml_schema::flags (), this),
     enable_adaptation_ (enable_adaptation, ::xml_schema::flags (), this),
     provides_ (::xml_schema::flags (), this),
     complexproperty_ (::xml_schema::flags (), this),
@@ -4187,8 +4283,7 @@ namespace AdaptationPolicy
     plugin_name_ (x.plugin_name_, f, this),
     library_name_ (x.library_name_, f, this),
     library_directory_ (x.library_directory_, f, this),
-    video_transmission_ (x.video_transmission_, f, this),
-    audio_transmission_ (x.audio_transmission_, f, this),
+    transmission_properties_ (x.transmission_properties_, f, this),
     enable_adaptation_ (x.enable_adaptation_, f, this),
     provides_ (x.provides_, f, this),
     complexproperty_ (x.complexproperty_, f, this),
@@ -4204,8 +4299,7 @@ namespace AdaptationPolicy
     plugin_name_ (f, this),
     library_name_ (f, this),
     library_directory_ (f, this),
-    video_transmission_ (f, this),
-    audio_transmission_ (f, this),
+    transmission_properties_ (f, this),
     enable_adaptation_ (f, this),
     provides_ (f, this),
     complexproperty_ (f, this),
@@ -4270,30 +4364,16 @@ namespace AdaptationPolicy
         }
       }
 
-      // video-transmission
+      // transmission-properties
       //
-      if (n.name () == "video-transmission" && n.namespace_ ().empty ())
+      if (n.name () == "transmission-properties" && n.namespace_ ().empty ())
       {
-        ::std::auto_ptr< video_transmission_type > r (
-          video_transmission_traits::create (i, f, this));
+        ::std::auto_ptr< transmission_properties_type > r (
+          transmission_properties_traits::create (i, f, this));
 
-        if (!this->video_transmission_)
+        if (!transmission_properties_.present ())
         {
-          this->video_transmission_.set (r);
-          continue;
-        }
-      }
-
-      // audio-transmission
-      //
-      if (n.name () == "audio-transmission" && n.namespace_ ().empty ())
-      {
-        ::std::auto_ptr< audio_transmission_type > r (
-          audio_transmission_traits::create (i, f, this));
-
-        if (!this->audio_transmission_)
-        {
-          this->audio_transmission_.set (r);
+          this->transmission_properties_.set (r);
           continue;
         }
       }
@@ -4359,6 +4439,13 @@ namespace AdaptationPolicy
     {
       throw ::xsd::cxx::tree::expected_element< char > (
         "library-name",
+        "");
+    }
+
+    if (!transmission_properties_.present ())
+    {
+      throw ::xsd::cxx::tree::expected_element< char > (
+        "transmission-properties",
         "");
     }
 
@@ -5144,125 +5231,40 @@ namespace AdaptationPolicy
   {
   }
 
-  // video_transmission
+  // transmission_properties
   //
 
-  video_transmission::
-  video_transmission (const video_codec_type& video_codec)
+  const transmission_properties::transmission_type_type transmission_properties::transmission_type_default_value_ (
+    ::std::string ("half-transmit"), 0, 0, 0);
+
+  transmission_properties::
+  transmission_properties ()
   : ::xml_schema::type (),
-    video_codec_ (video_codec, ::xml_schema::flags (), this)
+    video_transmission_ (::xml_schema::flags (), this),
+    audio_transmission_ (::xml_schema::flags (), this),
+    transmission_type_ (transmission_type_default_value (), ::xml_schema::flags (), this)
   {
   }
 
-  video_transmission::
-  video_transmission (const video_transmission& x,
-                      ::xml_schema::flags f,
-                      ::xml_schema::container* c)
+  transmission_properties::
+  transmission_properties (const transmission_properties& x,
+                           ::xml_schema::flags f,
+                           ::xml_schema::container* c)
   : ::xml_schema::type (x, f, c),
-    video_codec_ (x.video_codec_, f, this)
+    video_transmission_ (x.video_transmission_, f, this),
+    audio_transmission_ (x.audio_transmission_, f, this),
+    transmission_type_ (x.transmission_type_, f, this)
   {
   }
 
-  video_transmission::
-  video_transmission (const ::xercesc::DOMElement& e,
-                      ::xml_schema::flags f,
-                      ::xml_schema::container* c)
+  transmission_properties::
+  transmission_properties (const ::xercesc::DOMElement& e,
+                           ::xml_schema::flags f,
+                           ::xml_schema::container* c)
   : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
-    video_codec_ (f, this)
-  {
-    if ((f & ::xml_schema::flags::base) == 0)
-    {
-      ::xsd::cxx::xml::dom::parser< char > p (e, true, false);
-      this->parse (p, f);
-    }
-  }
-
-  void video_transmission::
-  parse (::xsd::cxx::xml::dom::parser< char >& p,
-         ::xml_schema::flags f)
-  {
-    for (; p.more_elements (); p.next_element ())
-    {
-      const ::xercesc::DOMElement& i (p.cur_element ());
-      const ::xsd::cxx::xml::qualified_name< char > n (
-        ::xsd::cxx::xml::dom::name< char > (i));
-
-      // video-codec
-      //
-      if (n.name () == "video-codec" && n.namespace_ ().empty ())
-      {
-        ::std::auto_ptr< video_codec_type > r (
-          video_codec_traits::create (i, f, this));
-
-        if (!video_codec_.present ())
-        {
-          this->video_codec_.set (r);
-          continue;
-        }
-      }
-
-      break;
-    }
-
-    if (!video_codec_.present ())
-    {
-      throw ::xsd::cxx::tree::expected_element< char > (
-        "video-codec",
-        "");
-    }
-  }
-
-  video_transmission* video_transmission::
-  _clone (::xml_schema::flags f,
-          ::xml_schema::container* c) const
-  {
-    return new class video_transmission (*this, f, c);
-  }
-
-  video_transmission::
-  ~video_transmission ()
-  {
-  }
-
-  // audio_transmission
-  //
-
-  const audio_transmission::enablePreprocessing_type audio_transmission::enablePreprocessing_default_value_ (
-    ::xsd::cxx::tree::traits< ::xml_schema::boolean, char >::create (
-      ::std::string ("false"), 0, 0, 0));
-
-  const audio_transmission::enableEchoCancellation_type audio_transmission::enableEchoCancellation_default_value_ (
-    ::xsd::cxx::tree::traits< ::xml_schema::boolean, char >::create (
-      ::std::string ("false"), 0, 0, 0));
-
-  audio_transmission::
-  audio_transmission (const codec_name_type& codec_name)
-  : ::xml_schema::type (),
-    codec_name_ (codec_name, ::xml_schema::flags (), this),
-    enablePreprocessing_ (enablePreprocessing_default_value (), ::xml_schema::flags (), this),
-    enableEchoCancellation_ (enableEchoCancellation_default_value (), ::xml_schema::flags (), this)
-  {
-  }
-
-  audio_transmission::
-  audio_transmission (const audio_transmission& x,
-                      ::xml_schema::flags f,
-                      ::xml_schema::container* c)
-  : ::xml_schema::type (x, f, c),
-    codec_name_ (x.codec_name_, f, this),
-    enablePreprocessing_ (x.enablePreprocessing_, f, this),
-    enableEchoCancellation_ (x.enableEchoCancellation_, f, this)
-  {
-  }
-
-  audio_transmission::
-  audio_transmission (const ::xercesc::DOMElement& e,
-                      ::xml_schema::flags f,
-                      ::xml_schema::container* c)
-  : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
-    codec_name_ (f, this),
-    enablePreprocessing_ (f, this),
-    enableEchoCancellation_ (f, this)
+    video_transmission_ (f, this),
+    audio_transmission_ (f, this),
+    transmission_type_ (f, this)
   {
     if ((f & ::xml_schema::flags::base) == 0)
     {
@@ -5271,7 +5273,7 @@ namespace AdaptationPolicy
     }
   }
 
-  void audio_transmission::
+  void transmission_properties::
   parse (::xsd::cxx::xml::dom::parser< char >& p,
          ::xml_schema::flags f)
   {
@@ -5281,28 +5283,35 @@ namespace AdaptationPolicy
       const ::xsd::cxx::xml::qualified_name< char > n (
         ::xsd::cxx::xml::dom::name< char > (i));
 
-      // codec-name
+      // video-transmission
       //
-      if (n.name () == "codec-name" && n.namespace_ ().empty ())
+      if (n.name () == "video-transmission" && n.namespace_ ().empty ())
       {
-        ::std::auto_ptr< codec_name_type > r (
-          codec_name_traits::create (i, f, this));
+        ::std::auto_ptr< video_transmission_type > r (
+          video_transmission_traits::create (i, f, this));
 
-        if (!codec_name_.present ())
+        if (!this->video_transmission_)
         {
-          this->codec_name_.set (r);
+          this->video_transmission_.set (r);
+          continue;
+        }
+      }
+
+      // audio-transmission
+      //
+      if (n.name () == "audio-transmission" && n.namespace_ ().empty ())
+      {
+        ::std::auto_ptr< audio_transmission_type > r (
+          audio_transmission_traits::create (i, f, this));
+
+        if (!this->audio_transmission_)
+        {
+          this->audio_transmission_.set (r);
           continue;
         }
       }
 
       break;
-    }
-
-    if (!codec_name_.present ())
-    {
-      throw ::xsd::cxx::tree::expected_element< char > (
-        "codec-name",
-        "");
     }
 
     while (p.more_attributes ())
@@ -5311,39 +5320,31 @@ namespace AdaptationPolicy
       const ::xsd::cxx::xml::qualified_name< char > n (
         ::xsd::cxx::xml::dom::name< char > (i));
 
-      if (n.name () == "enablePreprocessing" && n.namespace_ ().empty ())
+      if (n.name () == "transmission-type" && n.namespace_ ().empty ())
       {
-        this->enablePreprocessing_.set (enablePreprocessing_traits::create (i, f, this));
-        continue;
-      }
+        ::std::auto_ptr< transmission_type_type > r (
+          transmission_type_traits::create (i, f, this));
 
-      if (n.name () == "enableEchoCancellation" && n.namespace_ ().empty ())
-      {
-        this->enableEchoCancellation_.set (enableEchoCancellation_traits::create (i, f, this));
+        this->transmission_type_.set (r);
         continue;
       }
     }
 
-    if (!enablePreprocessing_.present ())
+    if (!transmission_type_.present ())
     {
-      this->enablePreprocessing_.set (enablePreprocessing_default_value ());
-    }
-
-    if (!enableEchoCancellation_.present ())
-    {
-      this->enableEchoCancellation_.set (enableEchoCancellation_default_value ());
+      this->transmission_type_.set (transmission_type_default_value ());
     }
   }
 
-  audio_transmission* audio_transmission::
+  transmission_properties* transmission_properties::
   _clone (::xml_schema::flags f,
           ::xml_schema::container* c) const
   {
-    return new class audio_transmission (*this, f, c);
+    return new class transmission_properties (*this, f, c);
   }
 
-  audio_transmission::
-  ~audio_transmission ()
+  transmission_properties::
+  ~transmission_properties ()
   {
   }
 
@@ -5560,6 +5561,263 @@ namespace AdaptationPolicy
   ~adaptation_method1 ()
   {
   }
+
+  // video_transmission
+  //
+
+  video_transmission::
+  video_transmission (const video_codec_type& video_codec)
+  : ::xml_schema::type (),
+    video_codec_ (video_codec, ::xml_schema::flags (), this)
+  {
+  }
+
+  video_transmission::
+  video_transmission (const video_transmission& x,
+                      ::xml_schema::flags f,
+                      ::xml_schema::container* c)
+  : ::xml_schema::type (x, f, c),
+    video_codec_ (x.video_codec_, f, this)
+  {
+  }
+
+  video_transmission::
+  video_transmission (const ::xercesc::DOMElement& e,
+                      ::xml_schema::flags f,
+                      ::xml_schema::container* c)
+  : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+    video_codec_ (f, this)
+  {
+    if ((f & ::xml_schema::flags::base) == 0)
+    {
+      ::xsd::cxx::xml::dom::parser< char > p (e, true, false);
+      this->parse (p, f);
+    }
+  }
+
+  void video_transmission::
+  parse (::xsd::cxx::xml::dom::parser< char >& p,
+         ::xml_schema::flags f)
+  {
+    for (; p.more_elements (); p.next_element ())
+    {
+      const ::xercesc::DOMElement& i (p.cur_element ());
+      const ::xsd::cxx::xml::qualified_name< char > n (
+        ::xsd::cxx::xml::dom::name< char > (i));
+
+      // video-codec
+      //
+      if (n.name () == "video-codec" && n.namespace_ ().empty ())
+      {
+        ::std::auto_ptr< video_codec_type > r (
+          video_codec_traits::create (i, f, this));
+
+        if (!video_codec_.present ())
+        {
+          this->video_codec_.set (r);
+          continue;
+        }
+      }
+
+      break;
+    }
+
+    if (!video_codec_.present ())
+    {
+      throw ::xsd::cxx::tree::expected_element< char > (
+        "video-codec",
+        "");
+    }
+  }
+
+  video_transmission* video_transmission::
+  _clone (::xml_schema::flags f,
+          ::xml_schema::container* c) const
+  {
+    return new class video_transmission (*this, f, c);
+  }
+
+  video_transmission::
+  ~video_transmission ()
+  {
+  }
+
+  // audio_transmission
+  //
+
+  const audio_transmission::enable_preprocessing_type audio_transmission::enable_preprocessing_default_value_ (
+    ::xsd::cxx::tree::traits< ::xml_schema::boolean, char >::create (
+      ::std::string ("false"), 0, 0, 0));
+
+  audio_transmission::
+  audio_transmission (const codec_name_type& codec_name)
+  : ::xml_schema::type (),
+    codec_name_ (codec_name, ::xml_schema::flags (), this),
+    enable_preprocessing_ (enable_preprocessing_default_value (), ::xml_schema::flags (), this)
+  {
+  }
+
+  audio_transmission::
+  audio_transmission (const audio_transmission& x,
+                      ::xml_schema::flags f,
+                      ::xml_schema::container* c)
+  : ::xml_schema::type (x, f, c),
+    codec_name_ (x.codec_name_, f, this),
+    enable_preprocessing_ (x.enable_preprocessing_, f, this)
+  {
+  }
+
+  audio_transmission::
+  audio_transmission (const ::xercesc::DOMElement& e,
+                      ::xml_schema::flags f,
+                      ::xml_schema::container* c)
+  : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+    codec_name_ (f, this),
+    enable_preprocessing_ (f, this)
+  {
+    if ((f & ::xml_schema::flags::base) == 0)
+    {
+      ::xsd::cxx::xml::dom::parser< char > p (e, true, true);
+      this->parse (p, f);
+    }
+  }
+
+  void audio_transmission::
+  parse (::xsd::cxx::xml::dom::parser< char >& p,
+         ::xml_schema::flags f)
+  {
+    for (; p.more_elements (); p.next_element ())
+    {
+      const ::xercesc::DOMElement& i (p.cur_element ());
+      const ::xsd::cxx::xml::qualified_name< char > n (
+        ::xsd::cxx::xml::dom::name< char > (i));
+
+      // codec-name
+      //
+      if (n.name () == "codec-name" && n.namespace_ ().empty ())
+      {
+        ::std::auto_ptr< codec_name_type > r (
+          codec_name_traits::create (i, f, this));
+
+        if (!codec_name_.present ())
+        {
+          this->codec_name_.set (r);
+          continue;
+        }
+      }
+
+      break;
+    }
+
+    if (!codec_name_.present ())
+    {
+      throw ::xsd::cxx::tree::expected_element< char > (
+        "codec-name",
+        "");
+    }
+
+    while (p.more_attributes ())
+    {
+      const ::xercesc::DOMAttr& i (p.next_attribute ());
+      const ::xsd::cxx::xml::qualified_name< char > n (
+        ::xsd::cxx::xml::dom::name< char > (i));
+
+      if (n.name () == "enable-preprocessing" && n.namespace_ ().empty ())
+      {
+        this->enable_preprocessing_.set (enable_preprocessing_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    if (!enable_preprocessing_.present ())
+    {
+      this->enable_preprocessing_.set (enable_preprocessing_default_value ());
+    }
+  }
+
+  audio_transmission* audio_transmission::
+  _clone (::xml_schema::flags f,
+          ::xml_schema::container* c) const
+  {
+    return new class audio_transmission (*this, f, c);
+  }
+
+  audio_transmission::
+  ~audio_transmission ()
+  {
+  }
+
+  // transmission_type
+  //
+
+  transmission_type::
+  transmission_type (const ::xercesc::DOMElement& e,
+                     ::xml_schema::flags f,
+                     ::xml_schema::container* c)
+  : ::xml_schema::string (e, f, c)
+  {
+    _xsd_transmission_type_convert ();
+  }
+
+  transmission_type::
+  transmission_type (const ::xercesc::DOMAttr& a,
+                     ::xml_schema::flags f,
+                     ::xml_schema::container* c)
+  : ::xml_schema::string (a, f, c)
+  {
+    _xsd_transmission_type_convert ();
+  }
+
+  transmission_type::
+  transmission_type (const ::std::string& s,
+                     const ::xercesc::DOMElement* e,
+                     ::xml_schema::flags f,
+                     ::xml_schema::container* c)
+  : ::xml_schema::string (s, e, f, c)
+  {
+    _xsd_transmission_type_convert ();
+  }
+
+  transmission_type* transmission_type::
+  _clone (::xml_schema::flags f,
+          ::xml_schema::container* c) const
+  {
+    return new class transmission_type (*this, f, c);
+  }
+
+  transmission_type::value transmission_type::
+  _xsd_transmission_type_convert () const
+  {
+    ::xsd::cxx::tree::enum_comparator< char > c (_xsd_transmission_type_literals_);
+    const value* i (::std::lower_bound (
+                      _xsd_transmission_type_indexes_,
+                      _xsd_transmission_type_indexes_ + 3,
+                      *this,
+                      c));
+
+    if (i == _xsd_transmission_type_indexes_ + 3 || _xsd_transmission_type_literals_[*i] != *this)
+    {
+      throw ::xsd::cxx::tree::unexpected_enumerator < char > (*this);
+    }
+
+    return *i;
+  }
+
+  const char* const transmission_type::
+  _xsd_transmission_type_literals_[3] =
+  {
+    "half-transmit",
+    "half-receive",
+    "full-duplex"
+  };
+
+  const transmission_type::value transmission_type::
+  _xsd_transmission_type_indexes_[3] =
+  {
+    ::AdaptationPolicy::transmission_type::full_duplex,
+    ::AdaptationPolicy::transmission_type::half_receive,
+    ::AdaptationPolicy::transmission_type::half_transmit
+  };
 
   // codec_name
   //

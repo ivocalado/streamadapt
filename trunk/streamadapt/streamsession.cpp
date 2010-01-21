@@ -67,6 +67,9 @@ set<EventType> StreamSession::getDependencies() throw(InvalidPolicyException) {
 
 }
 
+string StreamSession::retrievePluginInformation(string key) {}
+
+
 StreamSession::~StreamSession() {
 
 }

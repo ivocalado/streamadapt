@@ -30,8 +30,9 @@ PluginNegotiationPtrlIF* InfraFactory::buildNegotiationSession() {
 TransportSession* InfraFactory::buildTransportSession(
 		PluginNegotiationPtrlIF* negotiation,
 		auto_ptr<PolicyConfigurationType> policyDesc, PolicyEngine& engine,
-		string ip, int port, InfraFactory::SessionType sessionType, ConnectionListener* listener)
-		throw(CannotCreateSessionException, InvalidPolicyException) {
+		string ip, int port, InfraFactory::SessionType sessionType,
+		ConnectionListener* listener) throw(CannotCreateSessionException,
+		InvalidPolicyException) {
 
 	startup_config::transport_type& tProperties =
 			policyDesc->startup_config().transport();
@@ -111,6 +112,99 @@ TransportSession* InfraFactory::buildTransportSession(
 	session->setTSession(plugin);
 
 	return session;
+}
+
+StreamSession* InfraFactory::buildStreamSession(
+		PluginNegotiationPtrlIF* negotiation,
+		auto_ptr<PolicyConfigurationType> policyDesc, PolicyEngine& engine)
+		throw (CannotCreateSessionException, InvalidPolicyException) {
+
+	startup_config::stream_type& sProperties =
+			policyDesc->startup_config().stream();
+
+	string pluginName = sProperties.plugin_name();
+	log_info("Plugin Name: " + pluginName);
+
+	string libName = sProperties.library_name();
+	log_info("lib Name: " + libName);
+
+	StreamSession *session = new StreamSession(pluginName, libName, &engine,
+			negotiation);
+
+	adapt_config::stream_type *adapt = 0;
+
+	bool useAdaptation = sProperties.enable_adaptation();
+
+	if (useAdaptation) {
+		if (policyDesc->adapt_config().present()
+				&& policyDesc->adapt_config().get().stream().present())
+			adapt = &policyDesc->adapt_config().get().stream().get();
+		else {
+			log_error("Invalid policy in InfraFactory::buildStreamSession");
+			delete session;
+			throw InvalidPolicyException("You must provide adaptation config. "
+				"Otherwise set the adaptation as false");
+		}
+		session->setPolicy(adapt);
+	}
+
+	bool useDirInfo = sProperties.library_directory().present();
+
+	PluginManager* pm = PluginManager::getInstance();
+
+	auto_ptr<PluginStreamIF> plugin = (useDirInfo) ? pm->findAdaptor<
+			PluginStreamIF> (pluginName, libName,
+			sProperties.library_directory().get()) : pm->findAdaptor<
+			PluginStreamIF> (pluginName, libName);
+
+	checkAndLog(plugin->getName(), pluginName, false,
+			"The protocols specified are different. Make your checks", log_warning);
+
+	if(sProperties.transmission_properties().audio_transmission().present()) {
+		string s = sProperties.transmission_properties().transmission_type();
+		//if(s == )
+	}
+
+
+
+	//virtual void buildSession(StreamType streamType, s) = 0;
+//	try {
+//		if (sessionType == SERVER_SESSION) {
+//			plugin->buildSession(ip, port, listener);
+//		} else {
+//			plugin->buildSession();
+//			plugin->addDestination(ip, port);
+//			plugin->sendData(0); //Send a silent packet to open socket
+//		}
+//	} catch (...) {
+//		delete session;
+//		log_error("invalid Session");
+//		throw CannotCreateSessionException();
+//	}
+
+
+
+//	if (tProperties.provides().present()) {
+//		startup_config::transport_type::provides_type::provide_iterator
+//				provideIt(tProperties.provides().get().provide().begin());
+//		for (; provideIt != tProperties.provides().get().provide().end(); ++provideIt) {
+//			EventType et(*provideIt);
+//			EventType det(__default_value(*provideIt));
+//			Event de(det, provideIt->default_value());
+//			unsigned int timestamp = provideIt->update_time();
+//			engine.registerProvider(et, timestamp, plugin.get(), de);
+//		}
+//	}
+//
+//	JobManager::getInstance()->addJob(new AdaptationJob<
+//			startup_config::transport_type, auto_ptr<PluginTransportIF> > (
+//			tProperties, plugin));
+//
+//	plugin->startSession();
+//	session->setTSession(plugin);
+
+	return session;
+
 }
 
 InfraFactory::InfraFactory() {
