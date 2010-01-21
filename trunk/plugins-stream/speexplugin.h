@@ -18,6 +18,8 @@
 #include <speex/speex_preprocess.h>
 
 class SpeexPlugin: public PluginStreamIF {
+
+
 	enum SpeexMode {
 		INVALID_MODE,
 		MODE_NB, // Narrow band
@@ -39,11 +41,11 @@ class SpeexPlugin: public PluginStreamIF {
 	HalfCodec* encoder;
 	HalfCodec* decoder;
 	SpeexPreprocessState* preprocess;
-	//	void* encoderPtr; //encoder
-	//	void* decoderPtr; //decoder
-	//	SpeexPreprocessState* preprocess; //preprocess
-	//	SpeexBits encoderBits;
-	//	SpeexBits decoderBits;
+//	SpeexEchoState* echocancellation;
+//	bool usingEchoCancellation;
+//	bool echoCapturedLast;
+
+
 	void buildEncoder(std::string mode) throw(OperationNotPerfomedException);
 	void buildDecoder(std::string mode) throw(OperationNotPerfomedException);
 	SpeexMode getMode(std::string modeName);
@@ -113,6 +115,8 @@ public:
 	virtual bool disableEchoCancelling() throw (OperationNotPerfomedException) {
 		return false;
 	}
+
+	virtual uint32 getSampleSize();
 
 	virtual const char* getName() const;
 };

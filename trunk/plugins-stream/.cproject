@@ -45,7 +45,7 @@
 </tool>
 <tool id="cdt.managedbuild.tool.gnu.cpp.linker.so.debug.789244742" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.so.debug">
 <option defaultValue="true" id="gnu.cpp.link.so.debug.option.shared.1289750795" name="Shared (-shared)" superClass="gnu.cpp.link.so.debug.option.shared" valueType="boolean"/>
-<option id="gnu.cpp.link.option.libs.1592962818" superClass="gnu.cpp.link.option.libs" valueType="libs">
+<option id="gnu.cpp.link.option.libs.1592962818" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
 <listOptionValue builtIn="false" value="speex"/>
 </option>
 <inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.2128657395" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
