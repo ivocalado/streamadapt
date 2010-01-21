@@ -27,9 +27,12 @@ namespace infrastream {
  */
 class Session {
 	PluginNegotiationPtrlIF *negotiation;
+	string pluginName;
+	string libName;
 
 public:
-	Session(PluginNegotiationPtrlIF* negotiation)
+	Session(string pluginName, string libName,
+			PluginNegotiationPtrlIF* negotiation)
 			throw(CannotCreateSessionException);
 	virtual ~Session();
 
@@ -37,6 +40,13 @@ public:
 	virtual set<EventType> getDependencies() throw(InvalidPolicyException) = 0;
 
 	PluginNegotiationPtrlIF* getNegotiation() const;
+
+	string getPluginName() const;
+	string getLibName() const;
+
+	virtual void endSession() = 0;
+
+	virtual string retrievePluginInformation(string key) = 0;
 
 protected:
 
