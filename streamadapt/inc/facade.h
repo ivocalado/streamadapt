@@ -15,7 +15,6 @@
 #include "infraexceptions.h"
 #include "policy/policy.h"
 #include "logger/logger.h"
-#include "policyengine.h"
 #include "sessionmanager.h"
 
 using namespace std;
@@ -29,7 +28,7 @@ class Facade {
 	Facade& operator=(Facade&);
 	auto_ptr<PolicyConfigurationType> loadPolicy(string policyPath)
 			throw(CannotLoadPolicyException);
-	PolicyEngine engine;
+	//PolicyEngine engine;
 
 public:
 	string getName() const;

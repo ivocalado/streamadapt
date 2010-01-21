@@ -11,6 +11,7 @@
 #include <infrafactory.h>
 #include <trpsession.h>
 #include <ostream>
+#include <policyengine.h>
 
 //using namespace infrastream;
 using namespace AdaptationPolicy;

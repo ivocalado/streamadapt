@@ -35,11 +35,10 @@ class TransportSession: public Session {
 	map<EventType, const adapt_config::transport_type::policy_type*> dependencies;
 
 	string transportProtocol;
-	string pluginName;
-	string libName;
+
 public:
 	TransportSession(string tProtocol, string pluginName, string libName,
-			PolicyEngine* engine, PluginNegotiationPtrlIF* negotiation);
+			PolicyEngine* engine, PluginNegotiationPtrlIF* negotiation) throw(CannotCreateSessionException);
 
 	void setPolicy(adapt_config::transport_type* policy)
 			throw(InvalidPolicyException);
@@ -49,10 +48,6 @@ public:
 	auto_ptr<PluginTransportIF>& getSession();
 	//	bool isEnabled() const;
 	string getTransportProtocol() const;
-	string getPluginName() const;
-	string getLibName() const;
-
-
 
 	void addDestination(string targetIp, int port);
 	void sendData(uint32 stamp, const unsigned char* data = NULL, size_t len =

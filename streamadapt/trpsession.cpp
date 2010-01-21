@@ -8,12 +8,13 @@
 #include <trpsession.h>
 #include <logger/logger.h>
 
-
 namespace infrastream {
 
 TransportSession::TransportSession(string _tProtocol, string _pluginName,
-		string _libName, PolicyEngine* engine, PluginNegotiationPtrlIF* negotiation) :
-	Session(negotiation), transportProtocol(_tProtocol), pluginName(_pluginName), libName(_libName) {
+		string _libName, PolicyEngine* engine,
+		PluginNegotiationPtrlIF* negotiation)
+		throw(CannotCreateSessionException) :
+	Session(_pluginName, _libName, negotiation), transportProtocol(_tProtocol) {
 	policy = 0;
 	this->engine = engine;
 }
@@ -27,8 +28,10 @@ void TransportSession::setTSession(auto_ptr<PluginTransportIF> tsession) {
 
 void TransportSession::setPolicy(adapt_config::transport_type* _policy)
 		throw(InvalidPolicyException) {
-	if (!_policy)
+	if (!_policy) {
+		log_error("Error on set policy in transport session");
 		throw InvalidPolicyException("null policy object");
+	}
 	policy = _policy;
 	adapt_config::transport_type::policy_const_iterator it(
 			policy->policy().begin());
@@ -49,17 +52,10 @@ auto_ptr<PluginTransportIF>& TransportSession::getSession() {
 	return this->session;
 }
 
-
 string TransportSession::getTransportProtocol() const {
 	return this->transportProtocol;
 }
 
-string TransportSession::getPluginName() const {
-	return this->pluginName;
-}
-string TransportSession::getLibName() const {
-	return this->libName;
-}
 
 void TransportSession::addDestination(string targetIp, int targetPort) {
 	this->session->addDestination(targetIp, targetPort);
@@ -84,15 +80,13 @@ void TransportSession::endSession() {
 	session->endSession();
 }
 
-
-#include <typeinfo>
-using namespace std;
 void TransportSession::newEvent(Event event) throw(InvalidEventException) {
 	log_info("TransportSession::newEvent");
 	runInference(policy, session, dependencies, engine, event);
 }
 
-set<EventType> TransportSession::getDependencies() throw(InvalidPolicyException) {
+set<EventType> TransportSession::getDependencies()
+		throw(InvalidPolicyException) {
 	set<EventType> ret;
 	for (map<EventType, const adapt_config::transport_type::policy_type*>::iterator
 			it = dependencies.begin(); it != dependencies.end(); it++)
