@@ -93,7 +93,7 @@ private:
 
 #include "../streamadapt/inc/plugins/pluginnegotiation.h"
 #include "../streamadapt/inc/infraexceptions.h"
-#include "simpleserver.h"
+//#include "simpleserver.h"
 
 #include <string>
 #include <map>
@@ -112,8 +112,13 @@ private:
 	SimpleClient* client; /* Objeto responsavel pelas acoes de envio e recebimento de menssagens XMPP */
 	const char* name; /* Nome do plugin */
 	//SimpleServer* server; /* Objeto responsavel pelo gerenciamento dos clientes XMPP */
-	map<PluginBase*, list<std::string> > pluginsListeners; /* Mapa que contem os plugins interessados em uma lista de atributos */
+	map<std::string, list<PluginBase*> > pluginsListeners; /* Mapa que contem os plugins interessados em atributos */
 	map<std::string, std::string> attHasSuport; /* Mapa que contem os atributos suportados pelo cliente remoto */
+
+	/**
+	 * Funcao que verifica se um plugin jah esta adicionado a uma lista.
+	 */
+	bool containsInList(list<PluginBase*> list, PluginBase* plugin);
 
 public:
 
