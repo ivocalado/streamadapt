@@ -23,6 +23,10 @@ public:
 		ENCODER_SIDE, DECODER_SIDE, BOTH_SIDES
 	};
 
+	virtual void buildSession(std::map<std::string, std::string> params) = 0;
+
+	virtual void endSession() = 0;
+
 	virtual void adapt(std::string param,
 			std::map<std::string, std::string> &params)
 			throw (OperationNotPerfomedException,

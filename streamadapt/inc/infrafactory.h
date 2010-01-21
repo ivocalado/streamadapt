@@ -14,6 +14,7 @@
 #include "logger/logger.h"
 #include "policyengine.h"
 #include "plugins/pluginnegotiation.h"
+#include "streamsession.h"
 
 #include <memory>
 #include <string>
@@ -41,6 +42,11 @@ public:
 			string ip, int port, InfraFactory::SessionType sessionType,
 			ConnectionListener* listener = 0) throw(CannotCreateSessionException,
 			InvalidPolicyException);
+
+	StreamSession* buildStreamSession(PluginNegotiationPtrlIF* negotiation, auto_ptr<
+			PolicyConfigurationType> policyDesc, PolicyEngine& engine) throw (CannotCreateSessionException,InvalidPolicyException);
+
+
 
 	virtual ~InfraFactory();
 };

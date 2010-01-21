@@ -127,16 +127,18 @@ This property can be overhindden during infrastructure startup</xs:documentation
 											</xs:restriction>
 										</xs:simpleType>
 									</xs:element>
-									<xs:choice>
-										<xs:element name="video-transmission">
-											<xs:complexType>
+									<xs:element name="transmission-properties">
+										<xs:complexType>
+											<xs:choice>
+												<xs:element name="video-transmission">
+												<xs:complexType>
 												<xs:sequence>
 												<xs:element name="video-codec" type="xs:string"/>
 												</xs:sequence>
-											</xs:complexType>
-										</xs:element>
-										<xs:element name="audio-transmission">
-											<xs:complexType>
+												</xs:complexType>
+												</xs:element>
+												<xs:element name="audio-transmission">
+												<xs:complexType>
 												<xs:sequence>
 												<xs:element name="codec-name">
 												<xs:simpleType>
@@ -147,16 +149,22 @@ This property can be overhindden during infrastructure startup</xs:documentation
 												</xs:element>
 												</xs:sequence>
 												<xs:attribute default="false"
-												name="enablePreprocessing" type="xs:boolean"/>
-												<xs:attribute default="false"
-												name="enableEchoCancellation" type="xs:boolean">
-												<xs:annotation>
-												<xs:documentation>Enable echo cancellation. It should be enabled in plugin. </xs:documentation>
-												</xs:annotation>
-												</xs:attribute>
-											</xs:complexType>
-										</xs:element>
-									</xs:choice>
+												name="enable-preprocessing" type="xs:boolean"/>
+												</xs:complexType>
+												</xs:element>
+											</xs:choice>
+											<xs:attribute default="half-transmit"
+												name="transmission-type">
+												<xs:simpleType>
+												<xs:restriction base="xs:string">
+												<xs:enumeration value="half-transmit"/>
+												<xs:enumeration value="half-receive"/>
+												<xs:enumeration value="full-duplex"/>
+												</xs:restriction>
+												</xs:simpleType>
+											</xs:attribute>
+										</xs:complexType>
+									</xs:element>
 									<xs:element default="true" name="enable-adaptation"
 										type="xs:boolean"/>
 									<xs:element minOccurs="0" name="provides">

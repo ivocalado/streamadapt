@@ -253,11 +253,13 @@ namespace AdaptationPolicy
   class plugin_name1;
   class library_name1;
   class library_directory1;
-  class video_transmission;
-  class audio_transmission;
+  class transmission_properties;
   class provides1;
   class adaptation_method;
   class adaptation_method1;
+  class video_transmission;
+  class audio_transmission;
+  class transmission_type;
   class codec_name;
 }
 
@@ -2054,47 +2056,22 @@ namespace AdaptationPolicy
     void
     library_directory (::std::auto_ptr< library_directory_type > p);
 
-    // video-transmission
+    // transmission-properties
     // 
-    typedef ::AdaptationPolicy::video_transmission video_transmission_type;
-    typedef ::xsd::cxx::tree::optional< video_transmission_type > video_transmission_optional;
-    typedef ::xsd::cxx::tree::traits< video_transmission_type, char > video_transmission_traits;
+    typedef ::AdaptationPolicy::transmission_properties transmission_properties_type;
+    typedef ::xsd::cxx::tree::traits< transmission_properties_type, char > transmission_properties_traits;
 
-    const video_transmission_optional&
-    video_transmission () const;
+    const transmission_properties_type&
+    transmission_properties () const;
 
-    video_transmission_optional&
-    video_transmission ();
-
-    void
-    video_transmission (const video_transmission_type& x);
+    transmission_properties_type&
+    transmission_properties ();
 
     void
-    video_transmission (const video_transmission_optional& x);
+    transmission_properties (const transmission_properties_type& x);
 
     void
-    video_transmission (::std::auto_ptr< video_transmission_type > p);
-
-    // audio-transmission
-    // 
-    typedef ::AdaptationPolicy::audio_transmission audio_transmission_type;
-    typedef ::xsd::cxx::tree::optional< audio_transmission_type > audio_transmission_optional;
-    typedef ::xsd::cxx::tree::traits< audio_transmission_type, char > audio_transmission_traits;
-
-    const audio_transmission_optional&
-    audio_transmission () const;
-
-    audio_transmission_optional&
-    audio_transmission ();
-
-    void
-    audio_transmission (const audio_transmission_type& x);
-
-    void
-    audio_transmission (const audio_transmission_optional& x);
-
-    void
-    audio_transmission (::std::auto_ptr< audio_transmission_type > p);
+    transmission_properties (::std::auto_ptr< transmission_properties_type > p);
 
     // enable-adaptation
     // 
@@ -2172,6 +2149,12 @@ namespace AdaptationPolicy
     //
     stream (const plugin_name_type&,
             const library_name_type&,
+            const transmission_properties_type&,
+            const enable_adaptation_type&);
+
+    stream (const plugin_name_type&,
+            const library_name_type&,
+            ::std::auto_ptr< transmission_properties_type >&,
             const enable_adaptation_type&);
 
     stream (const ::xercesc::DOMElement& e,
@@ -2200,8 +2183,7 @@ namespace AdaptationPolicy
     ::xsd::cxx::tree::one< plugin_name_type > plugin_name_;
     ::xsd::cxx::tree::one< library_name_type > library_name_;
     library_directory_optional library_directory_;
-    video_transmission_optional video_transmission_;
-    audio_transmission_optional audio_transmission_;
+    ::xsd::cxx::tree::one< transmission_properties_type > transmission_properties_;
     ::xsd::cxx::tree::one< enable_adaptation_type > enable_adaptation_;
     static const enable_adaptation_type enable_adaptation_default_value_;
     provides_optional provides_;
@@ -2661,44 +2643,89 @@ namespace AdaptationPolicy
     ~library_directory1 ();
   };
 
-  class video_transmission: public ::xml_schema::type
+  class transmission_properties: public ::xml_schema::type
   {
     public:
-    // video-codec
+    // video-transmission
     // 
-    typedef ::xml_schema::string video_codec_type;
-    typedef ::xsd::cxx::tree::traits< video_codec_type, char > video_codec_traits;
+    typedef ::AdaptationPolicy::video_transmission video_transmission_type;
+    typedef ::xsd::cxx::tree::optional< video_transmission_type > video_transmission_optional;
+    typedef ::xsd::cxx::tree::traits< video_transmission_type, char > video_transmission_traits;
 
-    const video_codec_type&
-    video_codec () const;
+    const video_transmission_optional&
+    video_transmission () const;
 
-    video_codec_type&
-    video_codec ();
-
-    void
-    video_codec (const video_codec_type& x);
+    video_transmission_optional&
+    video_transmission ();
 
     void
-    video_codec (::std::auto_ptr< video_codec_type > p);
+    video_transmission (const video_transmission_type& x);
+
+    void
+    video_transmission (const video_transmission_optional& x);
+
+    void
+    video_transmission (::std::auto_ptr< video_transmission_type > p);
+
+    // audio-transmission
+    // 
+    typedef ::AdaptationPolicy::audio_transmission audio_transmission_type;
+    typedef ::xsd::cxx::tree::optional< audio_transmission_type > audio_transmission_optional;
+    typedef ::xsd::cxx::tree::traits< audio_transmission_type, char > audio_transmission_traits;
+
+    const audio_transmission_optional&
+    audio_transmission () const;
+
+    audio_transmission_optional&
+    audio_transmission ();
+
+    void
+    audio_transmission (const audio_transmission_type& x);
+
+    void
+    audio_transmission (const audio_transmission_optional& x);
+
+    void
+    audio_transmission (::std::auto_ptr< audio_transmission_type > p);
+
+    // transmission-type
+    // 
+    typedef ::AdaptationPolicy::transmission_type transmission_type_type;
+    typedef ::xsd::cxx::tree::traits< transmission_type_type, char > transmission_type_traits;
+
+    const transmission_type_type&
+    transmission_type () const;
+
+    transmission_type_type&
+    transmission_type ();
+
+    void
+    transmission_type (const transmission_type_type& x);
+
+    void
+    transmission_type (::std::auto_ptr< transmission_type_type > p);
+
+    static const transmission_type_type&
+    transmission_type_default_value ();
 
     // Constructors.
     //
-    video_transmission (const video_codec_type&);
+    transmission_properties ();
 
-    video_transmission (const ::xercesc::DOMElement& e,
-                        ::xml_schema::flags f = 0,
-                        ::xml_schema::container* c = 0);
+    transmission_properties (const ::xercesc::DOMElement& e,
+                             ::xml_schema::flags f = 0,
+                             ::xml_schema::container* c = 0);
 
-    video_transmission (const video_transmission& x,
-                        ::xml_schema::flags f = 0,
-                        ::xml_schema::container* c = 0);
+    transmission_properties (const transmission_properties& x,
+                             ::xml_schema::flags f = 0,
+                             ::xml_schema::container* c = 0);
 
-    virtual video_transmission*
+    virtual transmission_properties*
     _clone (::xml_schema::flags f = 0,
             ::xml_schema::container* c = 0) const;
 
     virtual 
-    ~video_transmission ();
+    ~transmission_properties ();
 
     // Implementation.
     //
@@ -2708,95 +2735,10 @@ namespace AdaptationPolicy
            ::xml_schema::flags);
 
     protected:
-    ::xsd::cxx::tree::one< video_codec_type > video_codec_;
-  };
-
-  class audio_transmission: public ::xml_schema::type
-  {
-    public:
-    // codec-name
-    // 
-    typedef ::AdaptationPolicy::codec_name codec_name_type;
-    typedef ::xsd::cxx::tree::traits< codec_name_type, char > codec_name_traits;
-
-    const codec_name_type&
-    codec_name () const;
-
-    codec_name_type&
-    codec_name ();
-
-    void
-    codec_name (const codec_name_type& x);
-
-    void
-    codec_name (::std::auto_ptr< codec_name_type > p);
-
-    // enablePreprocessing
-    // 
-    typedef ::xml_schema::boolean enablePreprocessing_type;
-    typedef ::xsd::cxx::tree::traits< enablePreprocessing_type, char > enablePreprocessing_traits;
-
-    const enablePreprocessing_type&
-    enablePreprocessing () const;
-
-    enablePreprocessing_type&
-    enablePreprocessing ();
-
-    void
-    enablePreprocessing (const enablePreprocessing_type& x);
-
-    static const enablePreprocessing_type&
-    enablePreprocessing_default_value ();
-
-    // enableEchoCancellation
-    // 
-    typedef ::xml_schema::boolean enableEchoCancellation_type;
-    typedef ::xsd::cxx::tree::traits< enableEchoCancellation_type, char > enableEchoCancellation_traits;
-
-    const enableEchoCancellation_type&
-    enableEchoCancellation () const;
-
-    enableEchoCancellation_type&
-    enableEchoCancellation ();
-
-    void
-    enableEchoCancellation (const enableEchoCancellation_type& x);
-
-    static const enableEchoCancellation_type&
-    enableEchoCancellation_default_value ();
-
-    // Constructors.
-    //
-    audio_transmission (const codec_name_type&);
-
-    audio_transmission (const ::xercesc::DOMElement& e,
-                        ::xml_schema::flags f = 0,
-                        ::xml_schema::container* c = 0);
-
-    audio_transmission (const audio_transmission& x,
-                        ::xml_schema::flags f = 0,
-                        ::xml_schema::container* c = 0);
-
-    virtual audio_transmission*
-    _clone (::xml_schema::flags f = 0,
-            ::xml_schema::container* c = 0) const;
-
-    virtual 
-    ~audio_transmission ();
-
-    // Implementation.
-    //
-    protected:
-    void
-    parse (::xsd::cxx::xml::dom::parser< char >&,
-           ::xml_schema::flags);
-
-    protected:
-    ::xsd::cxx::tree::one< codec_name_type > codec_name_;
-    ::xsd::cxx::tree::one< enablePreprocessing_type > enablePreprocessing_;
-    static const enablePreprocessing_type enablePreprocessing_default_value_;
-    ::xsd::cxx::tree::one< enableEchoCancellation_type > enableEchoCancellation_;
-    static const enableEchoCancellation_type enableEchoCancellation_default_value_;
+    video_transmission_optional video_transmission_;
+    audio_transmission_optional audio_transmission_;
+    ::xsd::cxx::tree::one< transmission_type_type > transmission_type_;
+    static const transmission_type_type transmission_type_default_value_;
   };
 
   class provides1: public ::xml_schema::type
@@ -2923,6 +2865,182 @@ namespace AdaptationPolicy
 
     virtual 
     ~adaptation_method1 ();
+  };
+
+  class video_transmission: public ::xml_schema::type
+  {
+    public:
+    // video-codec
+    // 
+    typedef ::xml_schema::string video_codec_type;
+    typedef ::xsd::cxx::tree::traits< video_codec_type, char > video_codec_traits;
+
+    const video_codec_type&
+    video_codec () const;
+
+    video_codec_type&
+    video_codec ();
+
+    void
+    video_codec (const video_codec_type& x);
+
+    void
+    video_codec (::std::auto_ptr< video_codec_type > p);
+
+    // Constructors.
+    //
+    video_transmission (const video_codec_type&);
+
+    video_transmission (const ::xercesc::DOMElement& e,
+                        ::xml_schema::flags f = 0,
+                        ::xml_schema::container* c = 0);
+
+    video_transmission (const video_transmission& x,
+                        ::xml_schema::flags f = 0,
+                        ::xml_schema::container* c = 0);
+
+    virtual video_transmission*
+    _clone (::xml_schema::flags f = 0,
+            ::xml_schema::container* c = 0) const;
+
+    virtual 
+    ~video_transmission ();
+
+    // Implementation.
+    //
+    protected:
+    void
+    parse (::xsd::cxx::xml::dom::parser< char >&,
+           ::xml_schema::flags);
+
+    protected:
+    ::xsd::cxx::tree::one< video_codec_type > video_codec_;
+  };
+
+  class audio_transmission: public ::xml_schema::type
+  {
+    public:
+    // codec-name
+    // 
+    typedef ::AdaptationPolicy::codec_name codec_name_type;
+    typedef ::xsd::cxx::tree::traits< codec_name_type, char > codec_name_traits;
+
+    const codec_name_type&
+    codec_name () const;
+
+    codec_name_type&
+    codec_name ();
+
+    void
+    codec_name (const codec_name_type& x);
+
+    void
+    codec_name (::std::auto_ptr< codec_name_type > p);
+
+    // enable-preprocessing
+    // 
+    typedef ::xml_schema::boolean enable_preprocessing_type;
+    typedef ::xsd::cxx::tree::traits< enable_preprocessing_type, char > enable_preprocessing_traits;
+
+    const enable_preprocessing_type&
+    enable_preprocessing () const;
+
+    enable_preprocessing_type&
+    enable_preprocessing ();
+
+    void
+    enable_preprocessing (const enable_preprocessing_type& x);
+
+    static const enable_preprocessing_type&
+    enable_preprocessing_default_value ();
+
+    // Constructors.
+    //
+    audio_transmission (const codec_name_type&);
+
+    audio_transmission (const ::xercesc::DOMElement& e,
+                        ::xml_schema::flags f = 0,
+                        ::xml_schema::container* c = 0);
+
+    audio_transmission (const audio_transmission& x,
+                        ::xml_schema::flags f = 0,
+                        ::xml_schema::container* c = 0);
+
+    virtual audio_transmission*
+    _clone (::xml_schema::flags f = 0,
+            ::xml_schema::container* c = 0) const;
+
+    virtual 
+    ~audio_transmission ();
+
+    // Implementation.
+    //
+    protected:
+    void
+    parse (::xsd::cxx::xml::dom::parser< char >&,
+           ::xml_schema::flags);
+
+    protected:
+    ::xsd::cxx::tree::one< codec_name_type > codec_name_;
+    ::xsd::cxx::tree::one< enable_preprocessing_type > enable_preprocessing_;
+    static const enable_preprocessing_type enable_preprocessing_default_value_;
+  };
+
+  class transmission_type: public ::xml_schema::string
+  {
+    public:
+    enum value
+    {
+      half_transmit,
+      half_receive,
+      full_duplex
+    };
+
+    transmission_type (value v);
+
+    transmission_type (const char* v);
+
+    transmission_type (const ::std::string& v);
+
+    transmission_type (const ::xml_schema::string& v);
+
+    transmission_type (const ::xercesc::DOMElement& e,
+                       ::xml_schema::flags f = 0,
+                       ::xml_schema::container* c = 0);
+
+    transmission_type (const ::xercesc::DOMAttr& a,
+                       ::xml_schema::flags f = 0,
+                       ::xml_schema::container* c = 0);
+
+    transmission_type (const ::std::string& s,
+                       const ::xercesc::DOMElement* e,
+                       ::xml_schema::flags f = 0,
+                       ::xml_schema::container* c = 0);
+
+    transmission_type (const transmission_type& x,
+                       ::xml_schema::flags f = 0,
+                       ::xml_schema::container* c = 0);
+
+    virtual transmission_type*
+    _clone (::xml_schema::flags f = 0,
+            ::xml_schema::container* c = 0) const;
+
+    transmission_type&
+    operator= (value v);
+
+    virtual
+    operator value () const
+    {
+      return _xsd_transmission_type_convert ();
+    }
+
+    protected:
+    value
+    _xsd_transmission_type_convert () const;
+
+    public:
+    static const char* const _xsd_transmission_type_literals_[3];
+    static const value _xsd_transmission_type_indexes_[3];
   };
 
   class codec_name: public ::xml_schema::string

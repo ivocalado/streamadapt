@@ -40,7 +40,7 @@ public:
 	void setPolicy(adapt_config::stream_type* policy)
 			throw(InvalidPolicyException);
 
-
+	virtual string retrievePluginInformation(string key) ;
 
 	auto_ptr<PluginStreamIF>& getSession();
 
