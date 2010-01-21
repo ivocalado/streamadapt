@@ -88,7 +88,7 @@ XMPPNegotiation::XMPPNegotiation() {
 
 XMPPNegotiation::~XMPPNegotiation() {
 	delete client;
-	delete server;
+	//delete server;
 }
 
 void XMPPNegotiation::initNegotiation(std::string localIp, int localPort,
@@ -97,14 +97,14 @@ void XMPPNegotiation::initNegotiation(std::string localIp, int localPort,
 		throw (OperationNotPerfomedException) {
 	if ((*params)["server"] == "yes") {
 		isServer = true;
-		server = new SimpleServer();
+		//server = new SimpleServer();
 		client = new SimpleClient("client_local@boom", "", this);
 	} else
 		client = new SimpleClient("client_remote@boom", "", this, remoteIp,
 				remotePort);
 
 	if (isServer)
-		server->start();
+		//server->start();
 		client->start();
 }
 
@@ -121,29 +121,48 @@ map<std::string, std::string> XMPPNegotiation::getAttrHasSuport() {
 	return attHasSuport;
 }
 
+bool XMPPNegotiation::containsInList(list<PluginBase*> list, PluginBase* plugin) {
+	for (std::list<PluginBase* >::iterator it = list.begin(); it != list.end(); it++ ) {
+		if (*it == plugin)
+			return true;
+	}
+	return false;
+}
+
 void XMPPNegotiation::addPluginListener(PluginBase* plugin,
 		list<std::string> attributes) {
-	pluginsListeners[plugin] = attributes;
+	list<PluginBase*> aux;
+	for (list<std::string>::iterator i = attributes.begin(); i
+			!= attributes.end(); i++) {
+		aux = pluginsListeners[*i];
+		if (!containsInList( aux , plugin)) {
+			aux.push_back(plugin);
+			pluginsListeners[*i] = aux;
+		}
+	}
 }
 
 void XMPPNegotiation::removePluginListener(PluginBase* plugin) {
-	for (map<PluginBase*, list<std::string> >::iterator it =
-			pluginsListeners.begin(); it != pluginsListeners.end(); it++) {
-		//TODO VERFICAR ESSA PARTE QUE FAZ ACESSO AO MAPA PARA REMOVER O PLUGIN DE ACORDO COM O NOME DADO
-		if (it->first == plugin) {
-			pluginsListeners.erase(it->first);
-			break;
+	list<PluginBase*> aux;
+	for (map<std::string, list<PluginBase*> >::iterator it = pluginsListeners.begin(); it != pluginsListeners.end(); it++) {
+		aux = pluginsListeners[it->first];
+		for (list<PluginBase*>::iterator j = aux.begin(); j != aux.end(); j ++) {
+			if ( *j == plugin) {
+				aux.remove(plugin);
+				pluginsListeners[it->first] = aux;
+			}
 		}
 	}
 }
 
 void XMPPNegotiation::assignResponsibleMessageToPlugin(map<std::string,
 		std::string> param) {
+	/*
 	list<std::string> aux;
 	for (map<PluginBase*, list<std::string> >::iterator it =
 			pluginsListeners.begin(); it != pluginsListeners.end(); it++) {
 		aux = it->second;
-		for(list<std::string>::iterator i = aux.begin(); i != aux.end(); i++) {
+		for (list<std::string>::iterator i = aux.begin(); i != aux.end(); i++) {
 			//if (*i == )
 		}
 		//if (it->first->getName() == namePlugin) {
@@ -151,6 +170,7 @@ void XMPPNegotiation::assignResponsibleMessageToPlugin(map<std::string,
 		//	break;
 		//}
 	}
+	*/
 }
 
 void XMPPNegotiation::notifyAdaptation(std::string paramName, std::map<
