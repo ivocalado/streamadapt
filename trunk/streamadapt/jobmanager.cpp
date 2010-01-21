@@ -12,7 +12,7 @@ namespace infrastream {
 JobManager* JobManager::instance = 0;
 
 JobManager* JobManager::getInstance() {
-	if(!instance)
+	if (!instance)
 		instance = new JobManager;
 	return instance;
 }
@@ -26,14 +26,12 @@ JobManager::~JobManager() {
 }
 
 void JobManager::run() {
-	while(jobs.size()) {
-		jobs.readLock();
-		AbstractJob* job = jobs.front();
-		jobs.unlock();
-		job->executeJob();
+	while (jobs.size()) {
 		jobs.writeLock();
+		AbstractJob* job = jobs.front();
 		jobs.pop_front();
 		jobs.unlock();
+		job->executeJob();
 		delete job;
 	}
 }
@@ -45,6 +43,13 @@ void JobManager::addJob(AbstractJob* newJob) {
 }
 
 void JobManager::endSession() {
+	jobs.writeLock();
+	while (jobs.size()) {
+		AbstractJob* job = jobs.front();
+		jobs.pop_front();
+		delete job;
+	}
+	jobs.unlock();
 
 }
 

@@ -39,10 +39,14 @@ public:
 		for (; simpleIt != property.simpleproperty().end(); ++simpleIt) {
 			log_info("key = " + simpleIt->key() + " \t| value = " + *simpleIt);
 			properties[simpleIt->key()] = *simpleIt;
-			session->adapt(simpleIt->key(), properties);
-			if (notifier)
-				notifier->notifyAdaptation(simpleIt->key(), properties);
-			properties.clear();
+			try {
+				session->adapt(simpleIt->key(), properties);
+				if (notifier)
+					notifier->notifyAdaptation(simpleIt->key(), properties);
+				properties.clear();
+			} catch (...) {
+				log_error("Problem in execute adaptation. Revise your policy");
+			}
 		}
 
 		typename AdaptDesc::complexproperty_const_iterator complexIt(
@@ -50,6 +54,8 @@ public:
 		for (; complexIt != property.complexproperty().end(); ++complexIt) {
 			typename AdaptDesc::complexproperty_type::sub_property_const_iterator
 					sub(complexIt->sub_property().begin());
+
+			try{
 			properties.clear();
 			for (; sub != complexIt->sub_property().end(); ++sub) {
 				properties[simpleIt->key()] = *sub;
@@ -57,6 +63,9 @@ public:
 			session->adapt(complexIt->key(), properties);
 			if (notifier)
 				notifier->notifyAdaptation(complexIt->key(), properties);
+			} catch (...) {
+				log_error("Problem in execute adaptation. Revise your policy");
+			}
 		}
 
 		log_info("End plugin configuration\n\n");

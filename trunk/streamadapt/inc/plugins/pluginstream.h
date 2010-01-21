@@ -53,6 +53,8 @@ public:
 
 	virtual uint16 getMaxPayloadSize(void) const = 0;
 
+	virtual uint32 getSampleSize() = 0;
+
 	/**
 	 * Enable preprocessing step. If plugin doesn't support,
 	 * just return false. It throws an exception if the state
