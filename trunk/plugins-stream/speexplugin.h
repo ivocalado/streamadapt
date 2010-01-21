@@ -19,12 +19,11 @@
 
 class SpeexPlugin: public PluginStreamIF {
 
-
 	enum SpeexMode {
-		INVALID_MODE,
-		MODE_NB, // Narrow band
+		INVALID_MODE, MODE_NB, // Narrow band
 		MODE_WB, // Wide band
-		MODE_UWB// Ultra wide band
+		MODE_UWB
+	// Ultra wide band
 	};
 
 	struct HalfCodec {
@@ -33,29 +32,30 @@ class SpeexPlugin: public PluginStreamIF {
 		void* state;
 	};
 
-
-
-
 	map<std::string, MessageType> constants;
 	void initConstants();
 	HalfCodec* encoder;
 	HalfCodec* decoder;
 	SpeexPreprocessState* preprocess;
-//	SpeexEchoState* echocancellation;
-//	bool usingEchoCancellation;
-//	bool echoCapturedLast;
+	//	SpeexEchoState* echocancellation;
+	//	bool usingEchoCancellation;
+	//	bool echoCapturedLast;
 
 
 	void buildEncoder(std::string mode) throw(OperationNotPerfomedException);
 	void buildDecoder(std::string mode) throw(OperationNotPerfomedException);
 	SpeexMode getMode(std::string modeName);
 
-
 	void destroyEncoder() throw(OperationNotPerfomedException);
 	void destroyDecoder() throw(OperationNotPerfomedException);
 public:
+
 	SpeexPlugin();
 	virtual ~SpeexPlugin();
+
+	virtual void buildSession(std::map<std::string, std::string> params);
+
+	virtual void endSession();
 
 	virtual std::string retrievePluginInformation(std::string info,
 			std::string subInfo = "") throw (OperationNotSupportedException,
@@ -76,8 +76,7 @@ public:
 
 	virtual uint16 getDecodingPtime() const;
 
-	uint16 getEncodingSampleRate() const
-			throw(OperationNotPerfomedException);
+	uint16 getEncodingSampleRate() const throw(OperationNotPerfomedException);
 
 	virtual uint16 getDecodingSampleRate(void) const
 			throw(OperationNotPerfomedException);

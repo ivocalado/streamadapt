@@ -605,13 +605,15 @@ void SpeexPlugin::adaptStream(std::string paramName, std::map<std::string,
 				spx_int32_t echosupressactive;
 				is >> echosupressactive;
 				if (is.fail() || speex_preprocess_ctl(preprocess,
-						SPEEX_PREPROCESS_SET_ECHO_SUPPRESS_ACTIVE, &echosupressactive))
+						SPEEX_PREPROCESS_SET_ECHO_SUPPRESS_ACTIVE,
+						&echosupressactive))
 					throw OperationNotPerfomedException(
 							"Invalid parameter: echosupressactive");
 				break;
 
 			default:
-				throw OperationNotSupportedException("Invalid option to Preprocessing");
+				throw OperationNotSupportedException(
+						"Invalid option to Preprocessing");
 			};
 		}
 	default:
@@ -630,24 +632,27 @@ void SpeexPlugin::buildEncoder(std::string modeName)
 			"Please call endEncoder before perform this task");
 
 	SpeexMode mode = getMode(modeName);
-	if (mode == INVALID_MODE)
+
+	const ::SpeexMode *_mode = 0;
+
+	switch (mode) {
+	case MODE_NB:
+		_mode = &speex_nb_mode;
+		break;
+	case MODE_WB:
+		_mode = &speex_wb_mode;
+		break;
+	case MODE_UWB:
+		_mode = &speex_uwb_mode;
+		break;
+	default:
 		throw OperationNotPerfomedException("Invalid Mode");
+	};
 
 	encoder = new HalfCodec;
 	encoder->mode = mode;
 	speex_bits_init(&encoder->bits);
-
-	switch (mode) {
-	case MODE_NB:
-		encoder->state = speex_encoder_init(&speex_nb_mode);
-		break;
-	case MODE_WB:
-		encoder->state = speex_encoder_init(&speex_wb_mode);
-		break;
-	case MODE_UWB:
-		encoder->state = speex_encoder_init(&speex_uwb_mode);
-		break;
-	};
+	encoder->state = speex_encoder_init(_mode);
 }
 void SpeexPlugin::buildDecoder(std::string modeName)
 		throw(OperationNotPerfomedException) {
@@ -832,4 +837,10 @@ bool SpeexPlugin::disablePreprocessing() throw(OperationNotPerfomedException) {
 
 uint16 SpeexPlugin::getMaxPayloadSize() const {
 	return MAX_PAYLOAD_SIZE;
+}
+
+void SpeexPlugin::buildSession(std::map<std::string, std::string> params) {
+}
+
+void SpeexPlugin::endSession() {
 }
