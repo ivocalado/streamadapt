@@ -14,6 +14,8 @@ SpeexPlugin::SpeexPlugin() {
 	encoder = 0;
 	decoder = 0;
 	preprocess = 0;
+	//	usingEchoCancellation = false;
+	//	echoCapturedLast = true;
 }
 
 void SpeexPlugin::initConstants() {
@@ -63,13 +65,13 @@ SpeexPlugin::~SpeexPlugin() {
 		destroyDecoder();
 }
 
-SpeexPlugin::SpeexMode SpeexPlugin::getMode(std::string modeName){
+SpeexPlugin::SpeexMode SpeexPlugin::getMode(std::string modeName) {
 	SpeexMode mode = INVALID_MODE;
-	if(modeName == "NarrowBand")
+	if (modeName == "NarrowBand")
 		mode = MODE_NB;
-	else if(modeName == "WideBand")
+	else if (modeName == "WideBand")
 		mode = MODE_WB;
-	else if(modeName == "UltraWideBand")
+	else if (modeName == "UltraWideBand")
 		mode = MODE_UWB;
 	return mode;
 }
@@ -269,12 +271,12 @@ std::string SpeexPlugin::retrievePluginInformation(std::string info,
 					&echosupressactive);
 			os << echosupressactive;
 			return os.str();
-//		case __SPEEX_PREPROCESS_ECHO_STATE:  For now, it just disabled. Use enable/disable echo cancellation instead
-//			spx_int32_t echostate;
-//			speex_preprocess_ctl(preprocess, SPEEX_PREPROCESS_GET_ECHO_STATE,
-//					&echostate);
-//			os << echostate;
-//			return os.str();
+			//		case __SPEEX_PREPROCESS_ECHO_STATE:  For now, it just disabled. Use enable/disable echo cancellation instead
+			//			spx_int32_t echostate;
+			//			speex_preprocess_ctl(preprocess, SPEEX_PREPROCESS_GET_ECHO_STATE,
+			//					&echostate);
+			//			os << echostate;
+			//			return os.str();
 		default:
 			throw OperationNotSupportedException("Invalid Option in preprocess");
 
@@ -496,6 +498,122 @@ void SpeexPlugin::adaptStream(std::string paramName, std::map<std::string,
 
 		}
 		break;
+	case __PREPROCESS_OPT:
+		if (!preprocess)
+			throw OperationNotPerfomedException("Preprocess not initialized");
+
+		for (std::map<std::string, std::string>::iterator it = params.begin(); it
+				!= params.end(); it++) {
+			MessageType second = constants[it->first];
+			std::istringstream is(it->first);
+
+			switch (second) {
+
+			case __SPEEX_PREPROCESS_DENOISE:
+				spx_int32_t denoise;
+				is >> denoise;
+				if (is.fail() || speex_preprocess_ctl(preprocess,
+						SPEEX_PREPROCESS_SET_DENOISE, &denoise))
+					throw OperationNotPerfomedException(
+							"Invalid parameter: denoise");
+				break;
+
+			case __SPEEX_PREPROCESS_AGC:
+				spx_int32_t agc;
+				is >> agc;
+				if (is.fail() || speex_preprocess_ctl(preprocess,
+						SPEEX_PREPROCESS_SET_AGC, &agc))
+					throw OperationNotPerfomedException(
+							"Invalid parameter: agc");
+				break;
+
+			case __SPEEX_PREPROCESS_AGC_LEVEL:
+				float agclevel;
+				is >> agclevel;
+				if (is.fail() || speex_preprocess_ctl(preprocess,
+						SPEEX_PREPROCESS_SET_AGC_LEVEL, &agclevel))
+					throw OperationNotPerfomedException(
+							"Invalid parameter: agclevel");
+				break;
+
+			case __SPEEX_PREPROCESS_DEREVERB:
+				spx_int32_t dereverb;
+				is >> dereverb;
+				if (is.fail() || speex_preprocess_ctl(preprocess,
+						SPEEX_PREPROCESS_SET_DEREVERB, &dereverb))
+					throw OperationNotPerfomedException(
+							"Invalid parameter: dereverb");
+				break;
+
+			case __SPEEX_PREPROCESS_DEREVERB_LEVEL:
+				spx_int32_t dereverblevel;
+				is >> dereverblevel;
+				if (is.fail() || speex_preprocess_ctl(preprocess,
+						SPEEX_PREPROCESS_SET_DEREVERB_LEVEL, &dereverblevel))
+					throw OperationNotPerfomedException(
+							"Invalid parameter: dereverblevel");
+				break;
+
+			case __SPEEX_PREPROCESS_DEREVERB_DECAY:
+				spx_int32_t dereverbdecay;
+				is >> dereverbdecay;
+				if (is.fail() || speex_preprocess_ctl(preprocess,
+						SPEEX_PREPROCESS_SET_DEREVERB_DECAY, &dereverbdecay))
+					throw OperationNotPerfomedException(
+							"Invalid parameter: dereverbdecay");
+				break;
+
+			case __SPEEX_PREPROCESS_PROB_START:
+				spx_int32_t probstart;
+				is >> probstart;
+				if (is.fail() || speex_preprocess_ctl(preprocess,
+						SPEEX_PREPROCESS_SET_PROB_START, &probstart))
+					throw OperationNotPerfomedException(
+							"Invalid parameter: probstart");
+				break;
+
+			case __SPEEX_PREPROCESS_PROB_CONTINUE:
+				spx_int32_t probcontinue;
+				is >> probcontinue;
+				if (is.fail() || speex_preprocess_ctl(preprocess,
+						SPEEX_PREPROCESS_SET_PROB_CONTINUE, &probcontinue))
+					throw OperationNotPerfomedException(
+							"Invalid parameter: probcontinue");
+				break;
+
+			case __SPEEX_PREPROCESS_NOISE_SUPRESS:
+				spx_int32_t noisesupress;
+				is >> noisesupress;
+				if (is.fail() || speex_preprocess_ctl(preprocess,
+						SPEEX_PREPROCESS_SET_NOISE_SUPPRESS, &noisesupress))
+					throw OperationNotPerfomedException(
+							"Invalid parameter: noisesupress");
+				break;
+
+			case __SPEEX_PREPROCESS_ECHO_SUPRESS:
+
+				spx_int32_t echosupress;
+				is >> echosupress;
+				if (is.fail() || speex_preprocess_ctl(preprocess,
+						SPEEX_PREPROCESS_SET_ECHO_SUPPRESS, &echosupress))
+					throw OperationNotPerfomedException(
+							"Invalid parameter: echosupress");
+				break;
+
+			case __SPEEX_PREPROCESS_ECHO_SUPRESS_ACTIVE:
+
+				spx_int32_t echosupressactive;
+				is >> echosupressactive;
+				if (is.fail() || speex_preprocess_ctl(preprocess,
+						SPEEX_PREPROCESS_SET_ECHO_SUPPRESS_ACTIVE, &echosupressactive))
+					throw OperationNotPerfomedException(
+							"Invalid parameter: echosupressactive");
+				break;
+
+			default:
+				throw OperationNotSupportedException("Invalid option to Preprocessing");
+			};
+		}
 	default:
 		throw OperationNotSupportedException();
 	};
@@ -512,7 +630,7 @@ void SpeexPlugin::buildEncoder(std::string modeName)
 			"Please call endEncoder before perform this task");
 
 	SpeexMode mode = getMode(modeName);
-	if(mode == INVALID_MODE)
+	if (mode == INVALID_MODE)
 		throw OperationNotPerfomedException("Invalid Mode");
 
 	encoder = new HalfCodec;
@@ -538,7 +656,7 @@ void SpeexPlugin::buildDecoder(std::string modeName)
 			"Please call endDecoder before perform this task");
 
 	SpeexMode mode = getMode(modeName);
-	if(mode == INVALID_MODE)
+	if (mode == INVALID_MODE)
 		throw OperationNotPerfomedException("Invalid Mode");
 
 	decoder = new HalfCodec;
@@ -580,6 +698,9 @@ void SpeexPlugin::destroyDecoder() throw(OperationNotPerfomedException) {
 	decoder = 0;
 }
 
+uint32 SpeexPlugin::getSampleSize() {
+	return getEncodingPtime() * getEncodingSampleRate() / 1000* 16 / 8 ;}
+
 uint16 SpeexPlugin::encode(int16 *sample_buf, uint16 nsamples, uint8 *payload,
 		uint16 payload_size, bool &silence)
 		throw(OperationNotPerfomedException) {
@@ -590,7 +711,21 @@ uint16 SpeexPlugin::encode(int16 *sample_buf, uint16 nsamples, uint8 *payload,
 	if (!encoder)
 		throw OperationNotPerfomedException("Encoder not ready");
 
-	// Falta fazer o echo cancelling
+	//	// Falta fazer o echo cancelling
+	//
+	//
+	//	if (usingEchoCancellation && !echoCapturedLast) {
+	//		uint32 samplesize = getSampleSize();
+	//		spx_int16_t *input_buf = new spx_int16_t[samplesize / 2];
+	//
+	//		for (int i = 0; i < getSampleSize() / 2; i++) {
+	//			input_buf[i] = sample_buf[i];
+	//		}
+	//
+	//		speex_echo_capture(echocancellation, input_buf, sample_buf);
+	//		echoCapturedLast = true;
+	//		delete input_buf;
+	//	}
 
 	bool preprocessing_silence = false;
 	if (preprocess) {
@@ -618,10 +753,26 @@ uint16 SpeexPlugin::decode(uint8 *payload, uint16 payload_size, int16 *pcm_buf,
 	int retval;
 	int speex_frame_size;
 
+	if (!decoder || !decoder->state)
+		throw OperationNotPerfomedException("Decoder not initialized");
+
 	speex_decoder_ctl(decoder->state, SPEEX_GET_FRAME_SIZE, &speex_frame_size);
 
 	if (pcm_buf_size < speex_frame_size)
 		throw OperationNotPerfomedException("The buffer is not large enough");
+
+	//	if (usingEchoCancellation && echoCapturedLast) {
+	//		uint32 samplesize = getSampleSize();
+	//		spx_int16_t *input_buf = new spx_int16_t[samplesize / 2];
+	//
+	//		for (int i = 0; i < getSampleSize() / 2; i++) {
+	//			input_buf[i] = sample_buf[i];
+	//		}
+	//
+	//		speex_echo_capture(echocancellation, input_buf, sample_buf);
+	//		echoCapturedLast = false;
+	//		delete input_buf;
+	//	}
 
 	speex_bits_read_from(&decoder->bits, reinterpret_cast<char *> (payload),
 			payload_size);
@@ -665,14 +816,14 @@ bool SpeexPlugin::enablePreprocessing() throw (OperationNotPerfomedException) {
 		throw OperationNotPerfomedException("Encoder not initialized");
 	uint16 sampleRate = getEncodingSampleRate();
 
-	this->preprocess = speex_preprocess_state_init(sampleRate / 1000 * getEncodingPtime(),
-			sampleRate);
+	this->preprocess = speex_preprocess_state_init(sampleRate / 1000
+			* getEncodingPtime(), sampleRate);
 
 	return true;
 }
 
 bool SpeexPlugin::disablePreprocessing() throw(OperationNotPerfomedException) {
-	if(preprocess) {
+	if (preprocess) {
 		speex_preprocess_state_destroy(preprocess);
 		return true;
 	}
