@@ -94,7 +94,7 @@ XMPPNegotiation::XMPPNegotiation() {
 
 XMPPNegotiation::~XMPPNegotiation() {
 	delete client;
-	//delete server;
+	delete server;
 }
 
 void XMPPNegotiation::initNegotiation(std::string localIp, int localPort,
@@ -103,14 +103,14 @@ void XMPPNegotiation::initNegotiation(std::string localIp, int localPort,
 		throw (OperationNotPerfomedException) {
 	if ((*params)["server"] == "yes") {
 		isServer = true;
-		//server = new SimpleServer();
+		server = new SimpleServer();
 		client = new SimpleClient("client_local@boom", "", this);
 	} else
 		client = new SimpleClient("client_remote@boom", "", this, remoteIp,
 				remotePort);
 
 	if (isServer)
-		//server->start();
+		server->start();
 		client->start();
 }
 
