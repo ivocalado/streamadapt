@@ -46,14 +46,14 @@ class SpeexPlugin: public PluginStreamIF {
 	void buildDecoder(std::string mode) throw(OperationNotPerfomedException);
 	SpeexMode getMode(std::string modeName);
 
-	void destroyEncoder() throw(OperationNotPerfomedException);
-	void destroyDecoder() throw(OperationNotPerfomedException);
+	bool destroyEncoder() throw(OperationNotPerfomedException);
+	bool destroyDecoder() throw(OperationNotPerfomedException);
 public:
 
 	SpeexPlugin();
 	virtual ~SpeexPlugin();
 
-	virtual void buildSession(std::map<std::string, std::string> params);
+	void buildSession(StreamType type, std::string codecName, bool enablePreprocessing);
 
 	virtual void endSession();
 

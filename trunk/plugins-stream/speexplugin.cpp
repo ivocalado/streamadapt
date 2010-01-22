@@ -681,19 +681,21 @@ void SpeexPlugin::buildDecoder(std::string modeName)
 	};
 }
 
-void SpeexPlugin::destroyEncoder() throw(OperationNotPerfomedException) {
+bool SpeexPlugin::destroyEncoder() throw(OperationNotPerfomedException) {
 	if (!encoder)
-		throw OperationNotPerfomedException("Encoder already destroyed");
+		return false;
+
 	speex_encoder_destroy(encoder->state);
 
 	speex_bits_destroy(&encoder->bits);
 
 	delete encoder;
 	encoder = 0;
+	return true;
 }
-void SpeexPlugin::destroyDecoder() throw(OperationNotPerfomedException) {
+bool SpeexPlugin::destroyDecoder() throw(OperationNotPerfomedException) {
 	if (!decoder)
-		throw OperationNotPerfomedException("Decoder already destroyed");
+		return false;
 
 	speex_decoder_destroy(decoder->state);
 
@@ -701,6 +703,7 @@ void SpeexPlugin::destroyDecoder() throw(OperationNotPerfomedException) {
 
 	delete decoder;
 	decoder = 0;
+	return true;
 }
 
 uint32 SpeexPlugin::getSampleSize() {
@@ -839,8 +842,28 @@ uint16 SpeexPlugin::getMaxPayloadSize() const {
 	return MAX_PAYLOAD_SIZE;
 }
 
-void SpeexPlugin::buildSession(std::map<std::string, std::string> params) {
+void SpeexPlugin::buildSession(StreamType type, std::string codecName,
+		bool ep) {
+	switch(type) {
+	case ENCODER_SIDE:
+		buildEncoder(codecName);
+		break;
+	case DECODER_SIDE:
+		buildDecoder(codecName);
+		break;
+	case BOTH_SIDES:
+		buildEncoder(codecName);
+		buildDecoder(codecName);
+	};
+
+	if(ep)
+		enablePreprocessing();
+
+
 }
 
 void SpeexPlugin::endSession() {
+	disablePreprocessing();
+	destroyEncoder();
+	destroyDecoder();
 }
