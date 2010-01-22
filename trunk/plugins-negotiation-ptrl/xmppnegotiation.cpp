@@ -22,9 +22,13 @@ SimpleClient::SimpleClient(std::string username, std::string password,
 	mClient->setServer(host);
 	mClient->setPort(port);
 
-	mClient->registerTagHandler(this, MessageConstants::TAG_HAS_SUPPORT,
+	mClient->registerTagHandler(this, MessageConstants::IQ_NOTIFY,
 			MessageConstants::TAG_NAMESPACE_NEGOTIATION_PLUGIN);
-	mClient->registerTagHandler(this, MessageConstants::TAG_IQ,
+	mClient->registerTagHandler(this, MessageConstants::IQ_NOTIFY_RESPONSE,
+			MessageConstants::TAG_NAMESPACE_NEGOTIATION_PLUGIN);
+	mClient->registerTagHandler(this, MessageConstants::IQ_RETRIEVE,
+			MessageConstants::TAG_NAMESPACE_NEGOTIATION_PLUGIN);
+	mClient->registerTagHandler(this, MessageConstants::IQ_RETRIEVE_RESPONSE,
 			MessageConstants::TAG_NAMESPACE_NEGOTIATION_PLUGIN);
 }
 
@@ -53,40 +57,43 @@ void SimpleClient::sendMessage(Tag* mss) {
 	mClient->send(mss);
 }
 
-void SimpleClient::handleTag(Tag *tag) {
-	std::string tagType = tag->findAttribute(MessageConstants::TAG_TYPE);
-	std::string tagSubType = tag->findAttribute(MessageConstants::TAG_SUBTYPE);
-	/*
-	if (nameTag == MessageConstants::TAG_HAS_SUPPORT)
-		newHasSupportEvent(tag);
-	else
-		newIqEvent(tag);
-	*/
-}
-
-void SimpleClient::newHasSupportEvent(Tag* tag) {
+map<std::string, std::string> SimpleClient::getAttibutesTag(Tag* tag) {
 	list<Tag::Attribute*> listAttr = tag->attributes();
 	map<std::string, std::string> mapAttr;
 	for (list<Tag::Attribute*>::iterator it = listAttr.begin(); it
 			!= listAttr.end(); it++)
 		mapAttr[(*it)->name()] = (*it)->value();
-	xmppNegotiation->updateAttrHasSuport(mapAttr);
+	return mapAttr;
 }
 
-void SimpleClient::newIqEvent(Tag* tag) {
-	/*
-	std::string typeIq = tag->findAttribute(MessageConstants::IQ_ID_TYPE);
-	if (atoi(typeIq.c_str()) == MessageConstants::RESULT)
-		printf("asd");
-	*/
-
-	//else if (atoi(typeIq.c_str()) == MessageConstants::RETRIVE)
-	//xmppNegotiation->retrievePluginInformation("info", "subinfo");
-	//else
-	//xmppNegotiation->notifyAdaptation("paramName", map<std::string,
-	//		std::string> params);
-
+void SimpleClient::handleTag(Tag *tag) {
+	std::string message = tag->name();
+	std::string messageType =
+			tag->findAttribute(MessageConstants::MESSAGE_TYPE);
+	if (message == MessageConstants::IQ_NOTIFY)
+		xmppNegotiation->receivedIqNotify(getAttibutesTag(tag), messageType);
+	else if (message == MessageConstants::IQ_NOTIFY_RESPONSE)
+		xmppNegotiation->receivedIqNotifyRespose(getAttibutesTag(tag),
+				messageType);
+	else if (message == MessageConstants::IQ_RETRIEVE)
+		xmppNegotiation->receivedIqRetrieve(tag->findAttribute(
+				MessageConstants::ATTIBUTE_REQUIRED), messageType);
+	else
+		xmppNegotiation->receivedIqRetrieveResponse(tag->findAttribute(
+				MessageConstants::ATTIBUTE_REQUIRED), tag->findAttribute(
+				MessageConstants::ATTIBUTE_VALUE), messageType);
 }
+
+/*
+ void SimpleClient::newHasSupportEvent(Tag* tag) {
+ list<Tag::Attribute*> listAttr = tag->attributes();
+ map<std::string, std::string> mapAttr;
+ for (list<Tag::Attribute*>::iterator it = listAttr.begin(); it
+ != listAttr.end(); it++)
+ mapAttr[(*it)->name()] = (*it)->value();
+ xmppNegotiation->updateAttrHasSuport(mapAttr);
+ }
+ */
 
 //Class XMPPNegotiation
 XMPPNegotiation::XMPPNegotiation() {
@@ -95,6 +102,26 @@ XMPPNegotiation::XMPPNegotiation() {
 XMPPNegotiation::~XMPPNegotiation() {
 	delete client;
 	delete server;
+}
+
+void XMPPNegotiation::receivedIqNotify(
+		map<std::string, std::string> attributes, std::string messageType) {
+
+}
+
+void XMPPNegotiation::receivedIqNotifyRespose(
+		map<std::string, std::string> attributes, std::string messageType) {
+
+}
+
+void XMPPNegotiation::receivedIqRetrieve(std::string attribute,
+		std::string messageType) {
+
+}
+
+void XMPPNegotiation::receivedIqRetrieveResponse(std::string attribute,
+		std::string value, std::string messageType) {
+
 }
 
 void XMPPNegotiation::initNegotiation(std::string localIp, int localPort,
@@ -111,67 +138,12 @@ void XMPPNegotiation::initNegotiation(std::string localIp, int localPort,
 
 	if (isServer)
 		server->start();
-		client->start();
+	client->start();
 }
 
 void XMPPNegotiation::shutdownNegotiation() {
 	//server->stop();
 	client->logout();
-}
-
-void XMPPNegotiation::updateAttrHasSuport(map<std::string, std::string> attr) {
-	attHasSuport = attr;
-}
-
-map<std::string, std::string> XMPPNegotiation::getAttrHasSuport() {
-	return attHasSuport;
-}
-
-bool XMPPNegotiation::containsInList(list<PluginBase*> list, PluginBase* plugin) {
-	for (std::list<PluginBase*>::iterator it = list.begin(); it != list.end(); it++) {
-		if (*it == plugin)
-			return true;
-	}
-	return false;
-}
-
-void XMPPNegotiation::addPluginListener(PluginBase* plugin,
-		list<std::string> attributes) {
-	list<PluginBase*> aux;
-	for (list<std::string>::iterator i = attributes.begin(); i
-			!= attributes.end(); i++) {
-		aux = pluginsListeners[*i];
-		if (!containsInList(aux, plugin)) {
-			aux.push_back(plugin);
-			pluginsListeners[*i] = aux;
-		}
-	}
-}
-
-void XMPPNegotiation::removePluginListener(PluginBase* plugin) {
-	list<PluginBase*> aux;
-	for (map<std::string, list<PluginBase*> >::iterator it =
-			pluginsListeners.begin(); it != pluginsListeners.end(); it++) {
-		aux = pluginsListeners[it->first];
-		for (list<PluginBase*>::iterator j = aux.begin(); j != aux.end(); j++) {
-			if (*j == plugin) {
-				aux.remove(plugin);
-				pluginsListeners[it->first] = aux;
-			}
-		}
-	}
-}
-
-void XMPPNegotiation::assignResponsibleMessageToPlugin(map<std::string,
-		std::string> param) {
-	list<PluginBase*> aux;
-	for (map<std::string, std::string>::iterator it = param.begin(); it
-			!= param.end(); it++) {
-		aux = pluginsListeners[it->first];
-		for (list<PluginBase*>::iterator j = aux.begin(); j != aux.end(); j++) {
-			//j->retrievePluginInformation();
-		}
-	}
 }
 
 void XMPPNegotiation::notifyAdaptation(std::string paramName, std::map<

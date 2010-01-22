@@ -1,22 +1,29 @@
 #include "message.h"
 #include <stdlib.h>
 
-const std::string MessageConstants::STREAM_ADAPT = "streamadapt";
-const std::string MessageConstants::TAG_TYPE = "tag_type";
-const std::string MessageConstants::TAG_SUBTYPE = "tag_subtype";
-const std::string MessageConstants::TAG_IQ = "iq";
-const std::string MessageConstants::TAG_HAS_SUPPORT = "has_suport";
-const std::string MessageConstants::IQ_TYPE = "iq_type";
+const std::string MessageConstants::IQ_NOTIFY = "iq-notify";
+const std::string MessageConstants::IQ_NOTIFY_RESPONSE = "iq-notify-response";
+
+const std::string MessageConstants::IQ_RETRIEVE = "iq-retrieve";
+const std::string MessageConstants::IQ_RETRIEVE_RESPONSE =
+		"iq-retrieve-response";
+
+const std::string MessageConstants::ATTIBUTE_REQUIRED = "attribute-required";
+const std::string MessageConstants::ATTIBUTE_VALUE = "attribute-value";
+
 const std::string MessageConstants::TAG_NAMESPACE_NEGOTIATION_PLUGIN =
 		"http://embedded.ufcg.edu.br";
-
 const std::string MessageConstants::FROM = "from";
 const std::string MessageConstants::TO = "to";
+
+const std::string MessageConstants::MESSAGE_TYPE;
+const std::string MessageConstants::STREAM;
+const std::string MessageConstants::TRANSPORT;
+const std::string MessageConstants::EMPTY_STRING;
 
 MessageCreator* MessageCreator::instance = 0;
 
 MessageCreator::MessageCreator() {
-	srand((unsigned) time(0));
 }
 
 MessageCreator* MessageCreator::getInstance() {
@@ -26,66 +33,58 @@ MessageCreator* MessageCreator::getInstance() {
 }
 
 Tag* MessageCreator::newSimpleTag(const std::string& to,
-		const std::string& from, MessageConstants::tagType tagType, MessageConstants::IqType iqType) {
+		const std::string& from, std::string iqType, std::string messageType) {
 
-	Tag* m = new Tag(MessageConstants::STREAM_ADAPT); //tag leva o nome da aplicacao
-
-	if (tagType == MessageConstants::STREAM)
-		m->addAttribute(MessageConstants::TAG_TYPE, MessageConstants::STREAM); //tipo da tag = stream
-	else
-		m->addAttribute(MessageConstants::TAG_TYPE, MessageConstants::TRANSPORT); //tipo da tag = transport
-
-	switch(iqType) {
-	case MessageConstants::RESULT :
-		m->addAttribute(MessageConstants::TAG_SUBTYPE, MessageConstants::TAG_IQ);
-		m->addAttribute(MessageConstants::IQ_TYPE, iqType);
-		break;
-	case MessageConstants::RETRIVE :
-		m->addAttribute(MessageConstants::TAG_SUBTYPE, MessageConstants::TAG_IQ);
-		m->addAttribute(MessageConstants::IQ_TYPE, iqType);
-		break;
-	case MessageConstants::NOTIFY :
-		m->addAttribute(MessageConstants::TAG_SUBTYPE, MessageConstants::TAG_IQ);
-		m->addAttribute(MessageConstants::IQ_TYPE, iqType);
-		break;
-	case MessageConstants::NONE :
-		m->addAttribute(MessageConstants::TAG_SUBTYPE, MessageConstants::TAG_HAS_SUPPORT);
-		break;
-	};
+	Tag* m = new Tag(iqType);
+	if (messageType != MessageConstants::EMPTY_STRING)
+		m->addAttribute(MessageConstants::MESSAGE_TYPE, messageType);
 	m->addAttribute(MessageConstants::TO, to);
 	m->addAttribute(MessageConstants::FROM, from);
 	m->setXmlns(MessageConstants::TAG_NAMESPACE_NEGOTIATION_PLUGIN);
 	return m;
 }
 
-Tag* MessageCreator::addAttributesInNewTag(std::map<std::string, std::string> attributes){
+Tag* MessageCreator::addAttributesInNewTag(
+		std::map<std::string, std::string> attributes) {
 	Tag* tag = new Tag("Attributes");
-	for (std::map<std::string, std::string>::const_iterator it = attributes.begin(); it != attributes.end(); it++) {
+	for (std::map<std::string, std::string>::const_iterator it =
+			attributes.begin(); it != attributes.end(); it++) {
 		tag->addAttribute(it->first, it->second);
 	}
 	return tag;
 }
 
-Tag* MessageCreator::newHasSuport(const std::string& to, const std::string& from, std::map<std::string, std::string> attributes){
-	Tag* tag = newSimpleTag(to, from, MessageConstants::STREAM);
+Tag* MessageCreator::newIqNotify(const std::string& to,
+		const std::string& from, std::map<std::string, std::string> attributes,
+		std::string messageType) {
+	Tag* tag = newSimpleTag(to, from, MessageConstants::IQ_NOTIFY, messageType);
 	tag->addChild(addAttributesInNewTag(attributes));
 	return tag;
 }
 
-Tag* MessageCreator::newIqResult(const std::string& to, const std::string& from, std::map<std::string, std::string> attributes){
-	Tag* tag = newSimpleTag(to, from, MessageConstants::STREAM, MessageConstants::RESULT);
+Tag* MessageCreator::newIqNotifyResponse(const std::string& to,
+		const std::string& from, std::map<std::string, std::string> attributes,
+		std::string messageType) {
+	Tag* tag = newSimpleTag(to, from, MessageConstants::IQ_NOTIFY_RESPONSE,
+			messageType);
 	tag->addChild(addAttributesInNewTag(attributes));
 	return tag;
 }
 
-Tag* MessageCreator::newIqRetrive(const std::string& to, const std::string& from, std::map<std::string, std::string> attributes){
-	Tag* tag = newSimpleTag(to, from, MessageConstants::STREAM, MessageConstants::RETRIVE);
-	tag->addChild(addAttributesInNewTag(attributes));
+Tag* MessageCreator::newIqRetrieve(const std::string& to,
+		const std::string& from, std::string attribute, std::string messageType) {
+	Tag* tag = newSimpleTag(to, from, MessageConstants::IQ_RETRIEVE,
+			messageType);
+	tag->addAttribute(MessageConstants::ATTIBUTE_REQUIRED, attribute);
 	return tag;
 }
 
-Tag* MessageCreator::newIqNotify(const std::string& to, const std::string& from, std::map<std::string, std::string> attributes){
-	Tag* tag = newSimpleTag(to, from, MessageConstants::STREAM, MessageConstants::NOTIFY);
-	tag->addChild(addAttributesInNewTag(attributes));
+Tag* MessageCreator::newIqRetrieveResponse(const std::string& to,
+		const std::string& from, std::string attribute, std::string value,
+		std::string messageType) {
+	Tag* tag = newSimpleTag(to, from, MessageConstants::IQ_RETRIEVE_RESPONSE,
+			messageType);
+	tag->addAttribute(MessageConstants::ATTIBUTE_REQUIRED, attribute);
+	tag->addAttribute(MessageConstants::ATTIBUTE_VALUE, value);
 	return tag;
 }

@@ -66,18 +66,6 @@ public:
 	virtual void handleTag(Tag *tag);
 
 	/**
-	 * Metodo responsavel pela acao de recebimento da mensagem de HasSuport do cliente XMPP.
-	 * @param tag estrutura Gloox que contem as menssagens recebidas pelo cliente XMPP
-	 */
-	void newHasSupportEvent(Tag* tag);
-
-	/**
-	 * Metodo que faz o tratamento da mensagem XMPP recebida.
-	 * @param estrutura Gloox que contem as menssagens recebidas pelo cliente XMPP
-	 */
-	void newIqEvent(Tag* tag);
-
-	/**
 	 * Metodo que executa a acao de start da implementacao de thread.
 	 */
 	void run(void);
@@ -86,6 +74,7 @@ private:
 
 	/* Cliente XMPP interno*/
 	Client* mClient;
+	map<std::string, std::string> getAttibutesTag(Tag* tag);
 };
 
 #ifndef XMPPNEGOTIATION_H_
@@ -112,13 +101,7 @@ private:
 	SimpleClient* client; /* Objeto responsavel pelas acoes de envio e recebimento de menssagens XMPP */
 	const char* name; /* Nome do plugin */
 	SimpleServer* server; /* Objeto responsavel pelo gerenciamento dos clientes XMPP */
-	map<std::string, list<PluginBase*> > pluginsListeners; /* Mapa que contem os plugins interessados em atributos */
 	map<std::string, std::string> attHasSuport; /* Mapa que contem os atributos suportados pelo cliente remoto */
-
-	/**
-	 * Funcao que verifica se um plugin jah esta adicionado a uma lista.
-	 */
-	bool containsInList(list<PluginBase*> list, PluginBase* plugin);
 
 public:
 
@@ -131,6 +114,14 @@ public:
 	 * Metodo destrutor
 	 */
 	virtual ~XMPPNegotiation();
+
+	void receivedIqNotify(map<std::string, std::string> attributes,
+			std::string messageType);
+	void receivedIqNotifyRespose(map<std::string, std::string> attributes,
+			std::string messageType);
+	void receivedIqRetrieve(std::string attribute, std::string messageType);
+	void receivedIqRetrieveResponse(std::string attribute, std::string value,
+			std::string messageType);
 
 	/**
 	 * Metodo que inicia a negociacao entre as entidades cliente/servidor XMPP.
@@ -146,35 +137,9 @@ public:
 			throw (OperationNotPerfomedException);
 
 	/**
-	 * Metodo que cadastram plugins interessador a uma lista de atributos.
-	 * @param plugin Objeto do tipo plugin
-	 * @param attributes Lista de atributos de interesse do plugin
-	 */
-	void addPluginListener(PluginBase* plugin, list<std::string> attributes);
-
-	/**
-	 * Metodo que remove um plugin jah cadastrado
-	 * @param namePlugin nome do plugin a ser retirado
-	 */
-	void removePluginListener(PluginBase* plugin);
-
-	/**
 	 * Metodo que encerra a negociacao entre cliente/servidor XMPP.
 	 */
 	virtual void shutdownNegotiation();
-
-	/**
-	 * Metodo que atualiza o mapa que possui os atributos e valores suportados pela entidade remota.
-	 * @param attr atributos que irao atualizar o mapa interno.
-	 */
-	void updateAttrHasSuport(map<std::string, std::string> attr);
-
-	/**
-	 * Metodo que informa o mapa de atributos e valores suportados pela entidade remota.
-	 */
-	map<std::string, std::string> getAttrHasSuport();
-
-	void assignResponsibleMessageToPlugin(map<std::string, std::string> param);
 
 	/**
 	 * Metodo que realiza a acao de recebimento de modificaco de adaptacao.
