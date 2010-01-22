@@ -23,7 +23,7 @@ public:
 		ENCODER_SIDE, DECODER_SIDE, BOTH_SIDES
 	};
 
-	virtual void buildSession(std::map<std::string, std::string> params) = 0;
+	virtual void buildSession(StreamType type, std::string codecName, bool enablePreprocessing) = 0;
 
 	virtual void endSession() = 0;
 

@@ -105,8 +105,8 @@ TransportSession* InfraFactory::buildTransportSession(
 	}
 
 	JobManager::getInstance()->addJob(new AdaptationJob<
-			startup_config::transport_type, auto_ptr<PluginTransportIF>, PluginNegotiationPtrlIF > (
-			tProperties, plugin));
+			startup_config::transport_type, auto_ptr<PluginTransportIF> ,
+			PluginNegotiationPtrlIF> (tProperties, plugin));
 
 	plugin->startSession();
 	session->setTSession(plugin);
@@ -160,9 +160,10 @@ StreamSession* InfraFactory::buildStreamSession(
 	checkAndLog(plugin->getName(), pluginName, false,
 			"The protocols specified are different. Make your checks", log_warning);
 
-	int transmisstionType = sProperties.transmission_properties().transmission_type();
+	int transmisstionType =
+			sProperties.transmission_properties().transmission_type();
 
-	if(sProperties.transmission_properties().audio_transmission().present()) {
+	if (sProperties.transmission_properties().audio_transmission().present()) {
 		PluginStreamIF::StreamType st;
 
 		switch (transmisstionType) {
@@ -177,48 +178,74 @@ StreamSession* InfraFactory::buildStreamSession(
 			break;
 		};
 
+		plugin->buildSession(
+				st,
+				sProperties.transmission_properties().audio_transmission().get().codec_name(),
+				sProperties.transmission_properties().audio_transmission().get().enable_preprocessing());
+
 	} else {
 		///TODO build video SESSION
 
 	}
 
+	if (sProperties.provides().present()) {
+		startup_config::stream_type::provides_type::provide_iterator provideIt(
+				sProperties.provides().get().provide().begin());
+		for (; provideIt != sProperties.provides().get().provide().end(); ++provideIt) {
+			EventType et(*provideIt);
+			EventType det(__default_value(*provideIt));
+			Event de(det, provideIt->default_value());
+			unsigned int timestamp = provideIt->update_time();
+			engine.registerProvider(et, timestamp, plugin.get(), de);
+		}
+	}
 
+	JobManager::getInstance()->addJob(new AdaptationJob<
+			startup_config::stream_type, auto_ptr<PluginStreamIF> ,
+			PluginNegotiationPtrlIF> (sProperties, plugin));
+
+
+	session->setSSession(plugin);
+
+	return session;
+
+	//	plugin->startSession();
+//	session->setTSession(plugin);
 
 	//virtual void buildSession(StreamType streamType, s) = 0;
-//	try {
-//		if (sessionType == SERVER_SESSION) {
-//			plugin->buildSession(ip, port, listener);
-//		} else {
-//			plugin->buildSession();
-//			plugin->addDestination(ip, port);
-//			plugin->sendData(0); //Send a silent packet to open socket
-//		}
-//	} catch (...) {
-//		delete session;
-//		log_error("invalid Session");
-//		throw CannotCreateSessionException();
-//	}
+	//	try {
+	//		if (sessionType == SERVER_SESSION) {
+	//			plugin->buildSession(ip, port, listener);
+	//		} else {
+	//			plugin->buildSession();
+	//			plugin->addDestination(ip, port);
+	//			plugin->sendData(0); //Send a silent packet to open socket
+	//		}
+	//	} catch (...) {
+	//		delete session;
+	//		log_error("invalid Session");
+	//		throw CannotCreateSessionException();
+	//	}
 
 
-
-//	if (tProperties.provides().present()) {
-//		startup_config::transport_type::provides_type::provide_iterator
-//				provideIt(tProperties.provides().get().provide().begin());
-//		for (; provideIt != tProperties.provides().get().provide().end(); ++provideIt) {
-//			EventType et(*provideIt);
-//			EventType det(__default_value(*provideIt));
-//			Event de(det, provideIt->default_value());
-//			unsigned int timestamp = provideIt->update_time();
-//			engine.registerProvider(et, timestamp, plugin.get(), de);
-//		}
-//	}
-//
-//	JobManager::getInstance()->addJob(new AdaptationJob<
-//			startup_config::transport_type, auto_ptr<PluginTransportIF> > (
-//			tProperties, plugin));
-//
-//	plugin->startSession();
-//	session->setTSession(plugin);
+	//	if (tProperties.provides().present()) {
+	//		startup_config::transport_type::provides_type::provide_iterator
+	//				provideIt(tProperties.provides().get().provide().begin());
+	//		for (; provideIt != tProperties.provides().get().provide().end(); ++provideIt) {
+	//			EventType et(*provideIt);
+	//			EventType det(__default_value(*provideIt));
+	//			Event de(det, provideIt->default_value());
+	//			unsigned int timestamp = provideIt->update_time();
+	//			engine.registerProvider(et, timestamp, plugin.get(), de);
+	//		}
+	//	}
+	//
+	//	JobManager::getInstance()->addJob(new AdaptationJob<
+	//			startup_config::transport_type, auto_ptr<PluginTransportIF> > (
+	//			tProperties, plugin));
+	//
+	//	plugin->startSession();
+	//	session->setTSession(plugin);
 
 	return session;
 
