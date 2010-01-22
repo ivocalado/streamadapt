@@ -249,17 +249,6 @@ This property can be overhindden during infrastructure startup</xs:documentation
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
-			<xs:element name="unit">
-				<xs:annotation>
-					<xs:documentation>Define the unit that will be used to
-						measure</xs:documentation>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:minLength value="1"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
 			<xs:element maxOccurs="1" minOccurs="0" name="lower">
 				<xs:complexType>
 					<xs:sequence>

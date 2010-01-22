@@ -230,7 +230,6 @@ namespace AdaptationPolicy
   class startup_config;
   class adapt_config;
   class comparisson_attibute;
-  class unit;
   class lower;
   class range;
   class greater;
@@ -410,23 +409,6 @@ namespace AdaptationPolicy
     void
     comparisson_attibute (::std::auto_ptr< comparisson_attibute_type > p);
 
-    // unit
-    // 
-    typedef ::AdaptationPolicy::unit unit_type;
-    typedef ::xsd::cxx::tree::traits< unit_type, char > unit_traits;
-
-    const unit_type&
-    unit () const;
-
-    unit_type&
-    unit ();
-
-    void
-    unit (const unit_type& x);
-
-    void
-    unit (::std::auto_ptr< unit_type > p);
-
     // lower
     // 
     typedef ::AdaptationPolicy::lower lower_type;
@@ -488,8 +470,7 @@ namespace AdaptationPolicy
 
     // Constructors.
     //
-    PolicyType (const comparisson_attibute_type&,
-                const unit_type&);
+    PolicyType (const comparisson_attibute_type&);
 
     PolicyType (const ::xercesc::DOMElement& e,
                 ::xml_schema::flags f = 0,
@@ -515,7 +496,6 @@ namespace AdaptationPolicy
 
     protected:
     ::xsd::cxx::tree::one< comparisson_attibute_type > comparisson_attibute_;
-    ::xsd::cxx::tree::one< unit_type > unit_;
     lower_optional lower_;
     range_sequence range_;
     greater_optional greater_;
@@ -1033,44 +1013,6 @@ namespace AdaptationPolicy
 
     virtual 
     ~comparisson_attibute ();
-  };
-
-  class unit: public ::xml_schema::string
-  {
-    public:
-    // Constructors.
-    //
-    unit ();
-
-    unit (const char*);
-
-    unit (const ::std::string&);
-
-    unit (const ::xml_schema::string&);
-
-    unit (const ::xercesc::DOMElement& e,
-          ::xml_schema::flags f = 0,
-          ::xml_schema::container* c = 0);
-
-    unit (const ::xercesc::DOMAttr& a,
-          ::xml_schema::flags f = 0,
-          ::xml_schema::container* c = 0);
-
-    unit (const ::std::string& s,
-          const ::xercesc::DOMElement* e,
-          ::xml_schema::flags f = 0,
-          ::xml_schema::container* c = 0);
-
-    unit (const unit& x,
-          ::xml_schema::flags f = 0,
-          ::xml_schema::container* c = 0);
-
-    virtual unit*
-    _clone (::xml_schema::flags f = 0,
-            ::xml_schema::container* c = 0) const;
-
-    virtual 
-    ~unit ();
   };
 
   class lower: public ::xml_schema::type

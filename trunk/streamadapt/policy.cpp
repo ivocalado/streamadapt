@@ -175,30 +175,6 @@ namespace AdaptationPolicy
     this->comparisson_attibute_.set (x);
   }
 
-  const PolicyType::unit_type& PolicyType::
-  unit () const
-  {
-    return this->unit_.get ();
-  }
-
-  PolicyType::unit_type& PolicyType::
-  unit ()
-  {
-    return this->unit_.get ();
-  }
-
-  void PolicyType::
-  unit (const unit_type& x)
-  {
-    this->unit_.set (x);
-  }
-
-  void PolicyType::
-  unit (::std::auto_ptr< unit_type > x)
-  {
-    this->unit_.set (x);
-  }
-
   const PolicyType::lower_optional& PolicyType::
   lower () const
   {
@@ -621,10 +597,6 @@ namespace AdaptationPolicy
 
 
   // comparisson_attibute
-  //
-
-
-  // unit
   //
 
 
@@ -2066,11 +2038,9 @@ namespace AdaptationPolicy
   //
 
   PolicyType::
-  PolicyType (const comparisson_attibute_type& comparisson_attibute,
-              const unit_type& unit)
+  PolicyType (const comparisson_attibute_type& comparisson_attibute)
   : ::xml_schema::type (),
     comparisson_attibute_ (comparisson_attibute, ::xml_schema::flags (), this),
-    unit_ (unit, ::xml_schema::flags (), this),
     lower_ (::xml_schema::flags (), this),
     range_ (::xml_schema::flags (), this),
     greater_ (::xml_schema::flags (), this)
@@ -2083,7 +2053,6 @@ namespace AdaptationPolicy
               ::xml_schema::container* c)
   : ::xml_schema::type (x, f, c),
     comparisson_attibute_ (x.comparisson_attibute_, f, this),
-    unit_ (x.unit_, f, this),
     lower_ (x.lower_, f, this),
     range_ (x.range_, f, this),
     greater_ (x.greater_, f, this)
@@ -2096,7 +2065,6 @@ namespace AdaptationPolicy
               ::xml_schema::container* c)
   : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
     comparisson_attibute_ (f, this),
-    unit_ (f, this),
     lower_ (f, this),
     range_ (f, this),
     greater_ (f, this)
@@ -2128,20 +2096,6 @@ namespace AdaptationPolicy
         if (!comparisson_attibute_.present ())
         {
           this->comparisson_attibute_.set (r);
-          continue;
-        }
-      }
-
-      // unit
-      //
-      if (n.name () == "unit" && n.namespace_ ().empty ())
-      {
-        ::std::auto_ptr< unit_type > r (
-          unit_traits::create (i, f, this));
-
-        if (!unit_.present ())
-        {
-          this->unit_.set (r);
           continue;
         }
       }
@@ -2192,13 +2146,6 @@ namespace AdaptationPolicy
     {
       throw ::xsd::cxx::tree::expected_element< char > (
         "comparisson-attibute",
-        "");
-    }
-
-    if (!unit_.present ())
-    {
-      throw ::xsd::cxx::tree::expected_element< char > (
-        "unit",
         "");
     }
   }
@@ -2955,78 +2902,6 @@ namespace AdaptationPolicy
 
   comparisson_attibute::
   ~comparisson_attibute ()
-  {
-  }
-
-  // unit
-  //
-
-  unit::
-  unit ()
-  : ::xml_schema::string ()
-  {
-  }
-
-  unit::
-  unit (const char* _xsd_string_base)
-  : ::xml_schema::string (_xsd_string_base)
-  {
-  }
-
-  unit::
-  unit (const ::std::string& _xsd_string_base)
-  : ::xml_schema::string (_xsd_string_base)
-  {
-  }
-
-  unit::
-  unit (const ::xml_schema::string& _xsd_string_base)
-  : ::xml_schema::string (_xsd_string_base)
-  {
-  }
-
-  unit::
-  unit (const unit& x,
-        ::xml_schema::flags f,
-        ::xml_schema::container* c)
-  : ::xml_schema::string (x, f, c)
-  {
-  }
-
-  unit::
-  unit (const ::xercesc::DOMElement& e,
-        ::xml_schema::flags f,
-        ::xml_schema::container* c)
-  : ::xml_schema::string (e, f, c)
-  {
-  }
-
-  unit::
-  unit (const ::xercesc::DOMAttr& a,
-        ::xml_schema::flags f,
-        ::xml_schema::container* c)
-  : ::xml_schema::string (a, f, c)
-  {
-  }
-
-  unit::
-  unit (const ::std::string& s,
-        const ::xercesc::DOMElement* e,
-        ::xml_schema::flags f,
-        ::xml_schema::container* c)
-  : ::xml_schema::string (s, e, f, c)
-  {
-  }
-
-  unit* unit::
-  _clone (::xml_schema::flags f,
-          ::xml_schema::container* c) const
-  {
-    return new class unit (*this, f, c);
-  }
-
-  unit::
-  ~unit ()
   {
   }
 
