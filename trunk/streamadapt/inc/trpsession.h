@@ -33,7 +33,7 @@ class TransportSession: public Session {
 	//	bool enabledAdapt;
 
 	map<EventType, const adapt_config::transport_type::policy_type*> dependencies;
-
+	PluginNegotiationPtrlIF* negotiation;
 	string transportProtocol;
 
 public:

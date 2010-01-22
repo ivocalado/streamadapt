@@ -5,12 +5,11 @@
  *      Author: ivocalado
  */
 
-#include "inc/session.h"
+#include <session.h>
 
 namespace infrastream {
 
-Session::Session(string _pluginName, string _libName,
-		PluginNegotiationPtrlIF* negotiation)
+Session::Session(string _pluginName, string _libName)
 		throw(CannotCreateSessionException) :
 	pluginName(_pluginName), libName(_libName) {
 	/*if (negotiation)
@@ -25,9 +24,6 @@ Session::~Session() {
 	// TODO Auto-generated destructor stub
 }
 
-PluginNegotiationPtrlIF* Session::getNegotiation() const {
-	return negotiation;
-}
 
 string Session::getPluginName() const {
 	return pluginName;

@@ -13,9 +13,10 @@ namespace infrastream {
 StreamSession::StreamSession(string _pluginName, string _libName,
 		PolicyEngine* engine, PluginNegotiationPtrlIF* negotiation)
 		throw(CannotCreateSessionException) :
-	Session(_pluginName, _libName, negotiation) {
+	Session(_pluginName, _libName) {
 	policy = 0;
 	this->engine = engine;
+	this->negotiation = negotiation; // Testar negociacao
 }
 
 void StreamSession::setSSession(auto_ptr<PluginStreamIF> ssession) {
@@ -56,7 +57,7 @@ void StreamSession::endSession() {
 
 void StreamSession::newEvent(Event event) throw(InvalidEventException) {
 	log_info("StreamSession::newEvent");
-	runInference(policy, session, dependencies, engine, event);
+	runInference(policy, session, dependencies, engine, event, negotiation);
 }
 set<EventType> StreamSession::getDependencies() throw(InvalidPolicyException) {
 	set<EventType> ret;

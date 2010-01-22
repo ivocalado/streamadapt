@@ -25,7 +25,7 @@
         <stream>
             <plugin-name>fdg</plugin-name>
             <library-name>uyt</library-name>
-            <transmission-properties>
+            <transmission-properties transmission-type="full-duplex">
                 <audio-transmission>
                     <codec-name>jh</codec-name>
                 </audio-transmission>

@@ -10,9 +10,26 @@
 #include "pluginbase.h"
 #include <string>
 #include <map>
+#include <event.h>
+#include <eventtype.h>
+#include <policyengine.h>
 
 class PluginNegotiationPtrlIF: public PluginBase {
+	infrastream::PolicyEngine *engine;
+protected:
+	infrastream::Event retrieveLastLocalEvent(infrastream::EventType type) {
+		return engine->getLastEvent(type);
+	}
 public:
+
+	/**
+	 * Differently from the others plugins, the negotiation needs to make a
+	 * plugin-core talk
+	 */
+	void setEngine(infrastream::PolicyEngine *engine) {
+		this->engine = engine;
+	}
+
 	virtual const char* getName() const = 0;
 	// Adicionar metodos padrao para negociacao
 	virtual void notifyAdaptation(std::string paramName, std::map<std::string,

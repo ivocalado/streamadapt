@@ -21,8 +21,8 @@ void AdaptationManager::commitAdaptation(PluginBase& plugin,
 		std::string paramName, std::map<std::string, std::string>& params)
 		throw(OperationNotPerfomedException, OperationNotSupportedException) {
 
-	plugin.adapt(paramName, params);
-	negotiation->notifyAdaptation(paramName, params);
+	//plugin.adapt(paramName, params);
+	//negotiation->notifyAdaptation(paramName, params);
 }
 
 }
