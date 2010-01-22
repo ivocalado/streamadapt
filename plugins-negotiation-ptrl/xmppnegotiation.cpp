@@ -54,11 +54,14 @@ void SimpleClient::sendMessage(Tag* mss) {
 }
 
 void SimpleClient::handleTag(Tag *tag) {
-	std::string nameTag = tag->name();
+	std::string tagType = tag->findAttribute(MessageConstants::TAG_TYPE);
+	std::string tagSubType = tag->findAttribute(MessageConstants::TAG_SUBTYPE);
+	/*
 	if (nameTag == MessageConstants::TAG_HAS_SUPPORT)
 		newHasSupportEvent(tag);
 	else
 		newIqEvent(tag);
+	*/
 }
 
 void SimpleClient::newHasSupportEvent(Tag* tag) {
@@ -71,9 +74,12 @@ void SimpleClient::newHasSupportEvent(Tag* tag) {
 }
 
 void SimpleClient::newIqEvent(Tag* tag) {
+	/*
 	std::string typeIq = tag->findAttribute(MessageConstants::IQ_ID_TYPE);
 	if (atoi(typeIq.c_str()) == MessageConstants::RESULT)
 		printf("asd");
+	*/
+
 	//else if (atoi(typeIq.c_str()) == MessageConstants::RETRIVE)
 	//xmppNegotiation->retrievePluginInformation("info", "subinfo");
 	//else
@@ -88,7 +94,7 @@ XMPPNegotiation::XMPPNegotiation() {
 
 XMPPNegotiation::~XMPPNegotiation() {
 	delete client;
-	delete server;
+	//delete server;
 }
 
 void XMPPNegotiation::initNegotiation(std::string localIp, int localPort,
@@ -97,14 +103,14 @@ void XMPPNegotiation::initNegotiation(std::string localIp, int localPort,
 		throw (OperationNotPerfomedException) {
 	if ((*params)["server"] == "yes") {
 		isServer = true;
-		server = new SimpleServer();
+		//server = new SimpleServer();
 		client = new SimpleClient("client_local@boom", "", this);
 	} else
 		client = new SimpleClient("client_remote@boom", "", this, remoteIp,
 				remotePort);
 
 	if (isServer)
-		server->start();
+		//server->start();
 		client->start();
 }
 
@@ -161,7 +167,7 @@ void XMPPNegotiation::assignResponsibleMessageToPlugin(map<std::string,
 	list<PluginBase*> aux;
 	for (map<std::string, std::string>::iterator it = param.begin(); it
 			!= param.end(); it++) {
-		aux = pluginsListeners[*it->first];
+		aux = pluginsListeners[it->first];
 		for (list<PluginBase*>::iterator j = aux.begin(); j != aux.end(); j++) {
 			//j->retrievePluginInformation();
 		}
