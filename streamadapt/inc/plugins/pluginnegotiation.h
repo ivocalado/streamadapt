@@ -9,6 +9,7 @@
 #define PLUGIN_NEGOTIATION_H_
 #include "pluginbase.h"
 #include <string>
+#include <ostream>
 #include <map>
 #include <event.h>
 #include <eventtype.h>
@@ -17,8 +18,10 @@
 class PluginNegotiationPtrlIF: public PluginBase {
 	infrastream::PolicyEngine *engine;
 protected:
-	infrastream::Event retrieveLastLocalEvent(infrastream::EventType type) {
-		return engine->getLastEvent(type);
+	std::string retrieveLastLocalEvent(std::string type) {
+		std::ostringstream os;
+		os << engine->getLastEvent(infrastream::EventType(type)).getPayload();
+		return os.str();
 	}
 public:
 
