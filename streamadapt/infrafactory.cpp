@@ -105,7 +105,7 @@ TransportSession* InfraFactory::buildTransportSession(
 	}
 
 	JobManager::getInstance()->addJob(new AdaptationJob<
-			startup_config::transport_type, auto_ptr<PluginTransportIF> > (
+			startup_config::transport_type, auto_ptr<PluginTransportIF>, PluginNegotiationPtrlIF > (
 			tProperties, plugin));
 
 	plugin->startSession();
@@ -160,9 +160,26 @@ StreamSession* InfraFactory::buildStreamSession(
 	checkAndLog(plugin->getName(), pluginName, false,
 			"The protocols specified are different. Make your checks", log_warning);
 
+	int transmisstionType = sProperties.transmission_properties().transmission_type();
+
 	if(sProperties.transmission_properties().audio_transmission().present()) {
-		string s = sProperties.transmission_properties().transmission_type();
-		//if(s == )
+		PluginStreamIF::StreamType st;
+
+		switch (transmisstionType) {
+		case (startup_config::stream_type::transmission_properties_type::transmission_type_type::half_receive):
+			st = PluginStreamIF::DECODER_SIDE;
+			break;
+		case (startup_config::stream_type::transmission_properties_type::transmission_type_type::half_transmit):
+			st = PluginStreamIF::ENCODER_SIDE;
+			break;
+		case (startup_config::stream_type::transmission_properties_type::transmission_type_type::full_duplex):
+			st = PluginStreamIF::BOTH_SIDES;
+			break;
+		};
+
+	} else {
+		///TODO build video SESSION
+
 	}
 
 

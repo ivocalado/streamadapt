@@ -47,6 +47,8 @@ public:
 			throw(OperationNotPerfomedException, OperationNotSupportedException) {
 	}
 
+//	virtual void adaptRemote()
+
 	/*MUST BE OVERHINDEN*/
 	void addListener(PluginSignal signal, PluginListener* listener)
 			throw (OperationNotSupportedException);

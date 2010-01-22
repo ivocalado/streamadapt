@@ -11,9 +11,10 @@
 #include "event.h"
 #include "eventtype.h"
 #include "logger/logger.h"
-#include "plugins/pluginnegotiation.h"
+//#include "plugins/pluginbase.h"
 #include "jobmanager.h"
 #include "adaptationjob.h"
+//#include "plugins/pluginnegotiation.h"
 
 #include <map>
 #include <set>
@@ -26,20 +27,19 @@ namespace infrastream {
  * This class describes a stream session.
  */
 class Session {
-	PluginNegotiationPtrlIF *negotiation;
+	//PluginBase *negotiation;
 	string pluginName;
 	string libName;
 
 public:
-	Session(string pluginName, string libName,
-			PluginNegotiationPtrlIF* negotiation)
+	Session(string pluginName, string libName)
 			throw(CannotCreateSessionException);
 	virtual ~Session();
 
 	virtual void newEvent(Event event) throw(InvalidEventException) = 0;
 	virtual set<EventType> getDependencies() throw(InvalidPolicyException) = 0;
 
-	PluginNegotiationPtrlIF* getNegotiation() const;
+//	PluginBase* getNegotiation() const;
 
 	string getPluginName() const;
 	string getLibName() const;
@@ -50,10 +50,10 @@ public:
 
 protected:
 
-	template<class PolicyDesc, class Ss, class Engine> void runInference(
+	template<class PolicyDesc, class Ss, class Engine, class Notifier> void runInference(
 			PolicyDesc *policy, Ss &session, map<EventType,
 const					typename PolicyDesc::policy_type*>dependencies,
-					Engine* engine, Event event) throw(InvalidEventException) {
+					Engine* engine, Event event, Notifier *negotiation) throw(InvalidEventException) {
 
 						if (policy) {
 							typename map<EventType, const typename PolicyDesc::policy_type*>::iterator
@@ -65,7 +65,7 @@ const					typename PolicyDesc::policy_type*>dependencies,
 					if (p->lower().present() && eventValue
 							< p->lower().get().threshold()) {
 						JobManager::getInstance()->addJob(
-								new AdaptationJob<const typename PolicyDesc::policy_type::lower_type, Ss>(p->lower().get(), session,negotiation));
+								new AdaptationJob<const typename PolicyDesc::policy_type::lower_type, Ss, Notifier>(p->lower().get(), session,negotiation));
 
 //						configurePlugin(p->lower().get(), session, negotiation); //configuring simple properties
 
@@ -118,7 +118,7 @@ const					typename PolicyDesc::policy_type*>dependencies,
 
 							if (result)
 								JobManager::getInstance()->addJob(
-																new AdaptationJob<const typename PolicyDesc::policy_type::lower_type::if_type::operations_type, Ss>
+																new AdaptationJob<const typename PolicyDesc::policy_type::lower_type::if_type::operations_type, Ss, Notifier>
 																(ifIt->operations(), session, negotiation));
 //								configurePlugin(ifIt->operations(), session, negotiation);
 						}
@@ -126,7 +126,7 @@ const					typename PolicyDesc::policy_type*>dependencies,
 					} else if (p->greater().present() && eventValue
 							>= p->greater().get().threshold()) {
 						JobManager::getInstance()->addJob(
-								new AdaptationJob<const typename PolicyDesc::policy_type::greater_type, Ss>
+								new AdaptationJob<const typename PolicyDesc::policy_type::greater_type, Ss, Notifier>
 									(p->greater().get(), session, negotiation));
 //						configurePlugin(p->greater().get(), session, negotiation); //adapting greater
 
@@ -180,7 +180,7 @@ const					typename PolicyDesc::policy_type*>dependencies,
 
 							if (result)
 								JobManager::getInstance()->addJob(
-											new AdaptationJob<const typename PolicyDesc::policy_type::greater_type::if_type::operations_type, Ss>
+											new AdaptationJob<const typename PolicyDesc::policy_type::greater_type::if_type::operations_type, Ss, Notifier>
 												(ifIt->operations(), session, negotiation));
 //								configurePlugin(ifIt->operations(), session, negotiation);
 						}
@@ -194,7 +194,7 @@ const					typename PolicyDesc::policy_type*>dependencies,
 							if (itRange->from() <= eventValue && eventValue
 									< itRange->from()) {
 								JobManager::getInstance()->addJob(
-											new AdaptationJob<const typename PolicyDesc::policy_type::range_type, Ss>
+											new AdaptationJob<const typename PolicyDesc::policy_type::range_type, Ss, Notifier>
 												(*itRange, session, negotiation));
 
 //								configurePlugin(*itRange, session, negotiation); // adapting ranges
@@ -247,7 +247,7 @@ const					typename PolicyDesc::policy_type*>dependencies,
 
 									if (result)
 										JobManager::getInstance()->addJob(
-												new AdaptationJob<const typename PolicyDesc::policy_type::range_type::if_type::operations_type, Ss>
+												new AdaptationJob<const typename PolicyDesc::policy_type::range_type::if_type::operations_type, Ss, Notifier>
 													(ifIt->operations(), session, negotiation));
 									break;
 								}

@@ -12,11 +12,12 @@ namespace infrastream {
 
 TransportSession::TransportSession(string _tProtocol, string _pluginName,
 		string _libName, PolicyEngine* engine,
-		PluginNegotiationPtrlIF* negotiation)
+		PluginNegotiationPtrlIF* _negotiation)
 		throw(CannotCreateSessionException) :
-	Session(_pluginName, _libName, negotiation), transportProtocol(_tProtocol) {
+	Session(_pluginName, _libName), transportProtocol(_tProtocol) {
 	policy = 0;
 	this->engine = engine;
+	this->negotiation = negotiation;
 }
 
 TransportSession::~TransportSession() {
@@ -82,7 +83,7 @@ void TransportSession::endSession() {
 
 void TransportSession::newEvent(Event event) throw(InvalidEventException) {
 	log_info("TransportSession::newEvent");
-	runInference(policy, session, dependencies, engine, event);
+	runInference(policy, session, dependencies, engine, event, negotiation);
 }
 
 set<EventType> TransportSession::getDependencies()

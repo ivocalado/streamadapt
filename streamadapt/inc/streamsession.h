@@ -28,7 +28,7 @@ class StreamSession: public infrastream::Session {
 	auto_ptr<PluginStreamIF> session;
 
 	map<EventType, const adapt_config::stream_type::policy_type*> dependencies;
-
+	PluginNegotiationPtrlIF* negotiation;
 
 public:
 	StreamSession(string pluginName, string libName,

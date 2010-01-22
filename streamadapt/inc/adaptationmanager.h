@@ -13,7 +13,6 @@
 #include <string>
 #include <map>
 #include "plugins/pluginbase.h"
-#include "plugins/pluginnegotiation.h"
 #include "plugins/streamexceptions.h"
 #include <memory>
 
@@ -25,7 +24,7 @@ namespace infrastream {
  * supported
  */
 class AdaptationManager {
-	std::auto_ptr<PluginNegotiationPtrlIF> negotiation;
+	//std::auto_ptr<PluginNegotiationPtrlIF> negotiation;
 
 public:
 	AdaptationManager();

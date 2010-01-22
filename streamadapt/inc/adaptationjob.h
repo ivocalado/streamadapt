@@ -13,17 +13,17 @@
 #include "logger/logger.h"
 #include <map>
 #include <string>
-#include "plugins/pluginnegotiation.h"
+
 
 namespace infrastream {
 
-template<class AdaptDesc, class Plugin> class AdaptationJob: public infrastream::AbstractJob {
+template<class AdaptDesc, class Plugin, class Notifier> class AdaptationJob: public infrastream::AbstractJob {
 	AdaptDesc& property;
 	Plugin& session;
-	PluginNegotiationPtrlIF* notifier;
+	Notifier* notifier;
 public:
 	AdaptationJob(AdaptDesc & _property, Plugin& _session,
-			PluginNegotiationPtrlIF* notifier = 0) :
+			Notifier* notifier = 0) :
 		property(_property), session(_session) {
 	}
 	virtual ~AdaptationJob() {

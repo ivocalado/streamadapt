@@ -88,9 +88,16 @@ void PolicyEngine::run() {
 					istringstream str(s); //OBJETIVO DESTA FUNCAO EH ATUALIZAR VALORES DE EVENT E DISPARAR EVENTOS CASO O VALOR CORRENTE SEJA DIFERENTE DO NOVO
 					double eventValue;
 					str >> eventValue;
-					if (str.fail()) {
+					if (s == "" || str.fail()) {
 						log_error("Fail to update" + eventType.getName());
-						continue;
+						log_error("Retrieving default value");
+						s = __default_value(eventType.getName());
+						for (set<Event>::iterator i = currentValues.begin(); i
+								!= currentValues.end(); i++)
+							if (i->getType().getName() == s) {
+								fireEvent(Event(eventType, i->getPayload()));
+								break;
+							}
 					}
 
 					Event newEvent(eventType, eventValue);
@@ -143,6 +150,7 @@ Event PolicyEngine::getLastEvent(EventType type) {
 	return default_event;
 }
 
-void PolicyEngine::endSession() {}
+void PolicyEngine::endSession() {
+}
 
 }
