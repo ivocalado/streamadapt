@@ -21,19 +21,24 @@ const std::string MessageConstants::STREAM;
 const std::string MessageConstants::TRANSPORT;
 const std::string MessageConstants::EMPTY_STRING;
 
-MessageCreator* MessageCreator::instance = 0;
+/*
+ MessageCreator* MessageCreator::instance = 0;
 
-MessageCreator::MessageCreator() {
+ MessageCreator::MessageCreator() {
+ }
+
+ MessageCreator* MessageCreator::getInstance() {
+ if (instance == 0)
+ instance = new MessageCreator();
+ return instance;
+ }
+ */
+MessageCreator::MessageCreator(std::string to, std::string from) {
+	this->to = to;
+	this->from = from;
 }
 
-MessageCreator* MessageCreator::getInstance() {
-	if (instance == 0)
-		instance = new MessageCreator();
-	return instance;
-}
-
-Tag* MessageCreator::newSimpleTag(const std::string& to,
-		const std::string& from, std::string iqType, std::string messageType) {
+Tag* MessageCreator::newSimpleTag(std::string iqType, std::string messageType) {
 
 	Tag* m = new Tag(iqType);
 	if (messageType != MessageConstants::EMPTY_STRING)
@@ -54,34 +59,28 @@ Tag* MessageCreator::addAttributesInNewTag(
 	return tag;
 }
 
-Tag* MessageCreator::newIqNotify(const std::string& to,
-		const std::string& from, std::map<std::string, std::string> attributes,
+Tag* MessageCreator::newIqNotify(std::map<std::string, std::string> attributes,
 		std::string messageType) {
-	Tag* tag = newSimpleTag(to, from, MessageConstants::IQ_NOTIFY, messageType);
+	Tag* tag = newSimpleTag(MessageConstants::IQ_NOTIFY, messageType);
 	tag->addChild(addAttributesInNewTag(attributes));
 	return tag;
 }
 
-Tag* MessageCreator::newIqNotifyResponse(const std::string& to,
-		const std::string& from, std::string messageType) {
-	Tag* tag = newSimpleTag(to, from, MessageConstants::IQ_NOTIFY_RESPONSE,
+Tag* MessageCreator::newIqNotifyResponse(std::string messageType) {
+	Tag* tag = newSimpleTag(MessageConstants::IQ_NOTIFY_RESPONSE,
 			messageType);
 	return tag;
 }
 
-Tag* MessageCreator::newIqRetrieve(const std::string& to,
-		const std::string& from, std::string attribute, std::string messageType) {
-	Tag* tag = newSimpleTag(to, from, MessageConstants::IQ_RETRIEVE,
-			messageType);
+Tag* MessageCreator::newIqRetrieve(std::string attribute) {
+	Tag* tag = newSimpleTag(MessageConstants::IQ_RETRIEVE);
 	tag->addAttribute(MessageConstants::ATTIBUTE_REQUIRED, attribute);
 	return tag;
 }
 
-Tag* MessageCreator::newIqRetrieveResponse(const std::string& to,
-		const std::string& from, std::string attribute, std::string value,
-		std::string messageType) {
-	Tag* tag = newSimpleTag(to, from, MessageConstants::IQ_RETRIEVE_RESPONSE,
-			messageType);
+Tag* MessageCreator::newIqRetrieveResponse(std::string attribute,
+		std::string value) {
+	Tag* tag = newSimpleTag(MessageConstants::IQ_RETRIEVE_RESPONSE);
 	tag->addAttribute(MessageConstants::ATTIBUTE_REQUIRED, attribute);
 	tag->addAttribute(MessageConstants::ATTIBUTE_VALUE, value);
 	return tag;

@@ -101,7 +101,8 @@ private:
 	SimpleClient* client; /* Objeto responsavel pelas acoes de envio e recebimento de menssagens XMPP */
 	const char* name; /* Nome do plugin */
 	SimpleServer* server; /* Objeto responsavel pelo gerenciamento dos clientes XMPP */
-	map<std::string, std::string> attHasSuport; /* Mapa que contem os atributos suportados pelo cliente remoto */
+	map<std::string, std::string> attRetrive;
+	MessageCreator* messageCreator;
 
 public:
 
@@ -118,8 +119,10 @@ public:
 	void receivedIqNotify(map<std::string, std::string> attributes,
 			std::string messageType);
 	void receivedIqNotifyRespose(std::string messageType);
-	void receivedIqRetrieve(std::string attribute, std::string messageType);
-	void receivedIqRetrieveResponse(std::string attribute, std::string value,
+	void receivedIqRetrieve(std::string attribute);
+	void receivedIqRetrieveResponse(std::string attribute, std::string value);
+
+	void remoteAdaptation(map<std::string, std::string> attributes,
 			std::string messageType);
 
 	/**

@@ -4,7 +4,7 @@ compile_message:
 	g++ message.cpp -c 
 
 compile_xmppnegotiation:
-	g++ -I/home/heverton/workspace/streamadapt/inc -O0 -g3 -fpermissive -Wall -c -fmessage-length=0 -fPIC -MMD -MP -MF"xmppnegotiation.d" -MT"xmppnegotiation.d" -o"xmppnegotiation.o" "xmppnegotiation.cpp"
+	g++ -I/home/heverton/workspace/streamadapt/streamadapt/inc -O0 -g3 -fpermissive -Wall -c -fmessage-length=0 -fPIC -MMD -MP -MF"xmppnegotiation.d" -MT"xmppnegotiation.d" -o"xmppnegotiation.o" "xmppnegotiation.cpp"
 
 build_all:
 	g++ -shared -o "libplugins-negotiation.so" -lgloox -pthread -lccgnu2

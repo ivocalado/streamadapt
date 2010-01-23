@@ -54,25 +54,25 @@ public:
 class MessageCreator {
 
 private:
-	static MessageCreator* instance;
-	MessageCreator();
-	Tag* newSimpleTag(const std::string& to, const std::string& from,
-			std::string iqType, std::string messageType);
+	//static MessageCreator* instance;
+	//MessageCreator();
+
+	std::string to;
+	std::string from;
+
+	Tag* newSimpleTag(std::string iqType, std::string messageType = MessageConstants::EMPTY_STRING);
 	Tag* addAttributesInNewTag(std::map<std::string, std::string> attributes);
 
 public:
-	static MessageCreator* getInstance();
-	Tag* newIqNotify(const std::string& to, const std::string& from, std::map<
-			std::string, std::string> attributes, std::string messageType =
-			MessageConstants::EMPTY_STRING);
-	Tag* newIqNotifyResponse(const std::string& to, const std::string& from,
+	//static MessageCreator* getInstance(std::string);
+	MessageCreator(std::string to, std::string from);
+
+	Tag* newIqNotify(std::map<std::string, std::string> attributes,
 			std::string messageType = MessageConstants::EMPTY_STRING);
-	Tag* newIqRetrieve(const std::string& to, const std::string& from,
-			std::string attribute, std::string messageType =
-					MessageConstants::EMPTY_STRING);
-	Tag* newIqRetrieveResponse(const std::string& to, const std::string& from,
-			std::string attribute, std::string value, std::string messageType =
-					MessageConstants::EMPTY_STRING);
+	Tag* newIqNotifyResponse(std::string messageType =
+			MessageConstants::EMPTY_STRING);
+	Tag* newIqRetrieve(std::string attribute);
+	Tag* newIqRetrieveResponse(std::string attribute, std::string value);
 };
 
 #endif // MESSAGE_H
