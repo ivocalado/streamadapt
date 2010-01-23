@@ -35,6 +35,22 @@ void PolicyEngine::addListener(Session* listener) {
 	}
 }
 
+void PolicyEngine::removeListener(Session* listener) {
+	log_info("Removing listener to map");
+	set<EventType> deps = listener->getDependencies();
+	for (set<EventType>::iterator it = deps.begin(); it != deps.end(); it++) {
+		map<EventType, set<Session*> >::iterator it2 =
+				this->listeners.find(*it);
+
+		if (it2 != listeners.end()) {
+			log_info("Unregistering listener: " + listener->getPluginName());
+			it2->second.erase(listener);
+		} else {
+			log_error("The object isn't registered to eventType: " + it2->first.getName());
+		}
+	}
+}
+
 void PolicyEngine::registerProvider(EventType type, unsigned int updateTime,
 		PluginBase* plugin, Event default_event) throw(InvalidPolicyException) {
 	map<EventType, PluginBase*>::iterator it = providers.find(type);

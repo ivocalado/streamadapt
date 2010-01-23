@@ -56,6 +56,10 @@ void SessionManager::setTransportSession(TransportSession* trSession) {
 	engine->addListener(trSession);
 }
 
+TransportSession* SessionManager::getTSession() {
+	return this->trSession;
+}
+
 void SessionManager::startSession() {
 	log_info("Starting managers session");
 	jobManager.enable();

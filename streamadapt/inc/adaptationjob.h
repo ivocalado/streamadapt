@@ -14,17 +14,18 @@
 #include <map>
 #include <string>
 
-
+#include <iostream>
 namespace infrastream {
 
 template<class AdaptDesc, class Plugin, class Notifier> class AdaptationJob: public infrastream::AbstractJob {
-	AdaptDesc& property;
+	AdaptDesc* property;
 	Plugin& session;
 	Notifier* notifier;
 public:
-	AdaptationJob(AdaptDesc & _property, Plugin& _session,
+	AdaptationJob(AdaptDesc*  _property, Plugin& _session,
 			Notifier* notifier = 0) :
-		property(_property), session(_session) {
+		session(_session) {
+		property = _property;
 	}
 	virtual ~AdaptationJob() {
 	}
@@ -33,25 +34,39 @@ public:
 		map<string, string> properties;
 
 		typename AdaptDesc::simpleproperty_const_iterator simpleIt(
-				property.simpleproperty().begin());
+				property->simpleproperty().begin());
 
 		log_info("Configuring plugin:");
-		for (; simpleIt != property.simpleproperty().end(); ++simpleIt) {
-			log_info("key = " + simpleIt->key() + " \t| value = " + *simpleIt);
+		for (; simpleIt != property->simpleproperty().end(); ++simpleIt) {
+			log_info("Passou aqui 1");
+			//std::cout<< "Key: "<<simpleIt->key()<<std::endl;
+		//	if(simpleIt->key()) {
+			//	std::cout<<"Not Nuloo"<<std::endl;
+			//} else
+				//std::cout<<"Nuloo"<<std::endl;
+			//log_info("Passou aqui 1.1");
+			//std::cout<< "Value: "<<*simpleIt<<std::endl;
+			//*simpleIt;
+			log_info("Passou aqui 1.2");
+			//log_info("key = " + simpleIt->key() + " \t| value = "/* + *simpleIt*/);
 			properties[simpleIt->key()] = *simpleIt;
+			log_info("Passou aqui 2");
 			try {
+				log_info("Passou aqui 3");
 				session->adapt(simpleIt->key(), properties);
+				log_info("Passou aqui 4");
 				if (notifier)
 					notifier->notifyAdaptation(simpleIt->key(), properties);
+				log_info("Passou aqui 5");
 				properties.clear();
 			} catch (...) {
 				log_error("Problem in execute adaptation. Revise your policy");
 			}
 		}
-
+		log_info("Passou aqui 6");
 		typename AdaptDesc::complexproperty_const_iterator complexIt(
-				property.complexproperty().begin());
-		for (; complexIt != property.complexproperty().end(); ++complexIt) {
+				property->complexproperty().begin());
+		for (; complexIt != property->complexproperty().end(); ++complexIt) {
 			typename AdaptDesc::complexproperty_type::sub_property_const_iterator
 					sub(complexIt->sub_property().begin());
 

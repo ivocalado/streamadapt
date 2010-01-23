@@ -39,7 +39,6 @@
             <adaptation-method>qpolicy</adaptation-method>
             <policy>
                 <comparisson-attibute>RTT</comparisson-attibute>
-                <unit>seconds</unit>
                 <lower threshold="2.5">
                     <if>
                         <equals Lhs="bandwidt" Rhs="30.0"/>

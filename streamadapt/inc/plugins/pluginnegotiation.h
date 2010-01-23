@@ -13,14 +13,14 @@
 #include <map>
 #include <event.h>
 #include <eventtype.h>
-#include <policyengine.h>
+#include <eventmanager.h>
 
 class PluginNegotiationPtrlIF: public PluginBase {
-	infrastream::PolicyEngine *engine;
+	infrastream::EventManager *manager;
 protected:
 	std::string retrieveLastLocalEvent(std::string type) {
 		std::ostringstream os;
-		os << engine->getLastEvent(infrastream::EventType(type)).getPayload();
+		os << manager->getLastEvent(infrastream::EventType(type)).getPayload();
 		return os.str();
 	}
 public:
@@ -29,8 +29,8 @@ public:
 	 * Differently from the others plugins, the negotiation needs to make a
 	 * plugin-core talk
 	 */
-	void setEngine(infrastream::PolicyEngine *engine) {
-		this->engine = engine;
+	void setEngine(infrastream::EventManager *engine) {
+		this->manager = manager;
 	}
 
 	virtual const char* getName() const = 0;
