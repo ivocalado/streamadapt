@@ -34,16 +34,16 @@ TransportSession* InfraFactory::buildTransportSession(
 		ConnectionListener* listener) throw(CannotCreateSessionException,
 		InvalidPolicyException) {
 
-	startup_config::transport_type& tProperties =
-			policyDesc->startup_config().transport();
+	startup_config::transport_type *tProperties =
+			&policyDesc.get()->startup_config().transport();
 
-	string transportProtocol = tProperties.protocol();
+	string transportProtocol = tProperties->protocol();
 	log_info("Protocol: " + transportProtocol);
 
-	string pluginName = tProperties.plugin_name();
+	string pluginName = tProperties->plugin_name();
 	log_info("Plugin Name: " + pluginName);
 
-	string libName = tProperties.library_name();
+	string libName = tProperties->library_name();
 	log_info("lib Name: " + libName);
 
 	TransportSession* session = new TransportSession(transportProtocol,
@@ -51,7 +51,7 @@ TransportSession* InfraFactory::buildTransportSession(
 
 	adapt_config::transport_type *adapt = 0;
 
-	bool useAdaptation = tProperties.enable_adaptation();
+	bool useAdaptation = tProperties->enable_adaptation();
 
 	if (useAdaptation) {
 		if (policyDesc->adapt_config().present()
@@ -66,13 +66,13 @@ TransportSession* InfraFactory::buildTransportSession(
 		session->setPolicy(adapt);
 	}
 
-	bool useDirInfo = tProperties.library_directory().present();
+	bool useDirInfo = tProperties->library_directory().present();
 
 	PluginManager* pm = PluginManager::getInstance();
 
 	auto_ptr<PluginTransportIF> plugin = (useDirInfo) ? pm->findAdaptor<
 			PluginTransportIF> (pluginName, libName,
-			tProperties.library_directory().get()) : pm->findAdaptor<
+			tProperties->library_directory().get()) : pm->findAdaptor<
 			PluginTransportIF> (pluginName, libName);
 
 	checkAndLog(plugin->getName(), pluginName, false,
@@ -92,10 +92,10 @@ TransportSession* InfraFactory::buildTransportSession(
 		throw CannotCreateSessionException();
 	}
 
-	if (tProperties.provides().present()) {
+	if (tProperties->provides().present()) {
 		startup_config::transport_type::provides_type::provide_iterator
-				provideIt(tProperties.provides().get().provide().begin());
-		for (; provideIt != tProperties.provides().get().provide().end(); ++provideIt) {
+				provideIt(tProperties->provides().get().provide().begin());
+		for (; provideIt != tProperties->provides().get().provide().end(); ++provideIt) {
 			EventType et(*provideIt);
 			EventType det(__default_value(*provideIt));
 			Event de(det, provideIt->default_value());
@@ -200,9 +200,9 @@ StreamSession* InfraFactory::buildStreamSession(
 		}
 	}
 
-	JobManager::getInstance()->addJob(new AdaptationJob<
-			startup_config::stream_type, auto_ptr<PluginStreamIF> ,
-			PluginNegotiationPtrlIF> (sProperties, plugin));
+//	JobManager::getInstance()->addJob(new AdaptationJob<
+//			startup_config::stream_type, auto_ptr<PluginStreamIF> ,
+//			PluginNegotiationPtrlIF> (sProperties, plugin));
 
 
 	session->setSSession(plugin);

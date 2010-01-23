@@ -15,6 +15,7 @@
 #include "jobmanager.h"
 #include "connectionlistener.h"
 #include "trpsession.h"
+#include <iostream>
 
 namespace infrastream {
 
@@ -47,6 +48,7 @@ class SessionManager: public ConnectionListener {
 		bool invalidstate;
 		T* manager;
 		timeout_t latency;
+		std::string name;
 	protected:
 		void run() {
 			while (active) {
@@ -61,23 +63,34 @@ class SessionManager: public ConnectionListener {
 
 		ThreadManager(std::string managerName, T* manager, timeout_t l = 0) :
 			active(false), invalidstate(false), latency(l) {
-			this->setName(managerName.c_str());
+			//this->setName(managerName.c_str());
+			this->name = managerName;
 			this->manager = manager;
 		}
 
 		bool enable() {
-			if (invalidstate)
+			log_info("Enabling thread session");
+			if (invalidstate) {
+				log_error("It's not possible enable the session");
 				return false;
+			}
 			active = true;
-			if (Thread::start())
+			int ret = Thread::start();
+			if (ret) {
+				std::cout<<"Valor de retorno da thread: "<<ret<<std::endl;
+				log_error("Error on start session: " + name);
 				throw CannotCreateSessionException(
 						"Error on start thread session");
+			}
 			return active;
 		}
 
 		bool disable() {
-			if (invalidstate)
-				false;
+			log_info("Disabling thread session");
+			if (invalidstate) {
+				log_error("It's not possible disable the session");
+				return false;
+			}
 			Thread::exit();
 			manager->endSession();
 			return true;
@@ -94,9 +107,11 @@ public:
 	void setTransportSession(TransportSession* trSession);
 
 	void onNewRemoteConnection(std::string remoteIp, int port) {
-		log_debug("Nova conexao: "+ remoteIp);
+		log_debug("New connection: "+ remoteIp);
 		startSession();
 	}
+
+	TransportSession* getTSession();
 
 	virtual ~SessionManager();
 

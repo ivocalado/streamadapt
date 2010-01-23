@@ -17,13 +17,14 @@
 #include "session.h"
 #include "plugins/pluginbase.h"
 #include "eventregister.h"
+#include "eventmanager.h"
 
 using namespace std;
 using namespace ost;
 #define __default_value(x) "__default_" + x
 namespace infrastream {
 
-class PolicyEngine {
+class PolicyEngine : public EventManager {
 
 	map<EventType, set<Session*> > listeners; //will make glue with sessions
 	set<Event> currentValues; // will keep current values
@@ -45,6 +46,8 @@ public:
 	bool unregisterProvider(EventType type);
 
 	void addListener(Session* listener);
+
+	void removeListener(Session* listener);
 
 	int fireEvent(Event event);
 
