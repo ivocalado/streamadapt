@@ -73,8 +73,7 @@ void SimpleClient::handleTag(Tag *tag) {
 	if (message == MessageConstants::IQ_NOTIFY)
 		xmppNegotiation->receivedIqNotify(getAttibutesTag(tag), messageType);
 	else if (message == MessageConstants::IQ_NOTIFY_RESPONSE)
-		xmppNegotiation->receivedIqNotifyRespose(getAttibutesTag(tag),
-				messageType);
+		xmppNegotiation->receivedIqNotifyRespose(messageType);
 	else if (message == MessageConstants::IQ_RETRIEVE)
 		xmppNegotiation->receivedIqRetrieve(tag->findAttribute(
 				MessageConstants::ATTIBUTE_REQUIRED), messageType);
@@ -83,17 +82,6 @@ void SimpleClient::handleTag(Tag *tag) {
 				MessageConstants::ATTIBUTE_REQUIRED), tag->findAttribute(
 				MessageConstants::ATTIBUTE_VALUE), messageType);
 }
-
-/*
- void SimpleClient::newHasSupportEvent(Tag* tag) {
- list<Tag::Attribute*> listAttr = tag->attributes();
- map<std::string, std::string> mapAttr;
- for (list<Tag::Attribute*>::iterator it = listAttr.begin(); it
- != listAttr.end(); it++)
- mapAttr[(*it)->name()] = (*it)->value();
- xmppNegotiation->updateAttrHasSuport(mapAttr);
- }
- */
 
 //Class XMPPNegotiation
 XMPPNegotiation::XMPPNegotiation() {
@@ -106,17 +94,30 @@ XMPPNegotiation::~XMPPNegotiation() {
 
 void XMPPNegotiation::receivedIqNotify(
 		map<std::string, std::string> attributes, std::string messageType) {
-
+	notifyAdaptation(messageType, attributes);
+	if (isServer)
+		client->sendMessage(MessageCreator::getInstance()->newIqNotifyResponse(
+				"client_remote@boom", "client_local"));
+	else
+		client->sendMessage(MessageCreator::getInstance()->newIqNotifyResponse(
+				"client_local", "client_remote@boom"));
 }
 
-void XMPPNegotiation::receivedIqNotifyRespose(
-		map<std::string, std::string> attributes, std::string messageType) {
+void XMPPNegotiation::receivedIqNotifyRespose(std::string messageType) {
 
 }
 
 void XMPPNegotiation::receivedIqRetrieve(std::string attribute,
 		std::string messageType) {
-
+	std::string value = retrieveLastLocalEvent(attribute);
+	if (isServer)
+		client->sendMessage(
+				MessageCreator::getInstance()->newIqRetrieveResponse(
+						"client_remote@boom", "client_local", attribute, value));
+	else
+		client->sendMessage(
+				MessageCreator::getInstance()->newIqRetrieveResponse(
+						"client_local", "client_remote@boom", attribute, value));
 }
 
 void XMPPNegotiation::receivedIqRetrieveResponse(std::string attribute,
@@ -138,7 +139,7 @@ void XMPPNegotiation::initNegotiation(std::string localIp, int localPort,
 
 	if (isServer)
 		server->start();
-	client->start();
+		client->start();
 }
 
 void XMPPNegotiation::shutdownNegotiation() {
@@ -156,5 +157,4 @@ const char* XMPPNegotiation::getName() const {
 
 std::string XMPPNegotiation::retrievePluginInformation(std::string info,
 		std::string subInfo) throw (OperationNotSupportedException) {
-
 }

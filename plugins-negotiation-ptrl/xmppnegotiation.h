@@ -117,8 +117,7 @@ public:
 
 	void receivedIqNotify(map<std::string, std::string> attributes,
 			std::string messageType);
-	void receivedIqNotifyRespose(map<std::string, std::string> attributes,
-			std::string messageType);
+	void receivedIqNotifyRespose(std::string messageType);
 	void receivedIqRetrieve(std::string attribute, std::string messageType);
 	void receivedIqRetrieveResponse(std::string attribute, std::string value,
 			std::string messageType);
