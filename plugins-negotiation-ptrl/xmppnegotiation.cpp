@@ -76,11 +76,11 @@ void SimpleClient::handleTag(Tag *tag) {
 		xmppNegotiation->receivedIqNotifyRespose(messageType);
 	else if (message == MessageConstants::IQ_RETRIEVE)
 		xmppNegotiation->receivedIqRetrieve(tag->findAttribute(
-				MessageConstants::ATTIBUTE_REQUIRED), messageType);
+				MessageConstants::ATTIBUTE_REQUIRED));
 	else
 		xmppNegotiation->receivedIqRetrieveResponse(tag->findAttribute(
 				MessageConstants::ATTIBUTE_REQUIRED), tag->findAttribute(
-				MessageConstants::ATTIBUTE_VALUE), messageType);
+				MessageConstants::ATTIBUTE_VALUE));
 }
 
 //Class XMPPNegotiation
@@ -92,37 +92,58 @@ XMPPNegotiation::~XMPPNegotiation() {
 	delete server;
 }
 
+/**
+ * Metodo que armazena os parametros de transmissao do lado remoto
+ */
+void XMPPNegotiation::remoteAdaptation(
+		map<std::string, std::string> attributes, std::string messageType) {
+	//doSomething
+}
+
+/**
+ * Metodo que recebe uma notificacao de parametros de transmissao do lado remoto, se faz necessario mandar uma
+ * menssagem de confirmacao de recebimento para o lado remoto
+ */
 void XMPPNegotiation::receivedIqNotify(
 		map<std::string, std::string> attributes, std::string messageType) {
-	notifyAdaptation(messageType, attributes);
+	//remoteAdaptation (resolvido)
+	remoteAdaptation(attributes, messageType);
 	if (isServer)
-		client->sendMessage(MessageCreator::getInstance()->newIqNotifyResponse(
-				"client_remote@boom", "client_local"));
+		client->sendMessage(messageCreator->newIqNotifyResponse(messageType));
 	else
-		client->sendMessage(MessageCreator::getInstance()->newIqNotifyResponse(
-				"client_local", "client_remote@boom"));
+		client->sendMessage(messageCreator->newIqNotifyResponse(messageType));
 }
 
+/**
+ * Metodo que recebe a confirmacao do lado remoto o recebimento da menssagem enviada de IQNotify
+ */
 void XMPPNegotiation::receivedIqNotifyRespose(std::string messageType) {
-
+	//off
 }
 
-void XMPPNegotiation::receivedIqRetrieve(std::string attribute,
-		std::string messageType) {
+/**
+ * Metodo que recebe a solicitacao do lado remoto do valor de um atributo, assim que recebida a menssagem
+ * deve-se obter o valor do atributo e enviar para o lado remoto a resposta (valor do atributo)
+ */
+void XMPPNegotiation::receivedIqRetrieve(std::string attribute) {
 	std::string value = retrieveLastLocalEvent(attribute);
 	if (isServer)
-		client->sendMessage(
-				MessageCreator::getInstance()->newIqRetrieveResponse(
-						"client_remote@boom", "client_local", attribute, value));
+		client->sendMessage(messageCreator->newIqRetrieveResponse(attribute,
+				value));
 	else
-		client->sendMessage(
-				MessageCreator::getInstance()->newIqRetrieveResponse(
-						"client_local", "client_remote@boom", attribute, value));
+		client->sendMessage(messageCreator->newIqRetrieveResponse(attribute,
+				value));
 }
 
+/**
+ * Metodo que recebe a resposta da requisicao do valor do atributo do lado remoto
+ * Esse metodo deve atualizar a tabela que contem os valores do atributo solicitado remotamente
+ */
 void XMPPNegotiation::receivedIqRetrieveResponse(std::string attribute,
-		std::string value, std::string messageType) {
-
+		std::string value) {
+	attRetrive[attribute] = value;
+	//atualizar o mapa (Resolvido)
+	//retirar o messageType (Resolvido)
 }
 
 void XMPPNegotiation::initNegotiation(std::string localIp, int localPort,
@@ -133,9 +154,14 @@ void XMPPNegotiation::initNegotiation(std::string localIp, int localPort,
 		isServer = true;
 		server = new SimpleServer();
 		client = new SimpleClient("client_local@boom", "", this);
-	} else
+		messageCreator = new MessageCreator("client_remote@boom",
+				"client_local@boom");
+	} else {
 		client = new SimpleClient("client_remote@boom", "", this, remoteIp,
 				remotePort);
+		messageCreator = new MessageCreator("client_local@boom",
+				"client_remote@boom");
+	}
 
 	if (isServer)
 		server->start();
@@ -147,14 +173,29 @@ void XMPPNegotiation::shutdownNegotiation() {
 	client->logout();
 }
 
+/**
+ * Metodo que notifica ao lado remoto os novos parametros de transmissao de stream
+ * Eh um iq, e o outro lado deve responder que recebeu a menssagem corretamente
+ */
 void XMPPNegotiation::notifyAdaptation(std::string paramName, std::map<
 		std::string, std::string>& params) {
+	client->sendMessage(messageCreator->newIqNotify(params, paramName));
+	//mando iqnotify (Resolvido)
+	//paramName (Resolvido)
 }
 
 const char* XMPPNegotiation::getName() const {
 	return name;
 }
 
+/**
+ * Metodo que consulta o valor de um atributo do lado remoto que se encontra em uma mapa
+ * ele consulta o mapa e apos isso manda um iqRetrive para atualizar a tabela com um novo valor
+ * para o atributo pesquisado
+ */
 std::string XMPPNegotiation::retrievePluginInformation(std::string info,
 		std::string subInfo) throw (OperationNotSupportedException) {
+	client->sendMessage(messageCreator->newIqRetrieve(info));
+	return attRetrive[info];
+	//retorno o valor do mapa e disparo o iq (resolvido)
 }
