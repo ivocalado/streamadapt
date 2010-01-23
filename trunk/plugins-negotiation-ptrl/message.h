@@ -63,14 +63,16 @@ private:
 public:
 	static MessageCreator* getInstance();
 	Tag* newIqNotify(const std::string& to, const std::string& from, std::map<
-			std::string, std::string> attributes, std::string messageType);
+			std::string, std::string> attributes, std::string messageType =
+			MessageConstants::EMPTY_STRING);
 	Tag* newIqNotifyResponse(const std::string& to, const std::string& from,
-			std::map<std::string, std::string> attributes,
-			std::string messageType);
+			std::string messageType = MessageConstants::EMPTY_STRING);
 	Tag* newIqRetrieve(const std::string& to, const std::string& from,
-			std::string attribute, std::string messageType);
+			std::string attribute, std::string messageType =
+					MessageConstants::EMPTY_STRING);
 	Tag* newIqRetrieveResponse(const std::string& to, const std::string& from,
-			std::string attribute, std::string value, std::string messageType);
+			std::string attribute, std::string value, std::string messageType =
+					MessageConstants::EMPTY_STRING);
 };
 
 #endif // MESSAGE_H

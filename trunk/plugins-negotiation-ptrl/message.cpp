@@ -63,11 +63,9 @@ Tag* MessageCreator::newIqNotify(const std::string& to,
 }
 
 Tag* MessageCreator::newIqNotifyResponse(const std::string& to,
-		const std::string& from, std::map<std::string, std::string> attributes,
-		std::string messageType) {
+		const std::string& from, std::string messageType) {
 	Tag* tag = newSimpleTag(to, from, MessageConstants::IQ_NOTIFY_RESPONSE,
 			messageType);
-	tag->addChild(addAttributesInNewTag(attributes));
 	return tag;
 }
 
