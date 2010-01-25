@@ -19,7 +19,7 @@ StreamSession::StreamSession(string _pluginName, string _libName,
 	this->negotiation = negotiation; // Testar negociacao
 }
 
-void StreamSession::setSSession(auto_ptr<PluginStreamIF> ssession) {
+void StreamSession::setSSession(PluginStreamIF* ssession) {
 	this->session = ssession;
 }
 
@@ -47,7 +47,7 @@ void StreamSession::setPolicy(adapt_config::stream_type* _policy)
 
 }
 
-auto_ptr<PluginStreamIF>& StreamSession::getSession() {
+PluginStreamIF* StreamSession::getSession() {
 	return this->session;
 }
 
@@ -57,7 +57,7 @@ void StreamSession::endSession() {
 
 void StreamSession::newEvent(Event event) throw(InvalidEventException) {
 	log_info("StreamSession::newEvent");
-	runInference(policy, session, dependencies, engine, event, negotiation);
+	runInference(policy, *session, dependencies, engine, event, negotiation);
 }
 set<EventType> StreamSession::getDependencies() throw(InvalidPolicyException) {
 	set<EventType> ret;

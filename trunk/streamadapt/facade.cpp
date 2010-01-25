@@ -59,19 +59,17 @@ SessionManager* Facade::createClientSession(string targetIp, int targetPort,
 	SessionManager* session = 0;
 
 	try {
-		auto_ptr<PolicyConfigurationType> plugin = loadPolicy(pluginPath);
+		auto_ptr<PolicyConfigurationType> _plugin = loadPolicy(pluginPath);
+		PolicyConfigurationType *plugin = new PolicyConfigurationType(*(_plugin.get()));
 
 		engine = new PolicyEngine;
-
 		//	PluginNegotiationPtrlIF* negotiation =
 		//			InfraFactory::getInstance()->buildNegotiationSession(); TODO DESCOMENTAR
 		session = new SessionManager(sender, receiver, engine);
-
 		TransportSession* trSession =
 				InfraFactory::getInstance()->buildTransportSession(0, plugin,
 						*engine, targetIp, targetPort,
 						InfraFactory::CLIENT_SESSION, session);
-
 		//StreamSession* ssession = InfraFactory::getInstance()
 
 
@@ -79,9 +77,7 @@ SessionManager* Facade::createClientSession(string targetIp, int targetPort,
 		session->setTransportSession(trSession);
 
 
-
 		session->startSession();
-
 	} catch (...) {
 		if (engine) {
 			delete engine;
@@ -89,10 +85,10 @@ SessionManager* Facade::createClientSession(string targetIp, int targetPort,
 		}
 		throw ;
 	}
-
 	return session;
 }
 
+#include <iostream>
 SessionManager* Facade::createServerSession(string localIP, int localport,
 		GenericSenderSocket* sender, GenericReceiverSocket* receiver,
 		string pluginPath, map<string, string> * additionalParams)
@@ -104,6 +100,7 @@ throw(CannotCreateSessionException, CannotLoadPolicyException) {
 			auto_ptr<PolicyConfigurationType> plugin = loadPolicy(pluginPath);
 
 
+
 			engine = new PolicyEngine;
 //
 //			//	PluginNegotiationPtrlIF* negotiation =
@@ -111,7 +108,7 @@ throw(CannotCreateSessionException, CannotLoadPolicyException) {
 			session = new SessionManager(sender, receiver, engine);
 //
 			TransportSession* trSession =
-					InfraFactory::getInstance()->buildTransportSession(0, plugin,
+					InfraFactory::getInstance()->buildTransportSession(0, plugin.get(),
 							*engine, localIP, localport,
 							InfraFactory::SERVER_SESSION, session);
 //

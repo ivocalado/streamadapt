@@ -7,7 +7,8 @@
 
 #include <sessionmanager.h>
 #include <logger/logger.h>
-
+#include <iostream>
+using namespace std;
 namespace infrastream {
 
 SessionManager::SessionManager(GenericSenderSocket* sender,
@@ -18,37 +19,50 @@ SessionManager::SessionManager(GenericSenderSocket* sender,
 		throw CannotCreateSessionException(
 				"At least one endpoint must be valid");
 	}
-
 	if (!engine) {
 		log_error("Strange! It shouldn't happen");
 		throw CannotCreateSessionException("The Policy engine MUST be valid");
 	}
-
 	this->sender = sender;
 	this->receiver = receiver;
 	this->engine = engine;
 
-	this->engineManager = ThreadManager<PolicyEngine> ("EngineManager", engine);
-
-	this->jobManager = ThreadManager<JobManager> ("JobManager",
+	this->engineManager = new ThreadManager<PolicyEngine> ("EngineManager",
+			engine);
+	this->jobManager = new ThreadManager<JobManager> ("JobManager",
 			JobManager::getInstance(), 50);
 
-	if(this->sender) {
+	if (this->sender) {
 		send = new SenderManager(*(this->sender));
-		this->senderManager = ThreadManager<SenderManager>("SenderManager", send);
+		this->senderManager = new ThreadManager<SenderManager> (
+				"SenderManager", send);
+	} else {
+		senderManager = 0;
 	}
 
-	if(this->receiver) {
+	if (this->receiver) {
 		recv = new ReceiverManager(*(this->receiver));
-		this->receiverManager = ThreadManager<ReceiverManager>("ReceiverManager", recv);
-	}
+		this->receiverManager = new ThreadManager<ReceiverManager> (
+				"ReceiverManager", recv);
+	} else
+		receiverManager = 0;
+
+	//	t = Teste<A>(new A);
+	//	t2 = Teste<B>(new B);
+	//	t3 = Teste<C>(new C);
 }
 
 SessionManager::~SessionManager() {
-	if(recv)
+	if (recv) {
+		delete receiverManager;
 		delete recv;
-	if(send)
+	}
+	if (send) {
+		delete senderManager;
 		delete send;
+	}
+	delete engineManager;
+	delete jobManager;
 }
 
 void SessionManager::setTransportSession(TransportSession* trSession) {
@@ -62,18 +76,29 @@ TransportSession* SessionManager::getTSession() {
 
 void SessionManager::startSession() {
 	log_info("Starting managers session");
-	jobManager.enable();
-	engineManager.enable();
-	receiverManager.enable();
-	senderManager.enable();
+	if (jobManager)
+		jobManager->enable();
+	if (engineManager)
+		engineManager->enable();
+	if (receiverManager)
+		receiverManager->enable();
+	if (senderManager)
+		senderManager->enable();
 }
 
 void SessionManager::endSession() {
 	log_info("Destroying managers");
-	jobManager.disable();
-	engineManager.disable();
-	receiverManager.disable();
-	senderManager.disable();
+	if (jobManager)
+		jobManager->disable();
+	if (engineManager)
+		engineManager->disable();
+
+	if (receiverManager)
+		receiverManager->disable();
+	if (senderManager)
+		senderManager->disable();
+	//
+	trSession->endSession();
 
 }
 
@@ -85,7 +110,9 @@ void ReceiverManager::run() {
 	//TODO IMPLEMENTAR RECEBIMENTO DE DADOS, NAO EH NECESSARIO COLOCAR WHILE(TRUE)
 }
 
-void ReceiverManager::endSession() {}
+void ReceiverManager::endSession() {
+
+}
 
 SenderManager::SenderManager(GenericSenderSocket& _sender) :
 	sender(_sender) {
@@ -95,6 +122,7 @@ void SenderManager::run() {
 	//TODO IMPLEMENTAR THREAD DE ENVIO DE DADOS NAO EH NECESSARIO COLOCAR WHILE(TRUE)
 }
 
-void SenderManager::endSession(){}
+void SenderManager::endSession() {
+}
 
 }

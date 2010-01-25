@@ -37,8 +37,8 @@ public:
 	PluginNegotiationPtrlIF* buildNegotiationSession();
 
 	TransportSession* buildTransportSession(
-			PluginNegotiationPtrlIF* negotiation, auto_ptr<
-					PolicyConfigurationType> policyDesc, PolicyEngine& engine,
+			PluginNegotiationPtrlIF* negotiation,
+					PolicyConfigurationType* policyDesc, PolicyEngine& engine,
 			string ip, int port, InfraFactory::SessionType sessionType,
 			ConnectionListener* listener = 0) throw(CannotCreateSessionException,
 			InvalidPolicyException);

@@ -5,9 +5,8 @@
  *      Author: ivocalado
  */
 
-
-#ifdef MAIN_CLIENT
-
+//#ifdef MAIN_CLIENT
+#include<stdio.h>
 #include <iostream>
 #include <facade.h>
 #include <logger/logger.h>
@@ -49,50 +48,49 @@ public:
 		packetsPerSecond(10) {
 
 		Facade* facade = Facade::getInstance();
-
 		SessionManager* session = facade->createClientSession(ia, port,
 				new RecordDevice, new PlaybackDevice,
 				"/home/ivocalado/workspace/streamadapt/policies/instance1.xml",
 				0);
 
 		TransportSession* sender = session->getTSession();
-
-				uint32 timestamp = tstamp ? tstamp : 0;
+		uint32 timestamp = tstamp ? tstamp : 0;
 		//
 		//
 		//
-				string s = sender->getSession()->retrievePluginInformation(
-						"CurrentRTPClockRate");
+		string s = sender->getSession()->retrievePluginInformation(
+				"CurrentRTPClockRate");
 		//
 		///		log_error("Passou aqui 2!");
 		//
-				cout<<"Passou aqui 4"<<endl;
-				istringstream s1(s);
-				uint16 tstampInc = 0;
-				s1 >> tstampInc;
-				tstampInc /= packetsPerSecond;
+//		cout << "Passou aqui 4" << endl;
+		istringstream s1(s);
+		uint16 tstampInc = 0;
+		s1 >> tstampInc;
+		tstampInc /= packetsPerSecond;
 		//
 		//		//		uint16 tstampInc = getCurrentRTPClockRate() / packetsPerSecond;
-				uint32 period = 1000 / packetsPerSecond;
+		uint32 period = 1000 / packetsPerSecond;
 		//		//		cout<<"Passou aqui 5"<<endl;
-				TimerPort::setTimer(period);
+		TimerPort::setTimer(period);
 		//
 		////		cout << "Passou aqui 6" << endl;
-				for (int i = 0; i < count; i++) {
-					uint32 tmp = timestamp + i * tstampInc;
-					sender->getSession()->sendData(tmp, data,
-							strlen((char *) data) + 1, &b);
-					//			cout<<"Passou aqui 7"<<endl;
-					Thread::sleep(TimerPort::getTimer());
-					TimerPort::incTimer(period);
-					//			b.priority++;
-				}
+		for (int i = 0; i < count; i++) {
+			uint32 tmp = timestamp + i * tstampInc;
+			sender->getSession()->sendData(tmp, data,
+					strlen((char *) data) + 1, &b);
+			//			cout<<"Passou aqui 7"<<endl;
+			Thread::sleep(TimerPort::getTimer());
+			TimerPort::incTimer(period);
+			//			b.priority++;
+		}
 		//
 		////		log_error("Passou aqui 1!");
 		////		string s2 = sender->getSession()->retrievePluginInformation(
 		////				"DCCPTXCCID");
 		////		cout << "ccid: " << s2 << endl;
 
+//		getchar(); //
 		session->endSession();
 	}
 
@@ -109,28 +107,27 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
 
-//	auto_ptr<PolicyConfigurationType> policyDesc = adaptation_policy(
-//			"/home/ivocalado/workspace/streamadapt/policies/instance1.xml");
-//	string
-//			s =
-//					policyDesc->startup_config().stream().transmission_properties().transmission_type();
-//	cout<<"S: "<<s<<endl;
+	//	auto_ptr<PolicyConfigurationType> policyDesc = adaptation_policy(
+	//			"/home/ivocalado/workspace/streamadapt/policies/instance1.xml");
+	//	string
+	//			s =
+	//					policyDesc->startup_config().stream().transmission_properties().transmission_type();
+	//	cout<<"S: "<<s<<endl;
 
-		cout << "rtpsend..." << endl;
+	cout << "rtpsend..." << endl;
 
-		if (argc != 6) {
-			cerr << "Syntax: " << "data host port timestamp count" << endl;
-			exit(1);
-		}
+	if (argc != 6) {
+		cerr << "Syntax: " << "data host port timestamp count" << endl;
+		exit(1);
+	}
 
-		Sender sender((unsigned char *) argv[1], argv[2], atoi(argv[3]), atoi(
-				argv[4]), atoi(argv[5]));
+	Sender sender((unsigned char *) argv[1], argv[2], atoi(argv[3]), atoi(
+			argv[4]), atoi(argv[5]));
 
-		cout << "I have sent " << argv[5] << " RTP packets containing \""
-				<< argv[1] << "\", with timestamp " << argv[4] << " to " << argv[2]
-				<< ":" << argv[3] << endl;
-
+	cout << "I have sent " << argv[5] << " RTP packets containing \""
+			<< argv[1] << "\", with timestamp " << argv[4] << " to " << argv[2]
+			<< ":" << argv[3] << endl;
 
 	return 0;
 }
-#endif
+//#endif

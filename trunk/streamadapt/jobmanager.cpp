@@ -25,6 +25,9 @@ JobManager::~JobManager() {
 	// TODO Auto-generated destructor stub
 }
 
+#include <iostream>
+using namespace std;
+
 void JobManager::run() {
 	while (jobs.size()) {
 		jobs.writeLock();
@@ -50,7 +53,6 @@ void JobManager::endSession() {
 		delete job;
 	}
 	jobs.unlock();
-
 }
 
 }

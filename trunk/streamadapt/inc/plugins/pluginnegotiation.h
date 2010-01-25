@@ -29,7 +29,7 @@ public:
 	 * Differently from the others plugins, the negotiation needs to make a
 	 * plugin-core talk
 	 */
-	void setEngine(infrastream::EventManager *engine) {
+	void setEngine(infrastream::EventManager *manager) {
 		this->manager = manager;
 	}
 

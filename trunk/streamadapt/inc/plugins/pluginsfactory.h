@@ -87,7 +87,7 @@ public:
 
 	TransportPluginFactory* findTransportFactory(string name);
 
-	template<class T> auto_ptr<T> findAdaptor(string pluginName,
+	template<class T> T* findAdaptor(string pluginName,
 			string fileName = "", string dirName = DEFAULT_PLUGINS_DIRECTORY)
 			throw(CannotLoadPluginException) {
 		Factory<T>* factory = findFactory<T> (pluginName);
@@ -102,7 +102,7 @@ public:
 				throw CannotLoadPluginException("Plugin unavailable");
 		}
 
-		return auto_ptr<T> ((T*) factory->create());
+		return (T*) factory->create();
 	}
 
 	template<class T> void unregisterPlugin(string pluginName) {

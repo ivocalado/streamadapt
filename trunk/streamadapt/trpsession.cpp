@@ -23,7 +23,7 @@ TransportSession::TransportSession(string _tProtocol, string _pluginName,
 TransportSession::~TransportSession() {
 }
 
-void TransportSession::setTSession(auto_ptr<PluginTransportIF> tsession) {
+void TransportSession::setTSession(PluginTransportIF* tsession) {
 	this->session = tsession;
 }
 
@@ -49,7 +49,7 @@ void TransportSession::setPolicy(adapt_config::transport_type* _policy)
 	dependencies = eventsDep;
 }
 
-auto_ptr<PluginTransportIF>& TransportSession::getSession() {
+PluginTransportIF* TransportSession::getSession() {
 	return this->session;
 }
 
@@ -83,7 +83,7 @@ void TransportSession::endSession() {
 
 void TransportSession::newEvent(Event event) throw(InvalidEventException) {
 	log_info("TransportSession::newEvent");
-	runInference(policy, session, dependencies, engine, event, negotiation);
+	runInference(policy, *session, dependencies, engine, event, negotiation);
 }
 
 set<EventType> TransportSession::getDependencies()

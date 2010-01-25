@@ -16,13 +16,13 @@ PolicyEngine::PolicyEngine() {
 PolicyEngine::~PolicyEngine() {
 }
 
+
 void PolicyEngine::addListener(Session* listener) {
 	log_info("Adding listener to map");
 	set<EventType> deps = listener->getDependencies();
 	for (set<EventType>::iterator it = deps.begin(); it != deps.end(); it++) {
 		map<EventType, set<Session*> >::iterator it2 =
 				this->listeners.find(*it);
-
 		if (it2 == listeners.end()) {
 			log_info("Registering new eventtype: " + it->getName());
 			set<Session*> l;
@@ -79,14 +79,13 @@ bool PolicyEngine::unregisterProvider(EventType type) {
 }
 
 // This function MUST be called into a thread to updates
+#include <iostream>
+using namespace std;
 void PolicyEngine::run() {
-
 	registers.sort();
 	timeout_t current = registers.front().getPeriod();
-
 	for (list<EventRegister>::iterator it = registers.begin(); it
 			!= registers.end(); it++) {
-		//			cout << "Timer: " << current << endl << "Sleepping..." << endl;
 		log_debug("Sleeping...");
 		Thread::sleep(current);
 		log_debug("Wake up!")
@@ -94,11 +93,8 @@ void PolicyEngine::run() {
 			log_info("new Event");
 			EventType eventType = it->getEventType();
 			PluginBase* plugin = providers[eventType];
-
 			if (plugin) {
-
 				string s;
-
 				try {
 					s = plugin->retrievePluginInformation(eventType.getName());
 					istringstream str(s); //OBJETIVO DESTA FUNCAO EH ATUALIZAR VALORES DE EVENT E DISPARAR EVENTOS CASO O VALOR CORRENTE SEJA DIFERENTE DO NOVO
@@ -133,6 +129,7 @@ void PolicyEngine::run() {
 					for (set<Event>::iterator i = currentValues.begin(); i
 							!= currentValues.end(); i++)
 						if (i->getType().getName() == s) {
+							log_info("Firing default event: " + s);
 							fireEvent(Event(eventType, i->getPayload()));
 							break;
 						}

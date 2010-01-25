@@ -29,7 +29,7 @@ class TransportSession: public Session {
 	PolicyEngine* engine;
 
 	adapt_config::transport_type* policy;
-	auto_ptr<PluginTransportIF> session;
+	PluginTransportIF* session;
 	//	bool enabledAdapt;
 
 	map<EventType, const adapt_config::transport_type::policy_type*> dependencies;
@@ -43,9 +43,9 @@ public:
 	void setPolicy(adapt_config::transport_type* policy)
 			throw(InvalidPolicyException);
 
-	void setTSession(auto_ptr<PluginTransportIF> tsession);
+	void setTSession(PluginTransportIF* tsession);
 
-	auto_ptr<PluginTransportIF>& getSession();
+	PluginTransportIF* getSession();
 	//	bool isEnabled() const;
 	string getTransportProtocol() const;
 
