@@ -41,8 +41,6 @@ public:
 
 class SessionManager: public ConnectionListener {
 
-
-
 	template<class T> class ThreadManager: public ost::Thread {
 		bool active;
 		bool invalidstate;
@@ -62,8 +60,9 @@ class SessionManager: public ConnectionListener {
 		}
 
 		ThreadManager(std::string managerName, T* manager, timeout_t l = 0) :
-			active(false), invalidstate(false), latency(l) {
-			//this->setName(managerName.c_str());
+			active(false), latency(l) {
+			if(!manager)
+				invalidstate = !manager;
 			this->name = managerName;
 			this->manager = manager;
 		}
@@ -77,10 +76,9 @@ class SessionManager: public ConnectionListener {
 			active = true;
 			int ret = Thread::start();
 			if (ret) {
-				std::cout<<"Valor de retorno da thread: "<<ret<<std::endl;
 				log_error("Error on start session: " + name);
 				throw CannotCreateSessionException(
-						"Error on start thread session");
+						"Error on start thread session: " + name);
 			}
 			return active;
 		}
@@ -91,12 +89,13 @@ class SessionManager: public ConnectionListener {
 				log_error("It's not possible disable the session");
 				return false;
 			}
-			Thread::exit();
+			log_info("Disabling: " + name);
+			exit();
+			active = false;
 			manager->endSession();
-			return true;
+			return active;
 		}
 	};
-
 
 public:
 	// for full-transmission it is both parameters isn't null
@@ -129,11 +128,10 @@ private:
 	ReceiverManager* recv;
 	SenderManager* send;
 
-
-	ThreadManager<PolicyEngine> engineManager;
-	ThreadManager<JobManager> jobManager;
-	ThreadManager<ReceiverManager> receiverManager;
-	ThreadManager<SenderManager> senderManager;
+	ThreadManager<PolicyEngine>* engineManager;
+	ThreadManager<JobManager>* jobManager;
+	ThreadManager<ReceiverManager>* receiverManager;
+	ThreadManager<SenderManager>* senderManager;
 
 };
 }

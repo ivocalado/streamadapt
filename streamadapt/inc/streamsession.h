@@ -25,7 +25,7 @@ namespace infrastream {
 class StreamSession: public infrastream::Session {
 	PolicyEngine* engine;
 	adapt_config::stream_type* policy;
-	auto_ptr<PluginStreamIF> session;
+	PluginStreamIF* session;
 
 	map<EventType, const adapt_config::stream_type::policy_type*> dependencies;
 	PluginNegotiationPtrlIF* negotiation;
@@ -35,14 +35,14 @@ public:
 			PolicyEngine* engine, PluginNegotiationPtrlIF* negotiation)
 			throw(CannotCreateSessionException);
 
-	void setSSession(auto_ptr<PluginStreamIF> tsession);
+	void setSSession(PluginStreamIF* tsession);
 
 	void setPolicy(adapt_config::stream_type* policy)
 			throw(InvalidPolicyException);
 
 	virtual string retrievePluginInformation(string key) ;
 
-	auto_ptr<PluginStreamIF>& getSession();
+	PluginStreamIF* getSession();
 
 	void endSession();
 
