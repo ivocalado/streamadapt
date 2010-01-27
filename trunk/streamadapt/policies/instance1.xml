@@ -14,8 +14,8 @@
             <enable-adaptation>true</enable-adaptation>
              
              <provides>
-                 <provide default-value="10">RTT</provide>
-                 <provide default-value="10" update-time="50">bandwidt</provide>
+                 <provide default-value="2.6" update-time="1000">RTT</provide>
+                 <provide default-value="30" update-time="500">bandwidt</provide>
              </provides>
             
             <simpleproperty key="SDESItem">rtpsend demo app.</simpleproperty>

@@ -15,6 +15,8 @@
 #include "jobmanager.h"
 #include "connectionlistener.h"
 #include "trpsession.h"
+#include "streamsession.h"
+
 #include <iostream>
 
 namespace infrastream {
@@ -61,7 +63,7 @@ class SessionManager: public ConnectionListener {
 
 		ThreadManager(std::string managerName, T* manager, timeout_t l = 0) :
 			active(false), latency(l) {
-			if(!manager)
+			if (!manager)
 				invalidstate = !manager;
 			this->name = managerName;
 			this->manager = manager;
@@ -92,8 +94,13 @@ class SessionManager: public ConnectionListener {
 			log_info("Disabling: " + name);
 			exit();
 			active = false;
-			manager->endSession();
-			return active;
+			try {
+				manager->endSession();
+			} catch (...) {
+				log_error("Error on finalize thread: " + name);
+				return false;
+			}
+			return true;
 		}
 	};
 
@@ -104,6 +111,8 @@ public:
 			throw (CannotCreateSessionException);
 
 	void setTransportSession(TransportSession* trSession);
+
+	void setStreamSession(StreamSession* sSession);
 
 	void onNewRemoteConnection(std::string remoteIp, int port) {
 		log_debug("New connection: "+ remoteIp);
@@ -120,18 +129,21 @@ public:
 
 private:
 
+	bool activeManager;
 	PolicyEngine* engine;
 	TransportSession* trSession;
+	StreamSession* sSession;
 	GenericSenderSocket* sender;
 	GenericReceiverSocket* receiver;
 
-	ReceiverManager* recv;
-	SenderManager* send;
 
-	ThreadManager<PolicyEngine>* engineManager;
-	ThreadManager<JobManager>* jobManager;
-	ThreadManager<ReceiverManager>* receiverManager;
-	ThreadManager<SenderManager>* senderManager;
+	ReceiverManager* receiverManager;
+	SenderManager* senderManager;
+
+	ThreadManager<PolicyEngine>* engineManagerThread;
+	ThreadManager<JobManager>* jobManagerThread;
+	ThreadManager<ReceiverManager>* receiverManagerThread;
+	ThreadManager<SenderManager>* senderManagerThread;
 
 };
 }

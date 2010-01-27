@@ -116,98 +116,96 @@ TransportSession* InfraFactory::buildTransportSession(
 
 StreamSession* InfraFactory::buildStreamSession(
 		PluginNegotiationPtrlIF* negotiation,
-		auto_ptr<PolicyConfigurationType> policyDesc, PolicyEngine& engine)
+		PolicyConfigurationType* policyDesc, PolicyEngine& engine)
 		throw (CannotCreateSessionException, InvalidPolicyException) {
 
-//	startup_config::stream_type& sProperties =
-//			policyDesc->startup_config().stream();
-//
-//	string pluginName = sProperties.plugin_name();
-//	log_info("Plugin Name: " + pluginName);
-//
-//	string libName = sProperties.library_name();
-//	log_info("lib Name: " + libName);
-//
-//	StreamSession *session = new StreamSession(pluginName, libName, &engine,
-//			negotiation);
-//
-//	adapt_config::stream_type *adapt = 0;
-//
-//	bool useAdaptation = sProperties.enable_adaptation();
-//
-//	if (useAdaptation) {
-//		if (policyDesc->adapt_config().present()
-//				&& policyDesc->adapt_config().get().stream().present())
-//			adapt = &policyDesc->adapt_config().get().stream().get();
-//		else {
-//			log_error("Invalid policy in InfraFactory::buildStreamSession");
-//			delete session;
-//			throw InvalidPolicyException("You must provide adaptation config. "
-//				"Otherwise set the adaptation as false");
-//		}
-//		session->setPolicy(adapt);
-//	}
-//
-//	bool useDirInfo = sProperties.library_directory().present();
-//
-//	PluginManager* pm = PluginManager::getInstance();
-//
-//	PluginStreamIF* plugin = (useDirInfo) ? pm->findAdaptor<
-//			PluginStreamIF> (pluginName, libName,
-//			sProperties.library_directory().get()) : pm->findAdaptor<
-//			PluginStreamIF> (pluginName, libName);
-//
-//	checkAndLog(plugin->getName(), pluginName, false,
-//			"The protocols specified are different. Make your checks", log_warning);
-//
-//	int transmisstionType =
-//			sProperties.transmission_properties().transmission_type();
-//
-//	if (sProperties.transmission_properties().audio_transmission().present()) {
-//		PluginStreamIF::StreamType st;
-//
-//		switch (transmisstionType) {
-//		case (startup_config::stream_type::transmission_properties_type::transmission_type_type::half_receive):
-//			st = PluginStreamIF::DECODER_SIDE;
-//			break;
-//		case (startup_config::stream_type::transmission_properties_type::transmission_type_type::half_transmit):
-//			st = PluginStreamIF::ENCODER_SIDE;
-//			break;
-//		case (startup_config::stream_type::transmission_properties_type::transmission_type_type::full_duplex):
-//			st = PluginStreamIF::BOTH_SIDES;
-//			break;
-//		};
-//
-//		plugin->buildSession(
-//				st,
-//				sProperties.transmission_properties().audio_transmission().get().codec_name(),
-//				sProperties.transmission_properties().audio_transmission().get().enable_preprocessing());
-//
-//	} else {
-//		///TODO build video SESSION
-//
-//	}
-//
-//	if (sProperties.provides().present()) {
-//		startup_config::stream_type::provides_type::provide_iterator provideIt(
-//				sProperties.provides().get().provide().begin());
-//		for (; provideIt != sProperties.provides().get().provide().end(); ++provideIt) {
-//			EventType et(*provideIt);
-//			EventType det(__default_value(*provideIt));
-//			Event de(det, provideIt->default_value());
-//			unsigned int timestamp = provideIt->update_time();
-//			engine.registerProvider(et, timestamp, plugin, de);
-//		}
-//	}
-//
-////	JobManager::getInstance()->addJob(new AdaptationJob<
-////			startup_config::stream_type, auto_ptr<PluginStreamIF> ,
-////			PluginNegotiationPtrlIF> (sProperties, plugin));
-//
-//
-//	session->setSSession(plugin);
-//
-//	return session;
+	startup_config::stream_type* sProperties =
+			&policyDesc->startup_config().stream();
+
+	string pluginName = sProperties->plugin_name();
+	log_info("Plugin Name: " + pluginName);
+
+	string libName = sProperties->library_name();
+	log_info("lib Name: " + libName);
+
+	StreamSession *session = new StreamSession(pluginName, libName, &engine,
+			negotiation);
+
+	adapt_config::stream_type *adapt = 0;
+
+	bool useAdaptation = sProperties->enable_adaptation();
+
+	if (useAdaptation) {
+		if (policyDesc->adapt_config().present()
+				&& policyDesc->adapt_config().get().stream().present())
+			adapt = &policyDesc->adapt_config().get().stream().get();
+		else {
+			log_error("Invalid policy in InfraFactory::buildStreamSession");
+			delete session;
+			throw InvalidPolicyException("You must provide adaptation config. "
+				"Otherwise set the adaptation as false");
+		}
+		session->setPolicy(adapt);
+	}
+
+	bool useDirInfo = sProperties->library_directory().present();
+
+	PluginManager* pm = PluginManager::getInstance();
+
+	PluginStreamIF* plugin = (useDirInfo) ? pm->findAdaptor<
+			PluginStreamIF> (pluginName, libName,
+			sProperties->library_directory().get()) : pm->findAdaptor<
+			PluginStreamIF> (pluginName, libName);
+
+	checkAndLog(plugin->getName(), pluginName, false,
+			"The protocols specified are different. Make your checks", log_warning);
+
+	int transmissionType =
+			sProperties->transmission_properties().transmission_type();
+
+	if (sProperties->transmission_properties().audio_transmission().present()) {
+		PluginStreamIF::StreamType st;
+
+		switch (transmissionType) {
+		case (startup_config::stream_type::transmission_properties_type::transmission_type_type::half_receive):
+			st = PluginStreamIF::DECODER_SIDE;
+			break;
+		case (startup_config::stream_type::transmission_properties_type::transmission_type_type::half_transmit):
+			st = PluginStreamIF::ENCODER_SIDE;
+			break;
+		case (startup_config::stream_type::transmission_properties_type::transmission_type_type::full_duplex):
+			st = PluginStreamIF::BOTH_SIDES;
+			break;
+		};
+
+		plugin->buildSession(
+				st,
+				sProperties->transmission_properties().audio_transmission().get().codec_name(),
+				sProperties->transmission_properties().audio_transmission().get().enable_preprocessing());
+
+	} else {
+		///TODO build video SESSION
+
+	}
+
+	if (sProperties->provides().present()) {
+		startup_config::stream_type::provides_type::provide_iterator provideIt(
+				sProperties->provides().get().provide().begin());
+		for (; provideIt != sProperties->provides().get().provide().end(); ++provideIt) {
+			EventType et(*provideIt);
+			EventType det(__default_value(*provideIt));
+			Event de(det, provideIt->default_value());
+			unsigned int timestamp = provideIt->update_time();
+			engine.registerProvider(et, timestamp, plugin, de);
+		}
+	}
+
+	JobManager::getInstance()->addJob(new AdaptationJob<
+			startup_config::stream_type, PluginStreamIF,
+			PluginNegotiationPtrlIF> (sProperties, *plugin, 0));
+
+	session->setSSession(plugin);
+	return session;
 
 }
 
