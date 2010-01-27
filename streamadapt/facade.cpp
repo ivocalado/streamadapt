@@ -52,81 +52,115 @@ Facade* Facade::getInstance() {
 
 SessionManager* Facade::createClientSession(string targetIp, int targetPort,
 		GenericSenderSocket* sender, GenericReceiverSocket* receiver,
-		string pluginPath, map<string, string> * additionalParams)
+		string policyPath, map<string, string> * additionalParams)
 		throw(CannotCreateSessionException, CannotLoadPolicyException) {
 
 	PolicyEngine* engine = 0;
 	SessionManager* session = 0;
+	PolicyConfigurationType* policyDesc = 0;
+	TransportSession* trSession = 0;
+	StreamSession* ssession = 0;
 
 	try {
-		auto_ptr<PolicyConfigurationType> _plugin = loadPolicy(pluginPath);
-		PolicyConfigurationType *plugin = new PolicyConfigurationType(*(_plugin.get()));
+		auto_ptr<PolicyConfigurationType> pd = loadPolicy(policyPath);
+		policyDesc = new PolicyConfigurationType(*(pd.get()));
 
 		engine = new PolicyEngine;
 		//	PluginNegotiationPtrlIF* negotiation =
 		//			InfraFactory::getInstance()->buildNegotiationSession(); TODO DESCOMENTAR
 		session = new SessionManager(sender, receiver, engine);
-		TransportSession* trSession =
-				InfraFactory::getInstance()->buildTransportSession(0, plugin,
-						*engine, targetIp, targetPort,
-						InfraFactory::CLIENT_SESSION, session);
-		//StreamSession* ssession = InfraFactory::getInstance()
-
-
+		trSession = InfraFactory::getInstance()->buildTransportSession(0,
+				policyDesc, *engine, targetIp, targetPort,
+				InfraFactory::CLIENT_SESSION, session);
 
 		session->setTransportSession(trSession);
 
+		ssession = InfraFactory::getInstance()->buildStreamSession(0,
+				policyDesc, *engine);
+
+		session->setStreamSession(ssession);
 
 		session->startSession();
 	} catch (...) {
+		if (session) {
+			delete session;
+			log_error("Exception on creating session. Deleting Session manager object");
+		}
+
 		if (engine) {
 			delete engine;
 			log_info("Exception on creating session. Deleting engine");
 		}
+
+		if (policyDesc) {
+			delete policyDesc;
+			log_error("Exception on creating session. Deleting plugin object");
+		}
+
 		throw ;
 	}
 	return session;
 }
 
-#include <iostream>
 SessionManager* Facade::createServerSession(string localIP, int localport,
 		GenericSenderSocket* sender, GenericReceiverSocket* receiver,
 		string pluginPath, map<string, string> * additionalParams)
 throw(CannotCreateSessionException, CannotLoadPolicyException) {
+
 	PolicyEngine* engine = 0;
-		SessionManager* session = 0;
+	SessionManager* session = 0;
+	PolicyConfigurationType* policyDesc = 0;
+	TransportSession* trSession = 0;
+	StreamSession* ssession = 0;
 
-		try {
-			auto_ptr<PolicyConfigurationType> plugin = loadPolicy(pluginPath);
+	try {
+		auto_ptr<PolicyConfigurationType> plugin = loadPolicy(pluginPath);
 
+		engine = new PolicyEngine;
+		//
+		//			//	PluginNegotiationPtrlIF* negotiation =
+		//			//			InfraFactory::getInstance()->buildNegotiationSession(); TODO DESCOMENTAR
+		session = new SessionManager(sender, receiver, engine);
+		//
+		trSession =
+		InfraFactory::getInstance()->buildTransportSession(0, plugin.get(),
+				*engine, localIP, localport,
+				InfraFactory::SERVER_SESSION, session);
 
+		session->setTransportSession(trSession);
 
-			engine = new PolicyEngine;
-//
-//			//	PluginNegotiationPtrlIF* negotiation =
-//			//			InfraFactory::getInstance()->buildNegotiationSession(); TODO DESCOMENTAR
-			session = new SessionManager(sender, receiver, engine);
-//
-			TransportSession* trSession =
-					InfraFactory::getInstance()->buildTransportSession(0, plugin.get(),
-							*engine, localIP, localport,
-							InfraFactory::SERVER_SESSION, session);
-//
-//			//StreamSession* ssession = InfraFactory::getInstance()
-//
-//
-//
-			session->setTransportSession(trSession);
+		ssession = InfraFactory::getInstance()->buildStreamSession(0,
+				policyDesc, *engine);
 
-		} catch (...) {
-			if (engine) {
-				delete engine;
-				log_info("Exception on creating session. Deleting engine");
-			}
-			throw ;
+		session->setStreamSession(ssession);
+
+	} catch (...) {
+		if(session) {
+			delete session;
+			log_error("Exception on creating session. Deleting Session manager object");
 		}
 
-		return session;
+		if (engine) {
+			delete engine;
+			log_info("Exception on creating session. Deleting engine");
+		}
+
+		if(policyDesc) {
+			delete policyDesc;
+			log_error("Exception on creating session. Deleting plugin object");
+		}
+
+		throw;
+	}
+
+	return session;
+
+}
+
+SessionManager* Facade::createGenericSession(string targetIp, int targetPort,
+		GenericSenderSocket* sender, GenericReceiverSocket* listener,
+		string pluginPath, map<string, string> * additionalParams, InfraFactory::SessionType sessionType)
+throw(CannotCreateSessionException, CannotLoadPolicyException) {
 
 }
 

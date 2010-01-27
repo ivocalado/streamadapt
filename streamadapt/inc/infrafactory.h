@@ -38,15 +38,14 @@ public:
 
 	TransportSession* buildTransportSession(
 			PluginNegotiationPtrlIF* negotiation,
-					PolicyConfigurationType* policyDesc, PolicyEngine& engine,
+			PolicyConfigurationType* policyDesc, PolicyEngine& engine,
 			string ip, int port, InfraFactory::SessionType sessionType,
-			ConnectionListener* listener = 0) throw(CannotCreateSessionException,
-			InvalidPolicyException);
+			ConnectionListener* listener = 0)
+			throw(CannotCreateSessionException, InvalidPolicyException);
 
-	StreamSession* buildStreamSession(PluginNegotiationPtrlIF* negotiation, auto_ptr<
-			PolicyConfigurationType> policyDesc, PolicyEngine& engine) throw (CannotCreateSessionException,InvalidPolicyException);
-
-
+	StreamSession* buildStreamSession(PluginNegotiationPtrlIF* negotiation,
+			PolicyConfigurationType* policyDesc, PolicyEngine& engine)
+			throw (CannotCreateSessionException, InvalidPolicyException);
 
 	virtual ~InfraFactory();
 };

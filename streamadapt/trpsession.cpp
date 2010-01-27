@@ -18,9 +18,12 @@ TransportSession::TransportSession(string _tProtocol, string _pluginName,
 	policy = 0;
 	this->engine = engine;
 	this->negotiation = negotiation;
+	this->session = 0;
 }
 
 TransportSession::~TransportSession() {
+	if(session)
+		delete session;
 }
 
 void TransportSession::setTSession(PluginTransportIF* tsession) {

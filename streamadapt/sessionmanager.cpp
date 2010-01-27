@@ -27,47 +27,109 @@ SessionManager::SessionManager(GenericSenderSocket* sender,
 	this->receiver = receiver;
 	this->engine = engine;
 
-	this->engineManager = new ThreadManager<PolicyEngine> ("EngineManager",
-			engine);
-	this->jobManager = new ThreadManager<JobManager> ("JobManager",
-			JobManager::getInstance(), 50);
+	this->engineManagerThread = new ThreadManager<PolicyEngine> (
+			"EngineManager", engine);
+	this->jobManagerThread = new ThreadManager<JobManager> ("JobManager",
+			JobManager::getInstance(), 500);
 
 	if (this->sender) {
-		send = new SenderManager(*(this->sender));
-		this->senderManager = new ThreadManager<SenderManager> (
-				"SenderManager", send);
+		senderManager = new SenderManager(*(this->sender));
+		this->senderManagerThread = new ThreadManager<SenderManager> (
+				"SenderManager", senderManager, 10000);
 	} else {
-		senderManager = 0;
+		senderManagerThread = 0;
 	}
 
 	if (this->receiver) {
-		recv = new ReceiverManager(*(this->receiver));
-		this->receiverManager = new ThreadManager<ReceiverManager> (
-				"ReceiverManager", recv);
+		receiverManager = new ReceiverManager(*(this->receiver));
+		this->receiverManagerThread = new ThreadManager<ReceiverManager> (
+				"ReceiverManager", receiverManager, 10000);
 	} else
-		receiverManager = 0;
+		receiverManagerThread = 0;
 
-	//	t = Teste<A>(new A);
-	//	t2 = Teste<B>(new B);
-	//	t3 = Teste<C>(new C);
+	trSession = 0;
+	sSession = 0;
+
+	activeManager = false;
+}
+void SessionManager::endSession() {
+	log_info("Disabling sessions");
+	if (jobManagerThread)
+		jobManagerThread->disable();
+	if (engineManagerThread)
+		engineManagerThread->disable();
+
+	if (receiverManagerThread)
+		receiverManagerThread->disable();
+	if (senderManagerThread)
+		senderManagerThread->disable();
+
+	try {
+		if (trSession)
+			trSession->endSession();
+	} catch (...) {
+		log_error("Exception in finalize Transport session. But we still continue");
+	}
+
+	try {
+		if (sSession)
+			sSession->endSession();
+	} catch (...) {
+		log_error("Exception in finalize Stream session. But we still continue");
+	}
+
+
+	if (receiverManager) {
+		delete receiverManagerThread;
+		delete receiverManager;
+		log_info("Deleting receive manager thread");
+		log_info("Deleting receive manager");
+	}
+
+	if (senderManager) {
+		delete senderManagerThread;
+		delete senderManager;
+		log_info("Deleting send manager");
+	}
+
+	log_info("Deleting engine manager");
+	delete engineManagerThread;
+
+	log_info("Deleting Job Manager");
+	delete jobManagerThread;
+
+	log_info("Deleting Engine");
+	delete engine;
+
+	if (trSession) {
+		log_info("Deleting Transport session");
+		delete trSession;
+	}
+
+	if (sSession) {
+		log_info("Deleting Stream Session");
+		delete sSession;
+	}
+
+	activeManager = false;
 }
 
 SessionManager::~SessionManager() {
-	if (recv) {
-		delete receiverManager;
-		delete recv;
+	if (activeManager) {
+		log_info("Finalizing sessions");
+		endSession();
 	}
-	if (send) {
-		delete senderManager;
-		delete send;
-	}
-	delete engineManager;
-	delete jobManager;
+
 }
 
 void SessionManager::setTransportSession(TransportSession* trSession) {
 	this->trSession = trSession;
 	engine->addListener(trSession);
+}
+
+void SessionManager::setStreamSession(StreamSession* sSession) {
+	this->sSession = sSession;
+	engine->addListener(sSession);
 }
 
 TransportSession* SessionManager::getTSession() {
@@ -76,30 +138,14 @@ TransportSession* SessionManager::getTSession() {
 
 void SessionManager::startSession() {
 	log_info("Starting managers session");
-	if (jobManager)
-		jobManager->enable();
-	if (engineManager)
-		engineManager->enable();
-	if (receiverManager)
-		receiverManager->enable();
-	if (senderManager)
-		senderManager->enable();
-}
-
-void SessionManager::endSession() {
-	log_info("Destroying managers");
-	if (jobManager)
-		jobManager->disable();
-	if (engineManager)
-		engineManager->disable();
-
-	if (receiverManager)
-		receiverManager->disable();
-	if (senderManager)
-		senderManager->disable();
-	//
-	trSession->endSession();
-
+	if (jobManagerThread)
+		jobManagerThread->enable();
+	if (engineManagerThread)
+		engineManagerThread->enable();
+	if (receiverManagerThread)
+		receiverManagerThread->enable();
+	if (senderManagerThread)
+		senderManagerThread->enable();
 }
 
 ReceiverManager::ReceiverManager(GenericReceiverSocket& _receiver) :
