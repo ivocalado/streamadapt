@@ -119,8 +119,7 @@ void DCCPSocketPlugin::adaptTransport(string paramName, std::map<std::string,
 
 }
 
-void DCCPSocketPlugin::buildSession(infrastream::ConnectionListener* manager,
-		std::string hostIp, int hostPort) throw(CannotBindSocketException,
+void DCCPSocketPlugin::buildSession(std::string hostIp, int hostPort, infrastream::ConnectionListener* manager) throw(CannotBindSocketException,
 		CannotCreateSocketException) {
 	if (rtpSession)
 		throw CannotCreateSocketException(
@@ -262,4 +261,9 @@ void DCCPSocketPlugin::newRemoteConnection(const InetHostAddress& remoteIp,
 	if (listener)
 		this->listener->onNewRemoteConnection(remoteIp.getHostname(),
 				remotePort);
+}
+
+void DCCPSocketPlugin::closeRemoteConnection() {
+	if(listener)
+		listener->onCloseRemoteConnection();
 }

@@ -87,6 +87,7 @@ class DCCPSocketPlugin: public PluginTransportIF {
 					<< source.getNetworkAddress() << ":"
 					<< source.getControlTransportPort() << endl;
 			cout << "   Goodbye reason: \"" << reason << "\"" << endl;
+			caller->closeRemoteConnection();
 		}
 
 		const InetHostAddress& targetAddress() const {
@@ -127,8 +128,8 @@ public:
 			std::string> &params) throw (OperationNotPerfomedException,
 			OperationNotSupportedException);
 
-	void buildSession(infrastream::ConnectionListener* manager, string hostIp,
-			int hostPort) throw(CannotBindSocketException,
+	void buildSession(string hostIp,
+			int hostPort,infrastream::ConnectionListener* manager) throw(CannotBindSocketException,
 			CannotCreateSocketException);
 
 	void addDestination(string target, int port)
@@ -154,6 +155,8 @@ public:
 			OperationNotPerfomedException);
 
 	void newRemoteConnection(const InetHostAddress& remoteIp, int remotePort);
+
+	void closeRemoteConnection();
 
 };
 
