@@ -14,11 +14,11 @@ public:
 
 	SPluginFactory() : StreamPluginFactory(STREAM_PLUGIN) {}
 	PluginStreamIF* create() {
-		return new SpeexPlugin;//
+		return new SpeexPlugin;
 	}
 
 	std::string getName() {
-		return "stream-plugin";
+		return "SpeexPlugin";
 	}
 
 	string getDescription() {
