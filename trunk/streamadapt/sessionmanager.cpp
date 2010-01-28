@@ -12,8 +12,15 @@ using namespace std;
 namespace infrastream {
 
 SessionManager::SessionManager(GenericSenderSocket* sender,
-		GenericReceiverSocket* receiver, PolicyEngine* engine)
-		throw (CannotCreateSessionException) {
+		GenericReceiverSocket* receiver, PolicyEngine* engine,
+		PolicyConfigurationType* policy) throw (CannotCreateSessionException) {
+
+	if (!policy) {
+		log_error("Invalid session creating");
+		throw CannotCreateSessionException(
+				"The policy object cannot be null");
+	}
+
 	if (!sender && !receiver) {
 		log_error("Invalid session creating");
 		throw CannotCreateSessionException(
@@ -26,6 +33,7 @@ SessionManager::SessionManager(GenericSenderSocket* sender,
 	this->sender = sender;
 	this->receiver = receiver;
 	this->engine = engine;
+	this->policy = policy;
 
 	this->engineManagerThread = new ThreadManager<PolicyEngine> (
 			"EngineManager", engine);
@@ -78,6 +86,16 @@ void SessionManager::endSession() {
 		log_error("Exception in finalize Stream session. But we still continue");
 	}
 
+	activeManager = false;
+}
+
+SessionManager::~SessionManager() {
+	if (activeManager) {
+		log_info("Finalizing sessions");
+		endSession();
+	}
+
+
 
 	if (receiverManager) {
 		delete receiverManagerThread;
@@ -101,6 +119,9 @@ void SessionManager::endSession() {
 	log_info("Deleting Engine");
 	delete engine;
 
+	log_info("Deleting Policy");
+	delete policy;
+
 	if (trSession) {
 		log_info("Deleting Transport session");
 		delete trSession;
@@ -111,14 +132,7 @@ void SessionManager::endSession() {
 		delete sSession;
 	}
 
-	activeManager = false;
-}
 
-SessionManager::~SessionManager() {
-	if (activeManager) {
-		log_info("Finalizing sessions");
-		endSession();
-	}
 
 }
 

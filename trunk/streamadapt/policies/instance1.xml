@@ -24,14 +24,14 @@
             <simpleproperty key="SchedulingTimeout">10000</simpleproperty>
         </transport>
         <stream>
-            <plugin-name>fdg</plugin-name>
-            <library-name>uyt</library-name>
+            <plugin-name>SpeexPlugin</plugin-name>
+            <library-name>libplugins-stream.so</library-name>
+            <library-directory>/home/ivocalado/workspace/plugins-stream/Debug/</library-directory>
             <transmission-properties transmission-type="full-duplex">
-                <audio-transmission>
-                    <codec-name>jh</codec-name>
+                <audio-transmission enable-preprocessing="true">
+                    <codec-name>WideBand</codec-name>
                 </audio-transmission>
             </transmission-properties>
-            
             <enable-adaptation>false</enable-adaptation>            
         </stream>
     </startup-config>

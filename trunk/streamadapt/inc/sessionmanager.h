@@ -18,6 +18,7 @@
 #include "streamsession.h"
 
 #include <iostream>
+#include "policy/policy.h"
 
 namespace infrastream {
 
@@ -107,7 +108,8 @@ class SessionManager: public ConnectionListener {
 public:
 	// for full-transmission it is both parameters isn't null
 	SessionManager(GenericSenderSocket* sender,
-			GenericReceiverSocket* receiver, PolicyEngine* engine)
+			GenericReceiverSocket* receiver, PolicyEngine* engine,
+			PolicyConfigurationType* policy)
 			throw (CannotCreateSessionException);
 
 	void setTransportSession(TransportSession* trSession);
@@ -118,6 +120,11 @@ public:
 		log_debug("New connection: "+ remoteIp);
 		startSession();
 	}
+
+	void onCloseRemoteConnection() {
+		log_info("Close remote connection");
+		endSession();
+	};
 
 	TransportSession* getTSession();
 
@@ -136,7 +143,6 @@ private:
 	GenericSenderSocket* sender;
 	GenericReceiverSocket* receiver;
 
-
 	ReceiverManager* receiverManager;
 	SenderManager* senderManager;
 
@@ -144,6 +150,7 @@ private:
 	ThreadManager<JobManager>* jobManagerThread;
 	ThreadManager<ReceiverManager>* receiverManagerThread;
 	ThreadManager<SenderManager>* senderManagerThread;
+	PolicyConfigurationType* policy;
 
 };
 }

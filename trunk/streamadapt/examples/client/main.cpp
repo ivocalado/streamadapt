@@ -5,7 +5,7 @@
  *      Author: ivocalado
  */
 
-//#ifdef MAIN_CLIENT
+#ifdef MAIN_CLIENT
 #include<stdio.h>
 #include <iostream>
 #include <facade.h>
@@ -60,37 +60,19 @@ public:
 		//
 		string s = sender->getSession()->retrievePluginInformation(
 				"CurrentRTPClockRate");
-		//
-		///		log_error("Passou aqui 2!");
-		//
-//		cout << "Passou aqui 4" << endl;
 		istringstream s1(s);
 		uint16 tstampInc = 0;
 		s1 >> tstampInc;
 		tstampInc /= packetsPerSecond;
-		//
-		//		//		uint16 tstampInc = getCurrentRTPClockRate() / packetsPerSecond;
 		uint32 period = 1000 / packetsPerSecond;
-		//		//		cout<<"Passou aqui 5"<<endl;
 		TimerPort::setTimer(period);
-		//
-		////		cout << "Passou aqui 6" << endl;
 		for (int i = 0; i < count; i++) {
 			uint32 tmp = timestamp + i * tstampInc;
 			sender->getSession()->sendData(tmp, data,
 					strlen((char *) data) + 1, &b);
-			//			cout<<"Passou aqui 7"<<endl;
 			Thread::sleep(TimerPort::getTimer());
 			TimerPort::incTimer(period);
-			//			b.priority++;
 		}
-		//
-		////		log_error("Passou aqui 1!");
-		////		string s2 = sender->getSession()->retrievePluginInformation(
-		////				"DCCPTXCCID");
-		////		cout << "ccid: " << s2 << endl;
-
-//		getchar(); //
 		session->endSession();
 	}
 
@@ -130,4 +112,4 @@ int main(int argc, char *argv[]) {
 
 	return 0;
 }
-//#endif
+#endif

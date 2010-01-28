@@ -74,7 +74,7 @@ void PluginManager::loadPlugin(string pathName)
 	log_info("Lib Path: "+ pathName);
 
 	void* plugin_h = 0;
-	plugin_h = dlopen(pathName.c_str(), RTLD_LAZY);
+	plugin_h = dlopen(pathName.c_str(), RTLD_NOW/*RTLD_LAZY*/);
 	if (!plugin_h) {
 		string error = "Cannot load plugin. Cause: ";
 		error += dlerror();

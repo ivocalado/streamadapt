@@ -178,10 +178,14 @@ StreamSession* InfraFactory::buildStreamSession(
 			break;
 		};
 
+		try{
 		plugin->buildSession(
 				st,
 				sProperties->transmission_properties().audio_transmission().get().codec_name(),
 				sProperties->transmission_properties().audio_transmission().get().enable_preprocessing());
+		}catch(...){
+			log_error("Erro on build session")
+		}
 
 	} else {
 		///TODO build video SESSION

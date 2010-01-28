@@ -18,6 +18,8 @@ public:
 	virtual ~ConnectionListener(){}
 
 	virtual void onNewRemoteConnection(std::string remoteIp, int port) = 0;
+
+	virtual void onCloseRemoteConnection() = 0;
 };
 
 }

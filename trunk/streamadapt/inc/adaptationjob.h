@@ -41,6 +41,7 @@ public:
 		log_info("execute Job");
 		for (; simpleIt != property->simpleproperty().end(); ++simpleIt) {
 			properties[simpleIt->key()] = *simpleIt;
+			log_info("Property: " + simpleIt->key());
 			try {
 				session.adapt(simpleIt->key(), properties);//
 				if (notifier)
@@ -55,10 +56,12 @@ public:
 		for (; complexIt != property->complexproperty().end(); ++complexIt) {
 			typename AdaptDesc::complexproperty_type::sub_property_const_iterator
 					sub(complexIt->sub_property().begin());
+			log_info("Property: "+ complexIt->key());
 			try {
 				properties.clear();
 				for (; sub != complexIt->sub_property().end(); ++sub) {
 					properties[simpleIt->key()] = *sub;
+					log_info("Sub Property: "+ simpleIt->key());
 				}
 				session.adapt(complexIt->key(), properties);
 				if (notifier)
@@ -68,7 +71,7 @@ public:
 			}
 		}
 
-		log_info("End plugin configuration\n\n");
+		log_info("End plugin configuration");
 
 	}
 };
