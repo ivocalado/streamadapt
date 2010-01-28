@@ -13,7 +13,6 @@
 #include <ostream>
 #include <policyengine.h>
 
-//using namespace infrastream;
 using namespace AdaptationPolicy;
 
 namespace infrastream {
@@ -68,7 +67,8 @@ SessionManager* Facade::createClientSession(string targetIp, int targetPort,
 		engine = new PolicyEngine;
 		//	PluginNegotiationPtrlIF* negotiation =
 		//			InfraFactory::getInstance()->buildNegotiationSession(); TODO DESCOMENTAR
-		session = new SessionManager(sender, receiver, engine);
+		session = new SessionManager(sender, receiver, engine, policyDesc);
+
 		trSession = InfraFactory::getInstance()->buildTransportSession(0,
 				policyDesc, *engine, targetIp, targetPort,
 				InfraFactory::CLIENT_SESSION, session);
@@ -97,14 +97,14 @@ SessionManager* Facade::createClientSession(string targetIp, int targetPort,
 			log_error("Exception on creating session. Deleting plugin object");
 		}
 
-		throw ;
+		throw;
 	}
 	return session;
 }
 
 SessionManager* Facade::createServerSession(string localIP, int localport,
 		GenericSenderSocket* sender, GenericReceiverSocket* receiver,
-		string pluginPath, map<string, string> * additionalParams)
+		string policyPath, map<string, string> * additionalParams)
 throw(CannotCreateSessionException, CannotLoadPolicyException) {
 
 	PolicyEngine* engine = 0;
@@ -114,16 +114,12 @@ throw(CannotCreateSessionException, CannotLoadPolicyException) {
 	StreamSession* ssession = 0;
 
 	try {
-		auto_ptr<PolicyConfigurationType> plugin = loadPolicy(pluginPath);
-
+		auto_ptr<PolicyConfigurationType> pd = loadPolicy(policyPath);
+		policyDesc = new PolicyConfigurationType(*(pd.get()));
 		engine = new PolicyEngine;
-		//
-		//			//	PluginNegotiationPtrlIF* negotiation =
-		//			//			InfraFactory::getInstance()->buildNegotiationSession(); TODO DESCOMENTAR
-		session = new SessionManager(sender, receiver, engine);
-		//
+		session = new SessionManager(sender, receiver, engine, policyDesc);
 		trSession =
-		InfraFactory::getInstance()->buildTransportSession(0, plugin.get(),
+		InfraFactory::getInstance()->buildTransportSession(0, policyDesc,
 				*engine, localIP, localport,
 				InfraFactory::SERVER_SESSION, session);
 
@@ -133,7 +129,6 @@ throw(CannotCreateSessionException, CannotLoadPolicyException) {
 				policyDesc, *engine);
 
 		session->setStreamSession(ssession);
-
 	} catch (...) {
 		if(session) {
 			delete session;
@@ -154,13 +149,6 @@ throw(CannotCreateSessionException, CannotLoadPolicyException) {
 	}
 
 	return session;
-
-}
-
-SessionManager* Facade::createGenericSession(string targetIp, int targetPort,
-		GenericSenderSocket* sender, GenericReceiverSocket* listener,
-		string pluginPath, map<string, string> * additionalParams, InfraFactory::SessionType sessionType)
-throw(CannotCreateSessionException, CannotLoadPolicyException) {
 
 }
 

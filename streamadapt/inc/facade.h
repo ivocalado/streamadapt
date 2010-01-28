@@ -29,11 +29,6 @@ class Facade {
 	auto_ptr<PolicyConfigurationType> loadPolicy(string policyPath)
 			throw(CannotLoadPolicyException);
 
-	SessionManager* createGenericSession(string targetIp, int targetPort,
-			GenericSenderSocket* sender, GenericReceiverSocket* listener,
-			string pluginPath, map<string, string>* additionalParams)
-			throw(CannotCreateSessionException, CannotLoadPolicyException);
-
 public:
 	string getName() const;
 
