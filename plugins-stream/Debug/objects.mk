@@ -4,4 +4,4 @@
 
 USER_OBJS :=
 
-LIBS := -lspeex
+LIBS := -lspeex -lspeexdsp -lm
