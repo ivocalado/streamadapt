@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <adaptation-policy xmlns="AdaptationPolicy"
  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="AdaptationPolicy file:/home/ivocalado/workspace/streamadapt/policies/policy.xsd">
+ xsi:schemaLocation="AdaptationPolicy file:/home/ivocalado/workspace/streamadapt/streamadapt/policies/policy.xsd">
     <policy-name xmlns="">politica Teste</policy-name>
     <policy-description xmlns="">O objetivo desta politica é realizar testes com o plugin de transporte</policy-description>
     <startup-config xmlns="">
@@ -10,7 +10,7 @@
             <protocol>DCCP</protocol>
             <plugin-name>DCCPSocketPlugin</plugin-name>
             <library-name>libplugins-transport.so</library-name>
-            <library-directory>/home/ivocalado/workspace/plugins-transport/Debug/</library-directory>
+            <library-directory>/home/ivocalado/workspace/streamadapt/plugins-transport/Debug/</library-directory>
             <enable-adaptation>true</enable-adaptation>
              
              <provides>
@@ -26,7 +26,7 @@
         <stream>
             <plugin-name>SpeexPlugin</plugin-name>
             <library-name>libplugins-stream.so</library-name>
-            <library-directory>/home/ivocalado/workspace/plugins-stream/Debug/</library-directory>
+            <library-directory>/home/ivocalado/workspace/streamadapt/plugins-stream/Debug/</library-directory>
             <transmission-properties transmission-type="full-duplex">
                 <audio-transmission enable-preprocessing="true">
                     <codec-name>WideBand</codec-name>
@@ -35,6 +35,7 @@
             <enable-adaptation>false</enable-adaptation>            
         </stream>
     </startup-config>
+    <!-- 
     <adapt-config xmlns="">
         <transport>
             <adaptation-method>qpolicy</adaptation-method>
@@ -52,4 +53,5 @@
             </policy>
         </transport>
     </adapt-config>
+    -->
 </adaptation-policy>

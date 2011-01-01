@@ -95,8 +95,6 @@ SessionManager::~SessionManager() {
 		endSession();
 	}
 
-
-
 	if (receiverManager) {
 		delete receiverManagerThread;
 		delete receiverManager;
@@ -115,24 +113,6 @@ SessionManager::~SessionManager() {
 
 	log_info("Deleting Job Manager");
 	delete jobManagerThread;
-
-	log_info("Deleting Engine");
-	delete engine;
-
-	log_info("Deleting Policy");
-	delete policy;
-
-	if (trSession) {
-		log_info("Deleting Transport session");
-		delete trSession;
-	}
-
-	if (sSession) {
-		log_info("Deleting Stream Session");
-		delete sSession;
-	}
-
-
 
 }
 

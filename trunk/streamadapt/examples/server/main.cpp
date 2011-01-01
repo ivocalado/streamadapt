@@ -4,6 +4,7 @@
  *  Created on: 14/07/2009
  *      Author: ivocalado
  */
+#define MAIN_SERVER
 #ifdef MAIN_SERVER
 #include <iostream>
 #include <facade.h>
@@ -21,18 +22,27 @@ using namespace infrastream;
 using namespace ost;
 
 class RecordDevice: public GenericSenderSocket {
+
 public:
+	string s;
 	int read(uint8* buffer, size_t bufferLen) {
 		return 0; // Le dados da sound card
+	}
+	RecordDevice() {
+		s = "sfsdsf";
 	}
 };
 
 class PlaybackDevice: public GenericReceiverSocket {
 public:
+	string s;
 	void newEventData(uint8* buffer, size_t bufferLen) {
 		//recebe dados para ser renderizado
 	}
 
+	PlaybackDevice() {
+		s = "sfasdf";
+	}
 	virtual ~PlaybackDevice() {
 	}
 };
@@ -42,10 +52,19 @@ public:
 	Receiver(string ia, tpport_t port) {
 
 		Facade* facade = Facade::getInstance();
-		SessionManager* session = facade->createServerSession(ia, port,
-				new RecordDevice, new PlaybackDevice,
-				"/home/ivocalado/workspace/streamadapt/policies/instance1.xml",
+		SessionManager* session;
+		RecordDevice *r = new RecordDevice;
+		PlaybackDevice *s = new PlaybackDevice;
+		try {
+		session = facade->createServerSession(ia, port,
+				r, s,
+				"/home/ivocalado/workspace/streamadapt/streamadapt/policies/instance1.xml",
 				0);
+		}catch(...) {
+			log_error(r->s);
+			log_error(s->s);
+			throw;
+		}
 
 		TransportSession* sender = session->getTSession();
 

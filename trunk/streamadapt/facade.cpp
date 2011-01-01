@@ -122,7 +122,6 @@ throw(CannotCreateSessionException, CannotLoadPolicyException) {
 		InfraFactory::getInstance()->buildTransportSession(0, policyDesc,
 				*engine, localIP, localport,
 				InfraFactory::SERVER_SESSION, session);
-
 		session->setTransportSession(trSession);
 
 		ssession = InfraFactory::getInstance()->buildStreamSession(0,
