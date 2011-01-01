@@ -14,6 +14,7 @@ PolicyEngine::PolicyEngine() {
 }
 
 PolicyEngine::~PolicyEngine() {
+	log_error("PolicyEngine::~PolicyEngine");
 }
 
 
@@ -88,7 +89,7 @@ void PolicyEngine::run() {
 			!= registers.end(); it++) {
 		log_debug("Sleeping...");
 		Thread::sleep(current);
-		log_debug("Wake up!")
+		log_debug("Wake up!");
 		if (it->nextCicle(current)) {
 			log_info("new Event");
 			EventType eventType = it->getEventType();
