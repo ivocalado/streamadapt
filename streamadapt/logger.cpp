@@ -6,7 +6,8 @@
  */
 
 #include <logger/logger.h>
-
+#include <ostream>
+using namespace std;
 namespace infralog {
 
 Logger* Logger::instance = 0;
@@ -52,4 +53,32 @@ void Logger::_log_msg(string logMessage, LogLevel level) {
 			(*it)->newEventLog(logMessage);
 	}
 }
+
+/*
+void Logger::_log_msg(double logValue, LogLevel level) {
+	std::ostringstream strs;
+	strs << logValue;
+	std::string str = strs.str();
+	_log_msg(str, level);
+}
+void Logger::_log_msg(int logValue, LogLevel level) {
+	std::ostringstream strs;
+	strs << logValue;
+	std::string str = strs.str();
+	_log_msg(str, level);
+}
+void Logger::_log_msg(char logValue, LogLevel level) {
+	std::ostringstream strs;
+	strs << logValue;
+	std::string str = strs.str();
+	_log_msg(str, level);
+}
+void Logger::_log_msg(short logValue, LogLevel level) {
+	std::ostringstream strs;
+	strs << logValue;
+	std::string str = strs.str();
+	_log_msg(str, level);
+}
+*/
+
 }

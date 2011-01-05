@@ -26,15 +26,15 @@ namespace infrastream {
 /**
  * This class describes a stream session.
  */
-class Session {
+class CommunicationSession {
 	//PluginBase *negotiation;
 	string pluginName;
 	string libName;
 
 public:
-	Session(string pluginName, string libName)
+	CommunicationSession(string pluginName, string libName)
 			throw(CannotCreateSessionException);
-	virtual ~Session();
+	virtual ~CommunicationSession();
 
 	virtual void newEvent(Event event) throw(InvalidEventException) = 0;
 	virtual set<EventType> getDependencies() throw(InvalidPolicyException) = 0;

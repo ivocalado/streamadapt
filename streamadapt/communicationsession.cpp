@@ -5,11 +5,11 @@
  *      Author: ivocalado
  */
 
-#include <session.h>
+#include <communicationsession.h>
 
 namespace infrastream {
 
-Session::Session(string _pluginName, string _libName)
+CommunicationSession::CommunicationSession(string _pluginName, string _libName)
 		throw(CannotCreateSessionException) :
 	pluginName(_pluginName), libName(_libName) {
 	/*if (negotiation)
@@ -20,15 +20,15 @@ Session::Session(string _pluginName, string _libName)
 	 }*/
 }
 
-Session::~Session() {
+CommunicationSession::~CommunicationSession() {
 	// TODO Auto-generated destructor stub
 }
 
 
-string Session::getPluginName() const {
+string CommunicationSession::getPluginName() const {
 	return pluginName;
 }
-string Session::getLibName() const {
+string CommunicationSession::getLibName() const {
 	return libName;
 }
 

@@ -65,6 +65,10 @@ public:
 	}
 	void _addAppender(LoggingAppender *appender);
 	void _log_msg(string logMessage, LogLevel level);
+	void _log_msg(double logMessage, LogLevel level);
+	void _log_msg(int logMessage, LogLevel level);
+	void _log_msg(char logMessage, LogLevel level);
+	void _log_msg(short logMessage, LogLevel level);
 };
 }
 #endif /* LOGGER_H_ */
