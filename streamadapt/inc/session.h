@@ -5,8 +5,8 @@
  *      Author: ivocalado
  */
 
-#ifndef SESSION_H_
-#define SESSION_H_
+#ifndef _SESSION_H_
+#define _SESSION_H_
 #include "infraexceptions.h"
 #include "event.h"
 #include "eventtype.h"
@@ -26,15 +26,15 @@ namespace infrastream {
 /**
  * This class describes a stream session.
  */
-class CommunicationSession {
+class Session {
 	//PluginBase *negotiation;
 	string pluginName;
 	string libName;
 
 public:
-	CommunicationSession(string pluginName, string libName)
+	Session(string pluginName, string libName)
 			throw(CannotCreateSessionException);
-	virtual ~CommunicationSession();
+	virtual ~Session();
 
 	virtual void newEvent(Event event) throw(InvalidEventException) = 0;
 	virtual set<EventType> getDependencies() throw(InvalidPolicyException) = 0;
