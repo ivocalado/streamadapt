@@ -5,6 +5,7 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
 ../adaptationmanager.cpp \
+../communicationsession.cpp \
 ../consoleappender.cpp \
 ../event.cpp \
 ../eventregister.cpp \
@@ -19,13 +20,13 @@ CPP_SRCS += \
 ../pluginsfactory.cpp \
 ../policy.cpp \
 ../policyengine.cpp \
-../session.cpp \
 ../sessionmanager.cpp \
 ../streamsession.cpp \
 ../trpsession.cpp 
 
 OBJS += \
 ./adaptationmanager.o \
+./communicationsession.o \
 ./consoleappender.o \
 ./event.o \
 ./eventregister.o \
@@ -40,13 +41,13 @@ OBJS += \
 ./pluginsfactory.o \
 ./policy.o \
 ./policyengine.o \
-./session.o \
 ./sessionmanager.o \
 ./streamsession.o \
 ./trpsession.o 
 
 CPP_DEPS += \
 ./adaptationmanager.d \
+./communicationsession.d \
 ./consoleappender.d \
 ./event.d \
 ./eventregister.d \
@@ -61,7 +62,6 @@ CPP_DEPS += \
 ./pluginsfactory.d \
 ./policy.d \
 ./policyengine.d \
-./session.d \
 ./sessionmanager.d \
 ./streamsession.d \
 ./trpsession.d 

@@ -85,7 +85,7 @@ public:
 				cerr << "Dado: "<<adu->getData()<<endl;
 				delete adu;
 			}
-			Thread::sleep(7);
+			Thread::sleep(1000);
 		}
 	}
 

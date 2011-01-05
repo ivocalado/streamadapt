@@ -8,7 +8,7 @@
 #ifndef STREAMSESSION_H_
 #define STREAMSESSION_H_
 
-#include "session.h"
+#include "communicationsession.h"
 #include "policyengine.h"
 #include "policy/policy.h"
 #include "plugins/pluginsfactory.h"
@@ -22,7 +22,7 @@ using namespace std;
 
 namespace infrastream {
 
-class StreamSession: public infrastream::Session {
+class StreamSession: public infrastream::CommunicationSession {
 	PolicyEngine* engine;
 	adapt_config::stream_type* policy;
 	PluginStreamIF* session;

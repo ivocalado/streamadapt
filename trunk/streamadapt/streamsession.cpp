@@ -13,7 +13,7 @@ namespace infrastream {
 StreamSession::StreamSession(string _pluginName, string _libName,
 		PolicyEngine* engine, PluginNegotiationPtrlIF* negotiation)
 		throw(CannotCreateSessionException) :
-	Session(_pluginName, _libName) {
+	CommunicationSession(_pluginName, _libName) {
 	policy = 0;
 	this->engine = engine;
 	this->negotiation = negotiation; // Testar negociacao

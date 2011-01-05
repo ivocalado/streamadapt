@@ -99,4 +99,5 @@ void PluginManager::loadPlugin(string pathName)
 	}
 
 	pluginHandlers.push_back(plugin_h);
+	log_info("Plugin loaded");
 }

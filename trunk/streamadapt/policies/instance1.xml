@@ -11,11 +11,11 @@
             <plugin-name>DCCPSocketPlugin</plugin-name>
             <library-name>libplugins-transport.so</library-name>
             <library-directory>/home/ivocalado/workspace/streamadapt/plugins-transport/Debug/</library-directory>
-            <enable-adaptation>true</enable-adaptation>
+            <enable-adaptation>false</enable-adaptation>
              
              <provides>
                  <provide default-value="2.6" update-time="1000">RTT</provide>
-                 <provide default-value="30" update-time="500">bandwidt</provide>
+                 <provide default-value="30" update-time="500">bandwidth</provide>
              </provides>
             
             <simpleproperty key="SDESItem">rtpsend demo app.</simpleproperty>
