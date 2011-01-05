@@ -16,6 +16,7 @@
 #include "connectionlistener.h"
 #include "trpsession.h"
 #include "streamsession.h"
+#include "session.h"
 
 #include <iostream>
 #include "policy/policy.h"

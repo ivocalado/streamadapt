@@ -18,15 +18,15 @@ PolicyEngine::~PolicyEngine() {
 }
 
 
-void PolicyEngine::addListener(CommunicationSession* listener) {
+void PolicyEngine::addListener(Session* listener) {
 	log_info("Adding listener to map");
 	set<EventType> deps = listener->getDependencies();
 	for (set<EventType>::iterator it = deps.begin(); it != deps.end(); it++) {
-		map<EventType, set<CommunicationSession*> >::iterator it2 =
+		map<EventType, set<Session*> >::iterator it2 =
 				this->listeners.find(*it);
 		if (it2 == listeners.end()) {
 			log_info("Registering new eventtype: " + it->getName());
-			set<CommunicationSession*> l;
+			set<Session*> l;
 			l.insert(listener);
 			listeners[*it] = l;
 		} else {
@@ -36,11 +36,11 @@ void PolicyEngine::addListener(CommunicationSession* listener) {
 	}
 }
 
-void PolicyEngine::removeListener(CommunicationSession* listener) {
+void PolicyEngine::removeListener(Session* listener) {
 	log_info("Removing listener to map");
 	set<EventType> deps = listener->getDependencies();
 	for (set<EventType>::iterator it = deps.begin(); it != deps.end(); it++) {
-		map<EventType, set<CommunicationSession*> >::iterator it2 =
+		map<EventType, set<Session*> >::iterator it2 =
 				this->listeners.find(*it);
 
 		if (it2 != listeners.end()) {
@@ -141,11 +141,11 @@ void PolicyEngine::run() {
 }
 
 int PolicyEngine::fireEvent(Event event) {
-	map<EventType, set<CommunicationSession*> >::iterator it = listeners.find(
+	map<EventType, set<Session*> >::iterator it = listeners.find(
 			event.getType());
 	if (it == listeners.end())
 		return 0;
-	for (set<CommunicationSession*>::iterator it2 = it->second.begin(); it2
+	for (set<Session*>::iterator it2 = it->second.begin(); it2
 			!= it->second.end(); it2++)
 		(*it2)->newEvent(event);
 	return it->second.size();

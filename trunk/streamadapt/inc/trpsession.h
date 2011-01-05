@@ -10,7 +10,7 @@
 
 #include "policy/policy.h"
 #include "plugins/pluginsfactory.h"
-#include "communicationsession.h"
+#include "session.h"
 #include "policyengine.h"
 #include "logger/logger.h"
 #include "event.h"
@@ -24,7 +24,7 @@ using namespace AdaptationPolicy;
 using namespace std;
 namespace infrastream {
 
-class TransportSession: public CommunicationSession {
+class TransportSession: public Session {
 
 	PolicyEngine* engine;
 

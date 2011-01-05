@@ -14,7 +14,7 @@
 #include <list>
 #include <cc++/thread.h>
 
-#include "communicationsession.h"
+#include "session.h"
 #include "plugins/pluginbase.h"
 #include "eventregister.h"
 #include "eventmanager.h"
@@ -26,7 +26,7 @@ namespace infrastream {
 
 class PolicyEngine : public EventManager {
 
-	map<EventType, set<CommunicationSession*> > listeners; //will make glue with sessions
+	map<EventType, set<Session*> > listeners; //will make glue with sessions
 	set<Event> currentValues; // will keep current values
 	map<EventType, PluginBase*> providers; // Will make the glue with the pluginBase
 	list<EventRegister> registers; //Will keep registers to update
@@ -45,9 +45,9 @@ public:
 
 	bool unregisterProvider(EventType type);
 
-	void addListener(CommunicationSession* listener);
+	void addListener(Session* listener);
 
-	void removeListener(CommunicationSession* listener);
+	void removeListener(Session* listener);
 
 	int fireEvent(Event event);
 

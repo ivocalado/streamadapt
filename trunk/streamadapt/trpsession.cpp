@@ -14,7 +14,7 @@ namespace infrastream {
 			string _libName, PolicyEngine* engine,
 			PluginNegotiationPtrlIF* _negotiation)
 			throw(CannotCreateSessionException) :
-		CommunicationSession(_pluginName, _libName), transportProtocol(_tProtocol) {
+		Session(_pluginName, _libName), transportProtocol(_tProtocol) {
 		policy = 0;
 		this->engine = engine;
 		this->negotiation = negotiation;
