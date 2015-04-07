@@ -1,0 +1,2 @@
+This project aims the development of an API for transmission of multimedia content with support to multimedia adaptation based on policies.
+This project is within the context of my work dissertation. Due to that, I will put here both source code and text documents.
